@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Admin\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Admin\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_.19.00" t="ExcludeRecursive" />
+    <e p="D:\Projects\Private\Shoppingendly.Monolith\src\Shoppingendly.Monolith.Core" t="IncludeRecursive">
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="Domain" t="Include">
+        <e p="Base" t="Include">
+          <e p="Aggregates" t="Include">
+            <e p="IAggregateRoot.cs" t="Include" />
+          </e>
+          <e p="BusinessRules" t="Include">
+            <e p="IBusinessRole.cs" t="Include" />
+          </e>
+          <e p="DomainEvents" t="Include">
+            <e p="DomainEventBase.cs" t="Include" />
+            <e p="IDomainEvent.cs" t="Include" />
+          </e>
+          <e p="Entities" t="Include">
+            <e p="AuditableAndEventSourcingEntity.cs" t="Include" />
+            <e p="AuditableEntity.cs" t="Include" />
+            <e p="Entity.cs" t="Include" />
+            <e p="EntityBase.cs" t="Include" />
+            <e p="EventSourcingEntity.cs" t="Include" />
+            <e p="IAuditiableEntity.cs" t="Include" />
+            <e p="IEntity.cs" t="Include" />
+            <e p="IEventSourcingEntity.cs" t="Include" />
+          </e>
+          <e p="Identification" t="Include">
+            <e p="Identity.cs" t="Include" />
+            <e p="IIdentity.cs" t="Include" />
+          </e>
+          <e p="SeedWork" t="Include">
+            <e p="IRepository.cs" t="Include" />
+            <e p="IUnitOfWork.cs" t="Include" />
+          </e>
+          <e p="ValueObjects" t="Include">
+            <e p="Enumeration.cs" t="Include" />
+            <e p="ValueObject.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Products" t="Include">
+          <e p="Aggregates" t="Include">
+            <e p="Product.cs" t="Include" />
+          </e>
+          <e p="BusinessRules" t="Include" />
+          <e p="Entities" t="Include">
+            <e p="Category.cs" t="Include" />
+            <e p="Creator.cs" t="Include" />
+            <e p="ProductCategory.cs" t="Include" />
+          </e>
+          <e p="Events" t="Include" />
+          <e p="Services" t="Include" />
+          <e p="ValueObjects" t="Include">
+            <e p="CategoryId.cs" t="Include" />
+            <e p="CreatorId.cs" t="Include" />
+            <e p="ProductId.cs" t="Include" />
+          </e>
+        </e>
+        <e p="ShoppingList" t="Include">
+          <e p="Aggregates" t="Include" />
+          <e p="BusinessRules" t="Include" />
+          <e p="Entities" t="Include" />
+          <e p="Events" t="Include" />
+          <e p="Services" t="Include" />
+          <e p="ValueObjects" t="Include" />
+        </e>
+        <e p="Users" t="Include">
+          <e p="Aggregates" t="Include" />
+          <e p="BusinessRules" t="Include" />
+          <e p="Entities" t="Include" />
+          <e p="Events" t="Include" />
+          <e p="Services" t="Include" />
+          <e p="ValueObjects" t="Include" />
+        </e>
+      </e>
+      <e p="Exceptions" t="Include">
+        <e p="ShoppingendlyException.cs" t="Include" />
+      </e>
+      <e p="Extensions" t="Include">
+        <e p="MaybeExtensionMethods.cs" t="Include" />
+        <e p="NullChecksExtensionMethods.cs" t="Include" />
+        <e p="StringExtensionMethods.cs" t="Include" />
+      </e>
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netstandard2.1" t="Include">
+            <e p="Shoppingendly.Monolith.Core.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Shoppingendly.Monolith.Core.csproj" t="IncludeRecursive" />
+      <e p="Types" t="Include">
+        <e p="IIdentifiable.cs" t="Include" />
+        <e p="Maybe.cs" t="Include" />
+      </e>
+    </e>
+  </component>
+</project>
