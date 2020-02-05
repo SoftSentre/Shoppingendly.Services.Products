@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Folder Include="Domain\Products\BusinessRules" />
-    <Folder Include="Domain\Products\Events" />
     <Folder Include="Domain\Products\Services" />
     <Folder Include="Domain\ShoppingList\Aggregates" />
     <Folder Include="Domain\ShoppingList\BusinessRules" />
