@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Domain.Products.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions;
 using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Xunit;
 
@@ -11,6 +12,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 {
     public class CategoryTests
     {
+        #region domain logic
+
         [Fact]
         public void CheckIfSetNameMethodReturnFalseWhenParameterIsTheSameAsExistingValue()
         {
@@ -56,19 +59,19 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             func.Should().NotThrow();
             testResult.Should().BeTrue();
         }
-        
+
         [Fact]
         public void CheckIfSetNameMethodSetValuesWhenCorrectNameHasBeenProvided()
         {
             // Arrange
             const string categoryName = "OtherCategory";
             var category = new Category(new CategoryId(), "ExampleCategory");
-            
+
             // Act
             category.SetName(categoryName);
             var isAssigned = category.Name == categoryName;
             var updatedDateAreChanged = category.UpdatedDate != default;
-            
+
             // Assert
             isAssigned.Should().BeTrue();
             updatedDateAreChanged.Should().BeTrue();
@@ -172,12 +175,12 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             // Arrange
             const string categoryDescription = "Description is correct.";
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
-            
+
             // Act
             category.SetDescription(categoryDescription);
             var isAssigned = category.Description == categoryDescription;
             var updatedDateAreChanged = category.UpdatedDate != default;
-            
+
             // Assert
             isAssigned.Should().BeTrue();
             updatedDateAreChanged.Should().BeTrue();
@@ -197,7 +200,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             func.Should().Throw<InvalidCategoryDescriptionException>()
                 .WithMessage("Category description can not be shorter than 20 characters.");
         }
-        
+
         [Fact]
         public void CheckIfSetDescriptionMethodThrowProperExceptionAndMessageWhenTooLongDescriptionHasBeenProvided()
         {
@@ -212,6 +215,111 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             func.Should().Throw<InvalidCategoryDescriptionException>()
                 .WithMessage("Category description can not be longer than 4000 characters.");
         }
+
+        #endregion
+
+        #region domain events
+
+        [Fact]
+        public void CheckIfCreateNewCategoryByConstructorWithoutDescriptionProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+
+            // Act
+            var category = new Category(new CategoryId(), "ExampleCategory");
+            var newCategoryCreatedDomainEvent = category.GetUncommitted().LastOrDefault() as NewCategoryCreatedDomainEvent;
+            
+            // Assert
+            category.DomainEvents.Should().NotBeEmpty();
+            category.DomainEvents.LastOrDefault().Should().BeOfType<NewCategoryCreatedDomainEvent>();
+            newCategoryCreatedDomainEvent.Should().NotBeNull();
+            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
+            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
+            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.Description);
+        }
+
+        [Fact]
+        public void CheckIfCreateNewCategoryByConstructorWithDescriptionProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+
+            // Act
+            var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
+            var newCategoryCreatedDomainEvent = category.GetUncommitted().LastOrDefault() as NewCategoryCreatedDomainEvent;
+            
+            // Assert
+            category.DomainEvents.Should().NotBeEmpty();
+            category.DomainEvents.LastOrDefault().Should().BeOfType<NewCategoryCreatedDomainEvent>();
+            newCategoryCreatedDomainEvent.Should().NotBeNull();
+            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
+            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
+            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.Description);
+        }
+
+        [Fact]
+        public void CheckIfSetCategoryNameMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var category = new Category(new CategoryId(), "ExampleCategory");
+
+            // Act
+            category.SetName("NewCategoryName");
+            var categoryNameChangedDomainEvent = category.GetUncommitted().LastOrDefault() as CategoryNameChangedDomainEvent;
+            
+            // Assert
+            category.DomainEvents.Should().NotBeEmpty();
+            category.DomainEvents.LastOrDefault().Should().BeOfType<CategoryNameChangedDomainEvent>();
+            categoryNameChangedDomainEvent.Should().NotBeNull();
+            categoryNameChangedDomainEvent.CategoryId.Should().Be(category.Id);
+            categoryNameChangedDomainEvent.CategoryName.Should().Be(category.Name);
+        }
+
+        [Fact]
+        public void CheckIfSetCategoryDescriptionMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
+
+            // Act
+            category.SetDescription("Other correct description");
+            var categoryDescriptionChanged = category.GetUncommitted().LastOrDefault() as CategoryDescriptionChangedDomainEvent;
+
+            // Assert
+            category.DomainEvents.Should().NotBeEmpty();
+            category.DomainEvents.LastOrDefault().Should().BeOfType<CategoryDescriptionChangedDomainEvent>();
+            categoryDescriptionChanged.Should().NotBeNull();
+            categoryDescriptionChanged.CategoryId.Should().Be(category.Id);
+            categoryDescriptionChanged.CategoryDescription.Should().Be(category.Description);
+        }
+
+        [Fact]
+        public void CheckIfClearDomainEventsMethodWorkingProperly()
+        {
+            // Arrange
+            var category = new Category(new CategoryId(), "ExampleCategory");
+
+            // Act
+            category.ClearDomainEvents();
+
+            // Assert
+            category.DomainEvents.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
+        {
+            // Arrange
+            var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
+
+            // Act
+            var domainEvents = category.GetUncommitted();
+            
+            // Assert
+            domainEvents.Should().NotBeNull();
+            domainEvents.LastOrDefault().Should().BeOfType<NewCategoryCreatedDomainEvent>();
+        }
+        
+        #endregion
     }
 
     public class CategoryDataGenerator
