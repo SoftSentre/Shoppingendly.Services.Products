@@ -45,7 +45,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         [Theory]
         [InlineData("Home")]
         [InlineData("IProvideMaximalNumberOfLetters")]
-        public void CheckIfSetNameMethodReturnTrueWhenCorrectNameHasBeenProvidedAndDoNotThrowAnyException(string name)
+        public void CheckIfSetCategoryNameMethodReturnTrueWhenCorrectNameHasBeenProvidedAndDoNotThrowAnyException(string name)
         {
             // Arrange
             var categoryName = name;
@@ -61,7 +61,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetNameMethodSetValuesWhenCorrectNameHasBeenProvided()
+        public void CheckIfSetCategoryNameMethodSetValuesWhenCorrectNameHasBeenProvided()
         {
             // Arrange
             const string categoryName = "OtherCategory";
@@ -69,19 +69,19 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             category.SetName(categoryName);
-            var isAssigned = category.Name == categoryName;
-            var updatedDateAreChanged = category.UpdatedDate != default;
 
             // Assert
-            isAssigned.Should().BeTrue();
-            updatedDateAreChanged.Should().BeTrue();
+            category.Name.Should().Be(categoryName);
+            category.UpdatedDate.Should().NotBe(default);
+            category.CreatedAt.Should().NotBe(default);
         }
 
-        [Fact]
-        public void CheckIfSetNameMethodThrowProperExceptionAndMessageWhenEmptyNameHasBeenProvided()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void CheckIfSetCategoryNameMethodThrowProperExceptionAndMessageWhenEmptyNameHasBeenProvided(string categoryName)
         {
             // Arrange
-            var categoryName = string.Empty;
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
@@ -93,7 +93,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetNameMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
+        public void CheckIfSetCategoryNameMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
         {
             // Arrange
             const string categoryName = "Hom";
@@ -108,7 +108,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetNameMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
+        public void CheckIfSetCategoryNameMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
         {
             // Arrange
             const string categoryName = "IProvideMaximalNumberOfLettersAndFewMore";
@@ -123,7 +123,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetDescriptionMethodReturnFalseWhenParameterIsTheSameAsExistingValue()
+        public void CheckIfSetCategoryDescriptionMethodReturnFalseWhenParameterIsTheSameAsExistingValue()
         {
             // Arrange
             const string description = "Description is correct.";
@@ -137,7 +137,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetDescriptionMethodReturnTrueWhenParameterIsDifferentAsExistingValue()
+        public void CheckIfSetCategoryDescriptionMethodReturnTrueWhenParameterIsDifferentAsExistingValue()
         {
             // Arrange
             const string description = "Description is correct.";
@@ -153,7 +153,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         [Theory]
         [MemberData(nameof(CategoryDataGenerator.CorrectCategoryDescriptions),
             MemberType = typeof(CategoryDataGenerator))]
-        public void CheckIfSetDescriptionMethodReturnTrueWhenCorrectDescriptionHasBeenProvidedAndDoNotThrowAnyException(
+        public void CheckIfSetCategoryDescriptionMethodReturnTrueWhenCorrectDescriptionHasBeenProvidedAndDoNotThrowAnyException(
             string description)
         {
             // Arrange
@@ -170,7 +170,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetDescriptionMethodSetValuesWhenCorrectDescriptionHasBeenProvided()
+        public void CheckIfSetCategoryDescriptionMethodSetValuesWhenCorrectDescriptionHasBeenProvided()
         {
             // Arrange
             const string categoryDescription = "Description is correct.";
@@ -178,16 +178,15 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             category.SetDescription(categoryDescription);
-            var isAssigned = category.Description == categoryDescription;
-            var updatedDateAreChanged = category.UpdatedDate != default;
 
             // Assert
-            isAssigned.Should().BeTrue();
-            updatedDateAreChanged.Should().BeTrue();
+            category.Description.Should().Be(categoryDescription);
+            category.UpdatedDate.Should().NotBe(default);
+            category.CreatedAt.Should().NotBe(default);
         }
 
         [Fact]
-        public void CheckIfSetDescriptionMethodThrowProperExceptionAndMessageWhenTooShortDescriptionHasBeenProvided()
+        public void CheckIfSetCategoryDescriptionMethodThrowProperExceptionAndMessageWhenTooShortDescriptionHasBeenProvided()
         {
             // Arrange
             const string description = "Description is too";
@@ -202,7 +201,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
 
         [Fact]
-        public void CheckIfSetDescriptionMethodThrowProperExceptionAndMessageWhenTooLongDescriptionHasBeenProvided()
+        public void CheckIfSetCategoryDescriptionMethodThrowProperExceptionAndMessageWhenTooLongDescriptionHasBeenProvided()
         {
             // Arrange
             var description = new string('*', 4001);
@@ -231,7 +230,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
-            category.DomainEvents.LastOrDefault().Should().BeOfType<NewCategoryCreatedDomainEvent>();
+            newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
             newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
             newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
@@ -249,7 +248,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
-            category.DomainEvents.LastOrDefault().Should().BeOfType<NewCategoryCreatedDomainEvent>();
+            newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
             newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
             newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
@@ -268,7 +267,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
-            category.DomainEvents.LastOrDefault().Should().BeOfType<CategoryNameChangedDomainEvent>();
+            categoryNameChangedDomainEvent.Should().BeOfType<CategoryNameChangedDomainEvent>();
             categoryNameChangedDomainEvent.Should().NotBeNull();
             categoryNameChangedDomainEvent.CategoryId.Should().Be(category.Id);
             categoryNameChangedDomainEvent.CategoryName.Should().Be(category.Name);
@@ -286,7 +285,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
-            category.DomainEvents.LastOrDefault().Should().BeOfType<CategoryDescriptionChangedDomainEvent>();
+            categoryDescriptionChanged.Should().BeOfType<CategoryDescriptionChangedDomainEvent>();
             categoryDescriptionChanged.Should().NotBeNull();
             categoryDescriptionChanged.CategoryId.Should().Be(category.Id);
             categoryDescriptionChanged.CategoryDescription.Should().Be(category.Description);

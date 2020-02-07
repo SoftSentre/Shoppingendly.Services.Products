@@ -2,7 +2,6 @@
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions;
 using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Shoppingendly.Services.Products.Core.Extensions;
 
