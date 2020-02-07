@@ -1,7 +1,4 @@
-﻿using System;
-using Shoppingendly.Services.Products.Core.Domain.Base.BusinessRules;
-
-namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
+﻿namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
 {
     public abstract class EntityBase<TId> : IEntity<TId>
     {
@@ -14,14 +11,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
         protected EntityBase(TId id)
         {
             Id = id;
-        }
-
-        protected void CheckRule(IBusinessRule rule, Action throwProperException)
-        {
-            if (rule.IsBroken())
-            {
-                throwProperException.Invoke();
-            }
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
 
-namespace Shoppingendly.Services.Products.Core.Domain.Products.Events
+namespace Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories
 {
     public class CategoryDescriptionChangedDomainEvent : DomainEventBase
     {
