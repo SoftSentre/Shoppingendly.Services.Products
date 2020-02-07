@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Events;
+using Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions;
+using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Shoppingendly.Services.Products.Core.Extensions;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Products.Entities
@@ -28,14 +29,14 @@ namespace Shoppingendly.Services.Products.Core.Domain.Products.Entities
         public Category(CategoryId categoryId, string name) : base(categoryId)
         {
             Name = ValidateCategoryName(name);
-            AddDomainEvent(new CategoryCreatedDomainEvent(Id, name));
+            AddDomainEvent(new NewCategoryCreatedDomainEvent(Id, name));
         }
         
         public Category(CategoryId categoryId, string name, string description) : base(categoryId)
         {
             Name = ValidateCategoryName(name);
             Description = ValidateCategoryDescription(description);
-            AddDomainEvent(new CategoryCreatedDomainEvent(categoryId, name, description));
+            AddDomainEvent(new NewCategoryCreatedDomainEvent(categoryId, name, description));
         }
 
         public bool SetName(string name)
@@ -63,6 +64,16 @@ namespace Shoppingendly.Services.Products.Core.Domain.Products.Entities
             AddDomainEvent(new CategoryDescriptionChangedDomainEvent(Id, description));
             return true;
         }
+        
+        public static Category Create(CategoryId categoryId, string name)
+        {
+            return new Category(categoryId, name);
+        }
+        
+        public static Category Create(CategoryId categoryId, string name, string description)
+        {
+            return new Category(categoryId, name, description);
+        }
 
         private static string ValidateCategoryName(string name)
         {
@@ -86,16 +97,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Products.Entities
                     "Category description can not be longer than 4000 characters.", description);
 
             return description;
-        }
-
-        public static Category Create(CategoryId categoryId, string name)
-        {
-            return new Category(categoryId, name);
-        }
-        
-        public static Category Create(CategoryId categoryId, string name, string description)
-        {
-            return new Category(categoryId, name, description);
         }
     }
 }

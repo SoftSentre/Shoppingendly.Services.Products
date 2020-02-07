@@ -4,9 +4,10 @@ using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Domain.Products.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions;
+using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Xunit;
 
-namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Products
+namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 {
     public class CategoryTests
     {
