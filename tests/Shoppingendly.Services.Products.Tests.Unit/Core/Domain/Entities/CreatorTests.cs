@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using Shoppingendly.Services.Products.Core.Domain.Products.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Events.Creators;
-using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
+using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Events.Creators;
+using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Creators;
 using Xunit;
 

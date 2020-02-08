@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Shoppingendly.Services.Products.Core.Domain.Products.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories;
-using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
+using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
+using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Xunit;
 

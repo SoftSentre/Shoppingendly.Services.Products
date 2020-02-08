@@ -1,6 +1,6 @@
 ﻿using Shoppingendly.Services.Products.Core.Domain.Base.ValueObjects;
 
-namespace Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects
+namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
 {
     public class Role : Enumeration
     {

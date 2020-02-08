@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Shoppingendly.Services.Products.Core.Domain.Base.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
+using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
-namespace Shoppingendly.Services.Products.Core.Domain.Products.Aggregates
+namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 {
     public class Product : AuditableAndEventSourcingEntity<ProductId>, IAggregateRoot
     {
@@ -25,8 +25,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Products.Aggregates
             // Required for EF
         }
         
-        public Product(ProductId id) : base(id)
+        public Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)
         {
+            CreatorId = creatorId;
+            Name = name;
+            Producer = producer;
         }
     }
 }

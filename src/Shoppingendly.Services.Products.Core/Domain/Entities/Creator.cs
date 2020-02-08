@@ -1,11 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Events.Creators;
-using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
+using Shoppingendly.Services.Products.Core.Domain.Events.Creators;
+using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Creators;
 using Shoppingendly.Services.Products.Core.Extensions;
 
-namespace Shoppingendly.Services.Products.Core.Domain.Products.Entities
+namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
     public class Creator : AuditableAndEventSourcingEntity<CreatorId>
     {

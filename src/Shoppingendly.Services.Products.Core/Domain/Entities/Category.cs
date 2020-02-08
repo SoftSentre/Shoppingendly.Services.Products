@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories;
-using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
+using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
+using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Shoppingendly.Services.Products.Core.Extensions;
 
-namespace Shoppingendly.Services.Products.Core.Domain.Products.Entities
+namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
     public class Category : AuditableAndEventSourcingEntity<CategoryId>
     {
