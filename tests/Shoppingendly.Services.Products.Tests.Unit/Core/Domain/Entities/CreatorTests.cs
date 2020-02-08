@@ -2,7 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Domain.Products.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Products.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.Products.Events.Creators;
 using Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Creators;

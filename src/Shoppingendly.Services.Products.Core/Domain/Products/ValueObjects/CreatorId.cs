@@ -3,7 +3,7 @@ using Shoppingendly.Services.Products.Core.Domain.Base.Identification;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Products.ValueObjects
 {
-    public class CreatorId : Identity
+    public class CreatorId : Identity<Guid>
     {
         public CreatorId()
         {

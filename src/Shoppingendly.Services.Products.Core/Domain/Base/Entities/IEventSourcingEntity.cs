@@ -5,8 +5,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
 {
     public interface IEventSourcingEntity
     {
-        IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
-        List<IDomainEvent> GetUncommitted();
+        IEnumerable<IDomainEvent> DomainEvents { get; }
+        IEnumerable<IDomainEvent> GetUncommitted();
         void AddDomainEvent(IDomainEvent domainEvent);
         void ClearDomainEvents();
     }

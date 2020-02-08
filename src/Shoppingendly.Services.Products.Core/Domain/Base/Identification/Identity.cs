@@ -2,21 +2,20 @@
 
 namespace Shoppingendly.Services.Products.Core.Domain.Base.Identification
 {
-    public abstract class Identity : IEquatable<Identity>, IIdentity
+    public abstract class Identity<TId> : IEquatable<Identity<TId>>, IIdentity<TId>
     {
-        public Identity()
+        protected Identity()
         {
-            Id = Guid.NewGuid();
         }
-
-        public Identity(Guid id)
+        
+        protected Identity(TId id)
         {
             Id = id;
         }
 
-        public Guid Id { get; }
+        public TId Id { get; protected set; }
 
-        public bool Equals(Identity id)
+        public bool Equals(Identity<TId> id)
         {
             if (ReferenceEquals(this, id)) return true;
             if (ReferenceEquals(null, id)) return false;
@@ -25,7 +24,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Identification
 
         public override bool Equals(object anotherObject)
         {
-            return Equals(anotherObject as Identity);
+            return Equals(anotherObject as Identity<TId>);
         }
 
         public override int GetHashCode()

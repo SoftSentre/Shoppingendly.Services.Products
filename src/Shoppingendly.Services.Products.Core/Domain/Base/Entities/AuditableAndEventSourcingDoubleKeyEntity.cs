@@ -4,7 +4,8 @@ using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
 {
-    public abstract class AuditableAndEventSourcingEntity<TId> : EntityBase<TId>, IEventSourcingEntity, IAuditAbleEntity
+    public class AuditableAndEventSourcingDoubleKeyEntity<TFirstId, TSecondId> 
+        : DoubleKeyEntityBase<TFirstId, TSecondId>, IEventSourcingEntity, IAuditAbleEntity
     {
         private List<IDomainEvent> _domainEvents;
 
@@ -14,12 +15,13 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
         public IEnumerable<IDomainEvent> DomainEvents
             => _domainEvents.AsReadOnly();
 
-        protected AuditableAndEventSourcingEntity()
+        protected AuditableAndEventSourcingDoubleKeyEntity()
         {
             CreatedAt = DateTime.UtcNow;
         }
-        
-        protected AuditableAndEventSourcingEntity(TId id) : base(id)
+
+        protected AuditableAndEventSourcingDoubleKeyEntity(TFirstId firstKey, TSecondId secondKey) 
+            : base(firstKey, secondKey)
         {
             CreatedAt = DateTime.UtcNow;
         }

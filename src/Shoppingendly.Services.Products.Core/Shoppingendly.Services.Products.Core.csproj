@@ -6,8 +6,4 @@
     <RootNamespace>Shoppingendly.Services.Products.Core</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\Products\Services" />
-  </ItemGroup>
-
 </Project>
