@@ -2,8 +2,6 @@
 using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
-using Shoppingendly.Services.Products.Core.Domain.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.Events.Products;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Products;

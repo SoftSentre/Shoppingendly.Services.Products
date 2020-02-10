@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Shoppingendly.Services.Products.Core.Domain.Base.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
