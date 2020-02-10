@@ -5,6 +5,8 @@ using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Products;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
+using Shoppingendly.Services.Products.Core.Exceptions.Products;
+using Shoppingendly.Services.Products.Core.Extensions;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 {
@@ -15,7 +17,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         public CreatorId CreatorId { get; }
         public string Name { get; private set; }
         public string Producer { get; private set; }
-        
+
         // Navigation property
         public Creator Creator { get; set; }
 
@@ -34,19 +36,33 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         public Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)
         {
             CreatorId = creatorId;
-            Name = name;
-            Producer = producer;
+            Name = ValidateName(name);
+            Producer = ValidateProducer(producer);
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer));
         }
 
         public bool SetName(string name)
         {
+            ValidateName(name);
+            
+            if (Name.EqualsCaseInvariant(name))
+                return false;
+
+            Name = name;
+            SetUpdatedDate();
             AddDomainEvent(new ProductNameChangedDomainEvent(Id, name));
             return true;
         }
 
         public bool SetProducer(string producer)
         {
+            ValidateProducer(producer);
+            
+            if (Producer.EqualsCaseInvariant(producer))
+                return false;
+
+            Producer = producer;
+            SetUpdatedDate();
             AddDomainEvent(new ProductProducerChangedDomainEvent(Id, producer));
             return true;
         }
@@ -56,14 +72,28 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             return new Product(id, creatorId, name, producer);
         }
 
-        private string ValidateName(string name)
+        private static string ValidateName(string name)
         {
-            throw new NotImplementedException();
+            if (name.IsEmpty())
+                throw new InvalidProductNameException("Product name can not be empty.");
+            if (name.IsLongerThan(30))
+                throw new InvalidProductNameException("Product name can not be longer than 30 characters.");
+            if (name.IsShorterThan(4))
+                throw new InvalidProductNameException("Product name can not be shorter than 4 characters.");
+            
+            return name;
         }
 
-        private string ValidateProducer(string producer)
+        private static string ValidateProducer(string producer)
         {
-            throw  new NotImplementedException();
+            if (producer.IsEmpty())
+                throw new InvalidProductProducerException("Product producer can not be empty.");
+            if (producer.IsLongerThan(50))
+                throw new InvalidProductProducerException("Product producer can not be longer than 50 characters.");
+            if (producer.IsShorterThan(2))
+                throw new InvalidProductProducerException("Product producer can not be shorter than 2 characters.");
+            
+            return producer;
         }
     }
 }

@@ -311,7 +311,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
 
             // Act
-            var domainEvents = category.GetUncommitted();
+            var domainEvents = category.GetUncommitted().ToList();
             
             // Assert
             domainEvents.Should().NotBeNull();
