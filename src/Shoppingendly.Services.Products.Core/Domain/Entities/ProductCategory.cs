@@ -7,7 +7,10 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
     public class ProductCategory : AuditableAndEventSourcingDoubleKeyEntity<ProductId, CategoryId>
     {
+        // Navigation property
         public Product Product { get; private set; }
+        
+        // Navigation property
         public Category Category { get; private set; }
 
         private ProductCategory()
@@ -19,6 +22,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             : base(productId, categoryId)
         {
             AddDomainEvent(new ProductAssignedToCategoryDomainEvent(productId, categoryId));
+        }
+
+        public static ProductCategory Create(ProductId productId, CategoryId categoryId)
+        {
+            return new ProductCategory(productId, categoryId);
         }
     }
 }

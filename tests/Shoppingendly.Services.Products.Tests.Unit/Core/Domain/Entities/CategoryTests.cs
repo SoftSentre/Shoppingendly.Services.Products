@@ -321,6 +321,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         #endregion
     }
 
+    #region data generators
+    
     public class CategoryDataGenerator
     {
         public static IEnumerable<object[]> CorrectCategoryDescriptions =>
@@ -330,4 +332,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
                 new object[] {new string('*', 3999)}
             };
     }
+    
+    #endregion
 }

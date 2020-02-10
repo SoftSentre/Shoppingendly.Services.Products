@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Creators;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -14,9 +16,19 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
+        private HashSet<Product> _products;
+        
         public string Name { get; private set; }
         public string Email { get; private set; }
+        
+        // Navigation property
         public Role Role { get; private set; }
+        
+        public HashSet<Product> Products
+        {
+            get => _products;
+            set => _products = new HashSet<Product>(value);
+        }
 
         public Creator()
         {
