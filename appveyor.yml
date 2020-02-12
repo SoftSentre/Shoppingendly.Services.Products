@@ -10,7 +10,7 @@ before_build:
 build_script:
   - cd scripts
   - ps: .\build-cake.ps1
-  - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full ..\tests\Shoppingendly.Services.Products.Tests.Unit\Shoppingendly.Services.Products.Tests.Unit.csproj" -filter:"+[Shoppingendly.Services.Products*]* -[Shoppingendly.Services.Products.Tests*]*" -output:".\shoppingendly_services_products_coverage.xml" -oldstyle
+  - OpenCover.Console.exe -register:administrator -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full ..\tests\Shoppingendly.Services.Products.Tests.Unit\Shoppingendly.Services.Products.Tests.Unit.csproj" -filter:"+[Shoppingendly.Services.Products*]* -[Shoppingendly.Services.Products.Tests*]*" -output:".\shoppingendly_services_products_coverage.xml" -oldstyle
   - codecov -f .\shoppingendly_services_products_coverage.xml -t $(CODECOV_TOKEN)
 
 test: off
