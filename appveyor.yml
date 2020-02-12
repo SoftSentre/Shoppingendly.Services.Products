@@ -4,8 +4,8 @@ init:
 image: Visual Studio 2019
 
 before_build:
-- choco install opencover.portable
-- choco install codecov
+  - choco install opencover.portable
+  - choco install codecov
 
 build_script:
   - cd scripts
@@ -19,8 +19,7 @@ branches:
   only:
     - develop
     - master
-    - implemented-domain-classes-in-tdd-approach
 
 cache:
-- tools -> build.cake
-- packages -> build.cake
+  - tools -> build.cake
+  - packages -> build.cake
