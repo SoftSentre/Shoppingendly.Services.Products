@@ -4,7 +4,7 @@ using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
-    public class ProductCategory : AuditableAndEventSourcingDoubleKeyEntity<ProductId, CategoryId>
+    public class ProductCategory : AuditableDoubleKeyEntity<ProductId, CategoryId>
     {
         // Navigation property
         public Product Product { get; private set; }
