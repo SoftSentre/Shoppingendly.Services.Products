@@ -7,7 +7,7 @@ using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Services;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services.Products;
+using Shoppingendly.Services.Products.Core.Exceptions.Services;
 using Shoppingendly.Services.Products.Core.Types;
 using Xunit;
 
@@ -63,7 +63,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
         
         [Fact]
@@ -113,7 +113,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             expectedFirstCategory.Value.Should().NotBeNull();
             var expectedSecondCategory =
                 productDomainService.GetAssignedCategory(testResult.Value, secondAssignedCategory);
-            expectedFirstCategory.Value.Should().NotBeNull();
+            expectedSecondCategory.Value.Should().NotBeNull();
         }
 
         [Fact]
@@ -215,7 +215,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
         
         [Fact]
@@ -260,7 +260,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
 
         [Fact]
@@ -306,7 +306,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
         
         [Fact]
@@ -352,7 +352,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
         
         [Fact]
@@ -398,7 +398,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to change product name, because provided value is empty.");
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
     }
 }

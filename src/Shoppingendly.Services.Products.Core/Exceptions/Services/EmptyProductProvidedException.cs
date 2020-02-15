@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Shoppingendly.Services.Products.Core.Exceptions.Services.Products
+namespace Shoppingendly.Services.Products.Core.Exceptions.Services
 {
     [Serializable]
     public class EmptyProductProvidedException : ShoppingendlyException

@@ -4,7 +4,7 @@ using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services.Products;
+using Shoppingendly.Services.Products.Core.Exceptions.Services;
 using Shoppingendly.Services.Products.Core.Types;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Services
@@ -94,7 +94,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             if (product.HasNoValue)
             {
                 throw new EmptyProductProvidedException(
-                    "Unable to change product name, because provided value is empty.", product);
+                    "Unable to mutate product state, because provided value is empty.", product);
             }
         }
     }
