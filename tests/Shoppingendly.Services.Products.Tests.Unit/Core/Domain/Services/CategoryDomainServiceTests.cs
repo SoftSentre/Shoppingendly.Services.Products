@@ -1,6 +1,5 @@
 using System;
 using FluentAssertions;
-using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Services;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
