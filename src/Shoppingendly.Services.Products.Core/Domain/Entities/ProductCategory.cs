@@ -1,6 +1,5 @@
 ﻿using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
-using Shoppingendly.Services.Products.Core.Domain.Events.ProductCategories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Entities
@@ -21,7 +20,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         public ProductCategory(ProductId productId, CategoryId categoryId) 
             : base(productId, categoryId)
         {
-            AddDomainEvent(new ProductAssignedToCategoryDomainEvent(productId, categoryId));
         }
 
         public static ProductCategory Create(ProductId productId, CategoryId categoryId)

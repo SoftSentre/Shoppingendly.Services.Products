@@ -14,7 +14,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
         public IEnumerable<IDomainEvent> DomainEvents
             => _domainEvents.AsReadOnly();
 
-        protected AuditableAndEventSourcingEntity()
+        protected AuditableAndEventSourcingEntity() 
         {
             CreatedAt = DateTime.UtcNow;
         }

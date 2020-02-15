@@ -2,9 +2,11 @@
 using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
+using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Products;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Products;
+using Shoppingendly.Services.Products.Core.Types;
 using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
@@ -235,6 +237,128 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
                 .WithMessage("Product producer can not be longer than 50 characters.");
         }
 
+        [Fact]
+        public void CheckIfGetAssignCategoryMethodReturnValidObjectWhenCorrectValueWasProvided()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var expectedValue = new ProductCategory(product.Id, categoryId);
+            product.ProductCategories.Add(expectedValue);
+
+            // Act
+            Func<Maybe<ProductCategory>> func = () => product.GetAssignedCategory(categoryId);
+            var assignedCategory = func.Invoke();
+
+            // Assert
+            func.Should().NotThrow();
+            assignedCategory.Should().NotBeNull();
+            assignedCategory.Value.FirstKey.Should().Be(product.Id);
+            assignedCategory.Value.SecondKey.Should().Be(categoryId);
+        }
+        
+        [Fact]
+        public void CheckIfAssignCategoryMethodDoNotThrowExceptionAndAddCorrectItemToList()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var expectedValue = new ProductCategory(product.Id, categoryId);
+
+            // Act
+            Action action = () => product.AssignCategory(categoryId);
+            
+            // Assert
+            action.Should().NotThrow();
+            product.ProductCategories.Should().NotBeEmpty();
+            product.UpdatedDate.Should().NotBe(default);
+            var assignedProduct = product.ProductCategories.FirstOrDefault();
+            assignedProduct?.FirstKey.Should().Be(expectedValue.FirstKey);
+            assignedProduct?.SecondKey.Should().Be(expectedValue.SecondKey);
+        }
+
+        [Fact]
+        public void CheckIfAssignCategoryMethodThrowExceptionWhenProductIsAlreadyAssignedToCategory()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var newProductCategory = new ProductCategory(product.Id, categoryId);
+            product.ProductCategories.Add(newProductCategory);
+            
+            // Act
+            Action action = () => product.AssignCategory(categoryId);
+
+            // Assert
+            action.Should().Throw<ProductIsAlreadyAssignedToCategoryException>()
+                .WithMessage($"Product already assigned to category with id: {categoryId.Id}.");
+        }
+        
+        [Fact]
+        public void CheckIfDeallocateCategoryMethodDoNotThrowExceptionAndRemoveCorrectItemToList()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(categoryId);
+            
+            // Act
+            Action action = () => product.DeallocateCategory(categoryId);
+            
+            // Assert
+            action.Should().NotThrow();
+            product.ProductCategories.Should().BeEmpty();
+            product.UpdatedDate.Should().NotBe(default);
+        }
+
+        [Fact]
+        public void CheckIfDeallocateCategoryMethodThrowExceptionWhenCategoryIsNotFound()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Action action = () => product.DeallocateCategory(categoryId);
+
+            // Assert
+            action.Should().Throw<ProductWithAssignedCategoryNotFoundException>()
+                .WithMessage($"Product with assigned category with id: {categoryId.Id} not found.");
+        }
+        
+        [Fact]
+        public void CheckIfDeallocateFromAllCategoriesMethodDoNotThrowExceptionAndRemoveAllItemsFromList()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(new CategoryId());
+            product.AssignCategory(new CategoryId());
+            var assignedCategoriesCount = product.ProductCategories.Count;
+            
+            // Act
+            Action action = () => product.DeallocateAllCategories();
+            
+            // Assert
+            action.Should().NotThrow();
+            assignedCategoriesCount.Should().Be(2);
+            product.ProductCategories.Should().BeEmpty();
+            product.UpdatedDate.Should().NotBe(default);
+        }
+
+        [Fact]
+        public void CheckIfDeallocateFromAllCategoriesMethodThrowExceptionWhenCategoryIsNotFound()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Action action = () => product.DeallocateAllCategories();
+
+            // Assert
+            action.Should().Throw<AnyProductWithAssignedCategoryNotFoundException>()
+                .WithMessage("Unable to find any product with assigned category.");
+        }
+
         #endregion
 
         #region domain events
@@ -253,10 +377,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewProductCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent.ProductId.Should().Be(product.Id);
-            newCategoryCreatedDomainEvent.CreatorId.Should().Be(product.CreatorId);
-            newCategoryCreatedDomainEvent.ProductName.Should().Be(product.Name);
-            newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.Producer);
+            newCategoryCreatedDomainEvent?.ProductId.Should().Be(product.Id);
+            newCategoryCreatedDomainEvent?.CreatorId.Should().Be(product.CreatorId);
+            newCategoryCreatedDomainEvent?.ProductName.Should().Be(product.Name);
+            newCategoryCreatedDomainEvent?.ProductProducer.Should().Be(product.Producer);
         }
 
         [Fact]
@@ -274,8 +398,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productNameChangedDomainEvent.Should().BeOfType<ProductNameChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent.ProductName.Should().Be(product.Name);
+            productNameChangedDomainEvent?.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent?.ProductName.Should().Be(product.Name);
         }
 
         [Fact]
@@ -293,8 +417,70 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productProducerChanged.Should().BeOfType<ProductProducerChangedDomainEvent>();
             productProducerChanged.Should().NotBeNull();
-            productProducerChanged.ProductId.Should().Be(product.Id);
-            productProducerChanged.ProductProducer.Should().Be(product.Producer);
+            productProducerChanged?.ProductId.Should().Be(product.Id);
+            productProducerChanged?.ProductProducer.Should().Be(product.Producer);
+        }
+        
+        [Fact]
+        public void CheckIfAssignCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            product.AssignCategory(categoryId);
+            var productAssignedToCategory =
+                product.GetUncommitted().LastOrDefault() as ProductAssignedToCategoryDomainEvent;
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productAssignedToCategory.Should().BeOfType<ProductAssignedToCategoryDomainEvent>();
+            productAssignedToCategory.Should().NotBeNull();
+            productAssignedToCategory?.ProductId.Should().Be(product.Id);
+            productAssignedToCategory?.CategoryId.Should().Be(categoryId);
+        }
+        
+        [Fact]
+        public void CheckIfDeallocateCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(categoryId);
+            
+            // Act
+            product.DeallocateCategory(categoryId);
+            var productDeallocatedFromCategory =
+                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromCategoryDomainEvent;
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productDeallocatedFromCategory.Should().BeOfType<ProductDeallocatedFromCategoryDomainEvent>();
+            productDeallocatedFromCategory.Should().NotBeNull();
+            productDeallocatedFromCategory?.ProductId.Should().Be(product.Id);
+            productDeallocatedFromCategory?.CategoryId.Should().Be(categoryId);
+        }
+        
+        [Fact]
+        public void CheckIfDeallocateAllCategoriesMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(new CategoryId());
+            product.AssignCategory(new CategoryId());
+            
+            // Act
+            product.DeallocateAllCategories();
+            var productDeallocatedFromAllCategories =
+                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromAllCategoriesDomainEvent;
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productDeallocatedFromAllCategories.Should().BeOfType<ProductDeallocatedFromAllCategoriesDomainEvent>();
+            productDeallocatedFromAllCategories.Should().NotBeNull();
+            productDeallocatedFromAllCategories?.ProductId.Should().Be(product.Id);
+            productDeallocatedFromAllCategories?.CategoriesIds.Should().HaveCount(2);
         }
 
         [Fact]

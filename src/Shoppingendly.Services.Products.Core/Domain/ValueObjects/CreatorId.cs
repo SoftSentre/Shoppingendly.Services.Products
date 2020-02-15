@@ -7,6 +7,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
     {
         public CreatorId()
         {
+            Id = Guid.NewGuid();
         }
 
         public CreatorId(Guid value) : base(value)

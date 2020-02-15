@@ -8,7 +8,7 @@
         {
         }
         
-        protected EntityBase(TId id)
+        protected EntityBase(TId id) 
         {
             Id = id;
         }
