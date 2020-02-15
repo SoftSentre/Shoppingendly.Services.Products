@@ -109,6 +109,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             AddDomainEvent(new ProductDeallocatedFromAllCategoriesDomainEvent(Id, categoriesIds));
         }
 
+        public Maybe<IEnumerable<ProductCategory>> GetAllAssignedCategories()
+        {
+            return _productCategories;
+        }
+
         public Maybe<ProductCategory> GetAssignedCategory(CategoryId categoryId)
         {
             return GetProductCategory(categoryId);

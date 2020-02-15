@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
@@ -357,6 +359,23 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Assert
             action.Should().Throw<AnyProductWithAssignedCategoryNotFoundException>()
                 .WithMessage("Unable to find any product with assigned category.");
+        }
+
+        [Fact]
+        public void CheckIfGetAllAssignedCategoriesMethodReturnValuesAndDoNotThrown()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(new CategoryId());
+            product.AssignCategory(new CategoryId());
+            
+            // Act
+            Func<Maybe<IEnumerable<ProductCategory>>> func = () => product.GetAllAssignedCategories();
+
+            // Assert
+            func.Should().NotThrow();
+            var assignedCategories = func.Invoke();
+            assignedCategories.Value.Should().HaveCount(2);
         }
 
         #endregion
