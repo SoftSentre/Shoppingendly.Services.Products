@@ -21,4 +21,8 @@
     <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Repositories" />
+  </ItemGroup>
+
 </Project>
