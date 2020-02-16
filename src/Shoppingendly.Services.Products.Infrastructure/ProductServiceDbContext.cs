@@ -13,17 +13,17 @@ namespace Shoppingendly.Services.Products.Infrastructure
     public class ProductServiceDbContext : DbContext
     {
         private Maybe<IDbContextTransaction> _currentTransaction;
-        
+
         public const string DefaultSchema = "products";
         public bool HasActiveTransaction => _currentTransaction.HasValue;
 
-        public DbSet<Product> Products { get; set; }    
-        public DbSet<Category> Categories { get; set; }    
-        public DbSet<Creator> Creators { get; set; }    
-        public DbSet<ProductCategory> ProductCategories { get; set; }    
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Creator> Creators { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Role> CreatorRoles { get; set; }
-        
-        protected ProductServiceDbContext(DbContextOptions options) : base(options)
+
+        public ProductServiceDbContext(DbContextOptions options) : base(options)
         {
         }
 

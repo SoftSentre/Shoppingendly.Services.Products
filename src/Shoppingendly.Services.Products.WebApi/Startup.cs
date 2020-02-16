@@ -1,27 +1,45 @@
+using System;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Shoppingendly.Services.Products.Infrastructure;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 
 namespace Shoppingendly.Services.Products.WebApi
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+        
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddEntityFrameworkSqlServer()
+                .AddDbContext<ProductServiceDbContext>(options =>
+                    {
+                        options.UseSqlServer(_configuration["ConnectionString"],
+                            sqlOptions =>
+                            {
+                                sqlOptions.MigrationsAssembly(typeof(ProductServiceDbContext).GetTypeInfo().Assembly
+                                    .GetName().Name);
+                                sqlOptions.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
+                            });
+                        options.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+                    },
+                    ServiceLifetime.Scoped
+                );
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -35,10 +53,7 @@ namespace Shoppingendly.Services.Products.WebApi
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

@@ -10,6 +10,8 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
         {
             productsConfiguration.ToTable("Products", ProductServiceDbContext.DefaultSchema);
 
+            productsConfiguration.HasKey(p => p.Id);
+
             productsConfiguration.Property(p => p.Name)
                 .HasColumnName("ProductName")
                 .HasMaxLength(30)
