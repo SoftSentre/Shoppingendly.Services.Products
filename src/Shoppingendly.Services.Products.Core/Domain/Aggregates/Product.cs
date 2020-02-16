@@ -22,7 +22,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         // Navigation property
         public Creator Creator { get; set; }
 
-
         public HashSet<ProductCategory> ProductCategories
         {
             get => _productCategories;

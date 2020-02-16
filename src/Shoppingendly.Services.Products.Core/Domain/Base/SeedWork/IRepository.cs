@@ -11,8 +11,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.SeedWork
     public interface IRepository<TEntity, in TId>
         where TEntity : class, IEntity<TId>
     {
-        IUnitOfWork UnitOfWork { get; }
-        
         Task<Maybe<TEntity>> GetById(TId id, string[] includeProperties = null);
 
         Task<Maybe<TEntity>> FindSpecific(Expression<Func<TEntity, bool>> predicate, 
@@ -27,7 +25,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.SeedWork
             Expression<Func<TEntity, bool>> predicate = null,
             string[] includeProperties = null, 
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, 
-            int? skip = 0, int? take = 0);
+            int? skip = null, int? take = null);
 
         Task Add(TEntity entity);
         Task AddRange(IEnumerable<TEntity> entityCollection);
