@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shoppingendly.Services.Products.Application\Shoppingendly.Services.Products.Application.csproj" />
+    <ProjectReference Include="..\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" />
     <ProjectReference Include="..\Shoppingendly.Services.Products.Infrastructure\Shoppingendly.Services.Products.Infrastructure.csproj" />
   </ItemGroup>
 
