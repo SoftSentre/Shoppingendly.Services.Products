@@ -17,11 +17,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private HashSet<Product> _products;
+        private int _roleId;
         
         public string Name { get; private set; }
         public string Email { get; private set; }
-        public int RoleId { get; private set; }
-        
+
         // Navigation property
         public Role Role { get; private set; }
         

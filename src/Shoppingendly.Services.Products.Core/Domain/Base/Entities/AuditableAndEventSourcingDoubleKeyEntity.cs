@@ -9,7 +9,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
     {
         private List<IDomainEvent> _domainEvents;
 
-        public DateTime UpdatedDate { get; private set; }
+        public DateTime? UpdatedDate { get; private set; }
         public DateTime CreatedAt { get; }
 
         public IEnumerable<IDomainEvent> DomainEvents
