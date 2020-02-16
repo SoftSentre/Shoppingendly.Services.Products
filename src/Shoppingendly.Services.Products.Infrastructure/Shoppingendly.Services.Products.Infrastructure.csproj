@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" />
+        <ProjectReference Include="..\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
 </Project>
