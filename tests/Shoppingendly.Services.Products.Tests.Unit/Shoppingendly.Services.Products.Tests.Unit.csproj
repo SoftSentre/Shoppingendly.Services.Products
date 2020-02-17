@@ -18,7 +18,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.Application\Shoppingendly.Services.Products.Application.csproj" />
     <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" />
+    <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.Infrastructure\Shoppingendly.Services.Products.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.WebApi\Shoppingendly.Services.Products.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Repositories" />
   </ItemGroup>
 
 </Project>
