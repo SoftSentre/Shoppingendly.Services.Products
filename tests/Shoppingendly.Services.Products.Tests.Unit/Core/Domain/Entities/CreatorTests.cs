@@ -151,6 +151,22 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             action.Should().Throw<InvalidCreatorEmailException>()
                 .WithMessage("Invalid email has been provided.");
         }
+        
+        [Fact]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsLongerThan100Characters()
+        {
+            // Arrange
+            const string email =
+                "ITryToCheckIfIProvideEmailWithMaximumNumberOfCharactersThenSetEmailMethodThrownAppropriateExceptionAn";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Creator email can not be longer than 100 characters.");
+        }
 
         [Fact]
         public void CheckIfSetCreatorRoleDoNotThrowExceptionWhenCorrectRoleHasBeenProvided()

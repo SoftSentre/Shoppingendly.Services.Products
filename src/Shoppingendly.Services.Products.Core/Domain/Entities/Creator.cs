@@ -17,10 +17,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private HashSet<Product> _products;
+        private int _roleId;
         
         public string Name { get; private set; }
         public string Email { get; private set; }
-        
+
         // Navigation property
         public Role Role { get; private set; }
         
@@ -89,6 +90,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         {
             if (email.IsEmpty())
                 throw new InvalidCreatorEmailException("Creator email can not be empty.", email);
+            if (email.IsLongerThan(100))
+                throw new InvalidCreatorEmailException("Creator email can not be longer than 100 characters.", email);
             if (!EmailRegex.IsMatch(email))
                 throw new InvalidCreatorEmailException("Invalid email has been provided.", email);
 
