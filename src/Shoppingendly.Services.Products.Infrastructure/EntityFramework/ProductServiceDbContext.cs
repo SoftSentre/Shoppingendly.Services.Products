@@ -8,7 +8,7 @@ using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Types;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 
-namespace Shoppingendly.Services.Products.Infrastructure
+namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
     public class ProductServiceDbContext : DbContext
     {
