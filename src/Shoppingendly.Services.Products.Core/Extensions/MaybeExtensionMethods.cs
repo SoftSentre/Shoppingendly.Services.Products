@@ -41,6 +41,7 @@ namespace Shoppingendly.Services.Products.Core.Extensions
             where T : class
         {
             var result = await maybe;
+            
             if (result.HasValue)
             {
                 return result.Value;

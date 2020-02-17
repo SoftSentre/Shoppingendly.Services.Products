@@ -11,10 +11,10 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
         public DateTime UpdatedDate { get; private set; }
         public DateTime CreatedAt { get; }
 
-        public IReadOnlyCollection<IDomainEvent> DomainEvents
+        public IEnumerable<IDomainEvent> DomainEvents
             => _domainEvents.AsReadOnly();
 
-        protected AuditableAndEventSourcingEntity()
+        protected AuditableAndEventSourcingEntity() 
         {
             CreatedAt = DateTime.UtcNow;
         }
@@ -24,7 +24,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
-        public List<IDomainEvent> GetUncommitted()
+        public IEnumerable<IDomainEvent> GetUncommitted()
         {
             return _domainEvents ??= new List<IDomainEvent>();
         }

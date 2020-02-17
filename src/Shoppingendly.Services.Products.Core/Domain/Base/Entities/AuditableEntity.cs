@@ -6,6 +6,10 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
     {
         public DateTime UpdatedDate { get; private set; }
         public DateTime CreatedAt { get; }
+
+        protected AuditableEntity()
+        {
+        }
         
         protected AuditableEntity(TId id) : base(id)
         {

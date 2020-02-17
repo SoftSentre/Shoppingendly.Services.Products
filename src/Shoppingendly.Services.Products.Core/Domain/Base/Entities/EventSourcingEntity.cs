@@ -7,12 +7,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.Base.Entities
     {
         private List<IDomainEvent> _domainEvents;
         
-        public IReadOnlyCollection<IDomainEvent> DomainEvents 
+        public IEnumerable<IDomainEvent> DomainEvents 
             => _domainEvents.AsReadOnly();
 
         protected EventSourcingEntity(TId id) : base(id) { }
         
-        public List<IDomainEvent> GetUncommitted()
+        public IEnumerable<IDomainEvent> GetUncommitted()
         {
             return _domainEvents ??= new List<IDomainEvent>();
         }

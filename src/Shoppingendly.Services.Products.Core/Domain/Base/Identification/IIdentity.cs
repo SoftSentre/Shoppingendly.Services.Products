@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Shoppingendly.Services.Products.Core.Domain.Base.Identification
+﻿namespace Shoppingendly.Services.Products.Core.Domain.Base.Identification
 {
-    public interface IIdentity
+    public interface IIdentity<out TId>
     {
-        Guid Id { get; }
+        TId Id { get; }
     }
 }

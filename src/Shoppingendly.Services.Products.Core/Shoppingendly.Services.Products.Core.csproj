@@ -2,25 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>8.0</LangVersion>
     <RootNamespace>Shoppingendly.Services.Products.Core</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\Products\BusinessRules" />
-    <Folder Include="Domain\Products\Events" />
-    <Folder Include="Domain\Products\Services" />
-    <Folder Include="Domain\ShoppingList\Aggregates" />
-    <Folder Include="Domain\ShoppingList\BusinessRules" />
-    <Folder Include="Domain\ShoppingList\Entities" />
-    <Folder Include="Domain\ShoppingList\Events" />
-    <Folder Include="Domain\ShoppingList\Services" />
-    <Folder Include="Domain\ShoppingList\ValueObjects" />
-    <Folder Include="Domain\Users\Aggregates" />
-    <Folder Include="Domain\Users\BusinessRules" />
-    <Folder Include="Domain\Users\Entities" />
-    <Folder Include="Domain\Users\Events" />
-    <Folder Include="Domain\Users\Services" />
-    <Folder Include="Domain\Users\ValueObjects" />
-  </ItemGroup>
 
 </Project>
