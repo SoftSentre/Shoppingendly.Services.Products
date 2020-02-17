@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
@@ -40,7 +41,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         {
             Name = ValidateName(name);
             Email = ValidateEmail(email);
-            Role = role;
+            Role = ValidateRole(role);
             AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, email, role));
         }
 
@@ -64,6 +65,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 
         public void SetRole(Role role)
         {
+            ValidateRole(role);
+            
             Role = role;
             SetUpdatedDate();
             AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, role));
@@ -96,6 +99,14 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
                 throw new InvalidCreatorEmailException("Invalid email has been provided.", email);
 
             return email;
+        }
+
+        private static Role ValidateRole(Role role)
+        {
+            if (role.Name.IsLongerThan(50))
+                throw new InvalidCreatorRoleException("Creator role name can not be longer than 50 characters.", role);
+
+            return role;
         }
     }
 }
