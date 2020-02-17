@@ -24,8 +24,4 @@
     <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.WebApi\Shoppingendly.Services.Products.WebApi.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Infrastructure\Repositories" />
-  </ItemGroup>
-
 </Project>
