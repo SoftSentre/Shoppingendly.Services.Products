@@ -2,7 +2,7 @@
 {
     public class InvalidCreatorNameException : ShoppingendlyException
     {
-        public InvalidCreatorNameException(string message, params object[] args) : base(message, args)
+        public InvalidCreatorNameException(string message) : base(message)
         {
         }
     }

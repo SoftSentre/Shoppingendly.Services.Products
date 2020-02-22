@@ -94,7 +94,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             if (product.HasNoValue)
             {
                 throw new EmptyProductProvidedException(
-                    "Unable to mutate product state, because provided value is empty.", product);
+                    "Unable to mutate product state, because provided value is empty.");
             }
         }
     }

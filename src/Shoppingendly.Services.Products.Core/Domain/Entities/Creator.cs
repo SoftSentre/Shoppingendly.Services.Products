@@ -80,11 +80,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateName(string name)
         {
             if (name.IsEmpty())
-                throw new InvalidCreatorNameException("Creator name can not be empty.", name);
+                throw new InvalidCreatorNameException("Creator name can not be empty.");
             if (name.IsLongerThan(50))
-                throw new InvalidCreatorNameException("Creator name can not be longer than 50 characters.", name);
+                throw new InvalidCreatorNameException("Creator name can not be longer than 50 characters.");
             if (name.IsShorterThan(3))
-                throw new InvalidCreatorNameException("Creator name can not be shorter than 3 characters.", name);
+                throw new InvalidCreatorNameException("Creator name can not be shorter than 3 characters.");
 
             return name;
         }
@@ -92,11 +92,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateEmail(string email)
         {
             if (email.IsEmpty())
-                throw new InvalidCreatorEmailException("Creator email can not be empty.", email);
+                throw new InvalidCreatorEmailException("Creator email can not be empty.");
             if (email.IsLongerThan(100))
-                throw new InvalidCreatorEmailException("Creator email can not be longer than 100 characters.", email);
+                throw new InvalidCreatorEmailException("Creator email can not be longer than 100 characters.");
             if (!EmailRegex.IsMatch(email))
-                throw new InvalidCreatorEmailException("Invalid email has been provided.", email);
+                throw new InvalidCreatorEmailException("Invalid email has been provided.");
 
             return email;
         }
@@ -104,7 +104,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         private static Role ValidateRole(Role role)
         {
             if (role.Name.IsLongerThan(50))
-                throw new InvalidCreatorRoleException("Creator role name can not be longer than 50 characters.", role);
+                throw new InvalidCreatorRoleException("Creator role name can not be longer than 50 characters.");
 
             return role;
         }

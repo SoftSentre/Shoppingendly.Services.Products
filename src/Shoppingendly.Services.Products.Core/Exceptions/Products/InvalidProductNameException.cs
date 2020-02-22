@@ -2,7 +2,7 @@
 {
     public class InvalidProductNameException : ShoppingendlyException
     {
-        public InvalidProductNameException(string message, params object[] args) : base(message, args)
+        public InvalidProductNameException(string message) : base(message)
         {
         }
     }

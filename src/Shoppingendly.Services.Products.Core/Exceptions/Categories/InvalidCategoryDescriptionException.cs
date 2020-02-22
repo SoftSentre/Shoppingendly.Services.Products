@@ -2,7 +2,7 @@
 {
     public class InvalidCategoryDescriptionException : ShoppingendlyException
     {
-        public InvalidCategoryDescriptionException(string message, params object[] args) : base(message, args)
+        public InvalidCategoryDescriptionException(string message) : base(message)
         {
         }
     }

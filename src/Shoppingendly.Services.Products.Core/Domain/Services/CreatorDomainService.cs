@@ -38,7 +38,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             if (creator.HasNoValue)
             {
                 throw new EmptyCreatorProvidedException(
-                    "Unable to mutate creator state, because provided value is empty.", creator);
+                    "Unable to mutate creator state, because provided value is empty.");
             }
         }
     }
