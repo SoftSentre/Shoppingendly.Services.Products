@@ -73,7 +73,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 
             if (assignedCategory.HasValue)
                 throw new ProductIsAlreadyAssignedToCategoryException(
-                    $"Product already assigned to category with id: {categoryId.Id}.", this);
+                    $"Product already assigned to category with id: {categoryId.Id}.");
 
             var newAssignedCategory = new ProductCategory(Id, categoryId);
             _productCategories.Add(newAssignedCategory);
@@ -88,7 +88,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 
             if (assignedCategory.HasNoValue)
                 throw new ProductWithAssignedCategoryNotFoundException(
-                    $"Product with assigned category with id: {categoryId.Id} not found.", this);
+                    $"Product with assigned category with id: {categoryId.Id} not found.");
 
             _productCategories.Remove(assignedCategory.Value);
             SetUpdatedDate();
@@ -100,7 +100,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         {
             if (!_productCategories.Any())
                 throw new AnyProductWithAssignedCategoryNotFoundException(
-                    "Unable to find any product with assigned category.", this);
+                    "Unable to find any product with assigned category.");
 
             var categoriesIds = _productCategories.Select(pc => pc.SecondKey).ToList();
             _productCategories.Clear();
@@ -126,11 +126,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         private static string ValidateName(string name)
         {
             if (name.IsEmpty())
-                throw new InvalidProductNameException("Product name can not be empty.", name);
+                throw new InvalidProductNameException("Product name can not be empty.");
             if (name.IsLongerThan(30))
-                throw new InvalidProductNameException("Product name can not be longer than 30 characters.", name);
+                throw new InvalidProductNameException("Product name can not be longer than 30 characters.");
             if (name.IsShorterThan(4))
-                throw new InvalidProductNameException("Product name can not be shorter than 4 characters.", name);
+                throw new InvalidProductNameException("Product name can not be shorter than 4 characters.");
 
             return name;
         }
@@ -138,13 +138,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         private static string ValidateProducer(string producer)
         {
             if (producer.IsEmpty())
-                throw new InvalidProductProducerException("Product producer can not be empty.", producer);
+                throw new InvalidProductProducerException("Product producer can not be empty.");
             if (producer.IsLongerThan(50))
-                throw new InvalidProductProducerException("Product producer can not be longer than 50 characters.",
-                    producer);
+                throw new InvalidProductProducerException("Product producer can not be longer than 50 characters.");
             if (producer.IsShorterThan(2))
-                throw new InvalidProductProducerException("Product producer can not be shorter than 2 characters.",
-                    producer);
+                throw new InvalidProductProducerException("Product producer can not be shorter than 2 characters.");
 
             return producer;
         }

@@ -43,7 +43,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             if (category.HasNoValue)
             {
                 throw new EmptyCategoryProvidedException(
-                    "Unable to mutate category state, because provided value is empty.", category);
+                    "Unable to mutate category state, because provided value is empty.");
             }
         }
     }

@@ -2,7 +2,7 @@
 {
     public class InvalidCreatorEmailException : ShoppingendlyException
     {
-        public InvalidCreatorEmailException(string message, params object[] args) : base(message, args)
+        public InvalidCreatorEmailException(string message) : base(message)
         {
         }
     }

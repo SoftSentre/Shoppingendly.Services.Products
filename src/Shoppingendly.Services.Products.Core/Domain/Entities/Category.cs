@@ -77,11 +77,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateCategoryName(string name)
         {
             if (name.IsEmpty())
-                throw new InvalidCategoryNameException("Category name can not be empty.", name);
+                throw new InvalidCategoryNameException("Category name can not be empty.");
             if (name.IsLongerThan(30))
-                throw new InvalidCategoryNameException("Category name can not be longer than 30 characters.", name);
+                throw new InvalidCategoryNameException("Category name can not be longer than 30 characters.");
             if (name.IsShorterThan(4))
-                throw new InvalidCategoryNameException("Category name can not be shorter than 4 characters.", name);
+                throw new InvalidCategoryNameException("Category name can not be shorter than 4 characters.");
 
             return name;
         }
@@ -90,10 +90,10 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         {
             if (description.IsShorterThan(20))
                 throw new InvalidCategoryDescriptionException(
-                    "Category description can not be shorter than 20 characters.", description);
+                    "Category description can not be shorter than 20 characters.");
             if (description.IsLongerThan(4000))
                 throw new InvalidCategoryDescriptionException(
-                    "Category description can not be longer than 4000 characters.", description);
+                    "Category description can not be longer than 4000 characters.");
 
             return description;
         }

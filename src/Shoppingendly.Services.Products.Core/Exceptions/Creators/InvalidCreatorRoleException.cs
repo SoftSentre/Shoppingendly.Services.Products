@@ -2,7 +2,7 @@
 {
     public class InvalidCreatorRoleException : ShoppingendlyException
     {
-        public InvalidCreatorRoleException(string message, params object[] args) : base(message, args)
+        public InvalidCreatorRoleException(string message) : base(message)
         {
         }
     }
