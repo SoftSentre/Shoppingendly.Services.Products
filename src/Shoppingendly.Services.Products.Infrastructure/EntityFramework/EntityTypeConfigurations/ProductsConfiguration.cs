@@ -33,6 +33,22 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
                 .HasColumnName("CreatedDate")
                 .IsRequired();
 
+            productsConfiguration.OwnsOne(
+                p => p.Picture, 
+                pi =>
+                {
+                    pi.Property(pp => pp.Name)
+                        .HasColumnName("ProductPictureName")
+                        .HasMaxLength(200);
+
+                    pi.Property(pp => pp.Url)
+                        .HasColumnName("ProductPictureUrl")
+                        .HasMaxLength(500);
+
+                    pi.Property(pp => pp.IsEmpty)
+                        .HasColumnName("IsProductPictureEmpty");
+                });
+
             productsConfiguration.HasMany(p => p.ProductCategories)
                 .WithOne(pc => pc.Product)
                 .HasForeignKey(pc => pc.FirstKey);

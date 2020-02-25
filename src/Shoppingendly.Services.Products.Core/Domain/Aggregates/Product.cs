@@ -16,6 +16,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         private HashSet<ProductCategory> _productCategories = new HashSet<ProductCategory>();
 
         public CreatorId CreatorId { get; }
+        public Picture Picture { get; private set; }
         public string Name { get; private set; }
         public string Producer { get; private set; }
 
@@ -36,9 +37,19 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         public Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)
         {
             CreatorId = creatorId;
+            Picture = Picture.Empty;
             Name = ValidateName(name);
             Producer = ValidateProducer(producer);
-            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer));
+            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, Picture.Empty));
+        }
+
+        public Product(ProductId id, CreatorId creatorId, Picture picture, string name, string producer) : base(id)
+        {
+            CreatorId = creatorId;
+            Picture = picture;
+            Name = ValidateName(name);
+            Producer = ValidateProducer(producer);
+            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, picture));
         }
 
         public bool SetName(string name)
@@ -65,6 +76,29 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             SetUpdatedDate();
             AddDomainEvent(new ProductProducerChangedDomainEvent(Id, producer));
             return true;
+        }
+
+        public bool AddOrChangePicture(Maybe<Picture> picture)
+        {
+            var validatePicture = ValidatePicture(picture);
+
+            if (Picture.Equals(validatePicture))
+                return false;
+            
+            Picture = validatePicture;
+            SetUpdatedDate();
+            AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, validatePicture));
+            return true;
+        }
+
+        public void RemovePicture()
+        {
+            if (Picture.IsEmpty)
+                throw new CanNotRemoveEmptyPictureException("Unable to remove picture, because it's already empty.");
+            
+            Picture = Picture.Empty;
+            SetUpdatedDate();
+            AddDomainEvent(new PictureRemovedDomainEvent(Id));
         }
 
         public void AssignCategory(CategoryId categoryId)
@@ -147,6 +181,14 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             return producer;
         }
 
+        private static Picture ValidatePicture(Maybe<Picture> picture)
+        {
+            if (picture.HasNoValue || picture.Value.IsEmpty)
+                throw new PictureCanNotBeEmptyException("Picture can not be empty.");
+
+            return picture.Value;
+        }
+        
         private Maybe<ProductCategory> GetProductCategory(CategoryId categoryId)
         {
             var assignedCategory = _productCategories.FirstOrDefault(pr => pr.SecondKey.Equals(categoryId));
