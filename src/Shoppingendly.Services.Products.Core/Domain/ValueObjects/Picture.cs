@@ -27,9 +27,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
         private static string ValidatePictureName(string name)
         {
             if (name.IsEmpty())
-                throw new PictureCanNotBeEmptyException("Picture name can not be empty.");
+                throw new PictureNameCanNotBeEmptyException("Picture name can not be empty.");
             if (name.IsLongerThan(200))
-                throw new PictureCanNotBeEmptyException("Picture name can not be longer than 200 characters.");
+                throw new PictureNameIsTooLongException("Picture name can not be longer than 200 characters.");
 
             return name;
         }
@@ -37,9 +37,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
         private static string ValidatePictureUrl(string url)
         {
             if (url.IsEmpty())
-                throw new PictureCanNotBeEmptyException("Picture url can not be empty.");
+                throw new PictureUrlCanNotBeEmptyException("Picture url can not be empty.");
+            if (url.Contains(' '))
+                throw new PictureUrlCanNotHaveWhiteSpacesException("Picture url can not have whitespaces.");
             if (url.IsLongerThan(500))
-                throw new PictureCanNotBeEmptyException("Picture url can not be longer than 500 characters.");
+                throw new PictureUrlIsTooLongException("Picture url can not be longer than 500 characters.");
 
             return url;
         }
