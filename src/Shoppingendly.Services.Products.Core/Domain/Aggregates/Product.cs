@@ -82,7 +82,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         {
             var validatePicture = ValidatePicture(picture);
 
-            if (Picture.Equals(validatePicture))
+            if (!Picture.IsEmpty && Picture.Equals(validatePicture))
                 return false;
             
             Picture = validatePicture;
@@ -94,7 +94,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         public void RemovePicture()
         {
             if (Picture.IsEmpty)
-                throw new CanNotRemoveEmptyPictureException("Unable to remove picture, because it's already empty.");
+                throw new CanNotRemoveEmptyPictureException(
+                    "Unable to remove picture, because it's already empty.");
             
             Picture = Picture.Empty;
             SetUpdatedDate();

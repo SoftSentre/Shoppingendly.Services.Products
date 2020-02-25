@@ -257,7 +257,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             assignedCategory.Value.FirstKey.Should().Be(product.Id);
             assignedCategory.Value.SecondKey.Should().Be(categoryId);
         }
-        
+
         [Fact]
         public void CheckIfAssignCategoryMethodDoNotThrowExceptionAndAddCorrectItemToList()
         {
@@ -268,7 +268,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
 
             // Act
             Action action = () => product.AssignCategory(categoryId);
-            
+
             // Assert
             action.Should().NotThrow();
             product.ProductCategories.Should().NotBeEmpty();
@@ -286,7 +286,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             var newProductCategory = new ProductCategory(product.Id, categoryId);
             product.ProductCategories.Add(newProductCategory);
-            
+
             // Act
             Action action = () => product.AssignCategory(categoryId);
 
@@ -294,7 +294,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             action.Should().Throw<ProductIsAlreadyAssignedToCategoryException>()
                 .WithMessage($"Product already assigned to category with id: {categoryId.Id}.");
         }
-        
+
         [Fact]
         public void CheckIfDeallocateCategoryMethodDoNotThrowExceptionAndRemoveCorrectItemToList()
         {
@@ -302,10 +302,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             product.AssignCategory(categoryId);
-            
+
             // Act
             Action action = () => product.DeallocateCategory(categoryId);
-            
+
             // Assert
             action.Should().NotThrow();
             product.ProductCategories.Should().BeEmpty();
@@ -326,7 +326,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             action.Should().Throw<ProductWithAssignedCategoryNotFoundException>()
                 .WithMessage($"Product with assigned category with id: {categoryId.Id} not found.");
         }
-        
+
         [Fact]
         public void CheckIfDeallocateFromAllCategoriesMethodDoNotThrowExceptionAndRemoveAllItemsFromList()
         {
@@ -335,10 +335,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
             var assignedCategoriesCount = product.ProductCategories.Count;
-            
+
             // Act
             Action action = () => product.DeallocateAllCategories();
-            
+
             // Assert
             action.Should().NotThrow();
             assignedCategoriesCount.Should().Be(2);
@@ -367,7 +367,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
-            
+
             // Act
             Func<Maybe<IEnumerable<ProductCategory>>> func = () => product.GetAllAssignedCategories();
 
@@ -375,6 +375,68 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             func.Should().NotThrow();
             var assignedCategories = func.Invoke();
             assignedCategories.Value.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangePictureMethodAssignValidObjectWhenInputIsCorrectAndDoNotThrown()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var picture = Picture.Create("ExamplePictureName", "ExamplePictureUrl");
+
+            // Act
+            Func<bool> function = () => product.AddOrChangePicture(picture);
+            var testResult = function.Invoke();
+
+            // Assert
+            function.Should().NotThrow();
+            product.Picture.Should().Be(picture);
+            testResult.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangePictureThrowAppropriateExceptionWhenPictureIsEmpty()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var picture = Picture.Empty;
+
+            // Act
+            Func<bool> function = () => product.AddOrChangePicture(picture);
+
+            // Assert
+            function.Should().Throw<PictureCanNotBeEmptyException>().WithMessage("Picture can not be empty.");
+        }
+
+        [Fact]
+        public void CheckIfIsPossibleToRemovePictureIfItIsEmpty()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Action action = () => product.RemovePicture();
+
+            // Assert
+            action.Should().Throw<CanNotRemoveEmptyPictureException>()
+                .WithMessage("Unable to remove picture, because it's already empty.");
+        }
+
+        [Fact]
+        public void CheckIfRemovePictureMethodCanDeleteThePictureFromProductAndDoNotThrown()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(),
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Action action = () => product.RemovePicture();
+
+            // Assert
+            action.Should().NotThrow();
+            product.Picture.Name.Should().Be(null);
+            product.Picture.Url.Should().Be(null);
+            product.Picture.IsEmpty.Should().BeTrue();
         }
 
         #endregion
@@ -438,7 +500,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             productProducerChanged?.ProductId.Should().Be(product.Id);
             productProducerChanged?.ProductProducer.Should().Be(product.Producer);
         }
-        
+
         [Fact]
         public void CheckIfAssignCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
@@ -458,7 +520,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             productAssignedToCategory?.ProductId.Should().Be(product.Id);
             productAssignedToCategory?.CategoryId.Should().Be(categoryId);
         }
-        
+
         [Fact]
         public void CheckIfDeallocateCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
@@ -466,7 +528,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             product.AssignCategory(categoryId);
-            
+
             // Act
             product.DeallocateCategory(categoryId);
             var productDeallocatedFromCategory =
@@ -479,7 +541,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             productDeallocatedFromCategory?.ProductId.Should().Be(product.Id);
             productDeallocatedFromCategory?.CategoryId.Should().Be(categoryId);
         }
-        
+
         [Fact]
         public void CheckIfDeallocateAllCategoriesMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
@@ -487,7 +549,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
-            
+
             // Act
             product.DeallocateAllCategories();
             var productDeallocatedFromAllCategories =
@@ -499,6 +561,44 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             productDeallocatedFromAllCategories.Should().NotBeNull();
             productDeallocatedFromAllCategories?.ProductId.Should().Be(product.Id);
             productDeallocatedFromAllCategories?.CategoriesIds.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            product.AddOrChangePicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
+            var productNameChangedDomainEvent =
+                product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent;
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productNameChangedDomainEvent.Should().BeOfType<PictureAddedOrChangedDomainEvent>();
+            productNameChangedDomainEvent.Should().NotBeNull();
+            productNameChangedDomainEvent?.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent?.Picture.Should().Be(product.Picture);
+        }
+
+        [Fact]
+        public void CheckIfRemovePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(),
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            product.RemovePicture();
+            var productNameChangedDomainEvent =
+                product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent;
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productNameChangedDomainEvent.Should().BeOfType<PictureRemovedDomainEvent>();
+            productNameChangedDomainEvent.Should().NotBeNull();
+            productNameChangedDomainEvent?.ProductId.Should().Be(product.Id);
         }
 
         [Fact]
