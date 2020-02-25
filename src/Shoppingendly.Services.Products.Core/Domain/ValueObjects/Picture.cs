@@ -13,23 +13,37 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
 
         public bool IsEmpty => _isEmpty = Name.IsEmpty() || Url.IsEmpty();
 
-        protected Picture()
+        private Picture()
         {
             // Required for EF
         }
 
         public Picture(string name, string url)
         {
-            if (name.IsEmpty())
-                throw new PictureCanNotBeEmptyException("Avatar name can not be empty.");
-            
-            if (url.IsEmpty())
-                throw new PictureCanNotBeEmptyException("Avatar Url can not be empty.");
-            
-            Name = name;
-            Url = url;
+            Name = ValidatePictureName(name);
+            Url = ValidatePictureUrl(url);
         }
 
+        private static string ValidatePictureName(string name)
+        {
+            if (name.IsEmpty())
+                throw new PictureCanNotBeEmptyException("Picture name can not be empty.");
+            if (name.IsLongerThan(200))
+                throw new PictureCanNotBeEmptyException("Picture name can not be longer than 200 characters.");
+
+            return name;
+        }
+
+        private static string ValidatePictureUrl(string url)
+        {
+            if (url.IsEmpty())
+                throw new PictureCanNotBeEmptyException("Picture url can not be empty.");
+            if (url.IsLongerThan(500))
+                throw new PictureCanNotBeEmptyException("Picture url can not be longer than 500 characters.");
+
+            return url;
+        }
+        
         public static Picture Empty => new Picture();
 
         public static Picture Create(string name, string url)
@@ -39,12 +53,16 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
 
         protected override bool EqualsCore(Picture other)
         {
-            return Name.Equals(other.Name);
+            return Name.Equals(other.Name) && Url.Equals(other.Url);
         }
 
         protected override int GetHashCodeCore()
         {
-            return Name.GetHashCode();
+            var hash = 13;
+            hash = hash * 7 + Name.GetHashCode();
+            hash = hash * 7 + Url.GetHashCode();
+            
+            return hash;
         }
     }
 }

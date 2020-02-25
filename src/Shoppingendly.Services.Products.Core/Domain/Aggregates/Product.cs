@@ -46,7 +46,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         public Product(ProductId id, CreatorId creatorId, Picture picture, string name, string producer) : base(id)
         {
             CreatorId = creatorId;
-            Picture = ValidatePicture(picture);
+            Picture = picture;
             Name = ValidateName(name);
             Producer = ValidateProducer(producer);
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, picture));
@@ -80,14 +80,14 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 
         public bool AddOrChangePicture(Maybe<Picture> picture)
         {
-            ValidatePicture(picture);
+            var validatePicture = ValidatePicture(picture);
 
-            if (Picture.Equals(picture.Value))
+            if (Picture.Equals(validatePicture))
                 return false;
             
-            Picture = picture.Value;
+            Picture = validatePicture;
             SetUpdatedDate();
-            AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, picture.Value));
+            AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, validatePicture));
             return true;
         }
 
