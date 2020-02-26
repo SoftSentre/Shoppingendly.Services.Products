@@ -47,6 +47,20 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             return newProduct;
         }
 
+        public bool AddOrChangeProductPicture(Maybe<Product> product, Picture picture)
+        {
+            IfProductIsEmptyThenThrow(product);
+            var isPictureChanged = product.Value.AddOrChangePicture(picture);
+
+            return isPictureChanged;
+        }
+
+        public void RemovePictureFromProduct(Maybe<Product> product)
+        {
+            IfProductIsEmptyThenThrow(product);
+            product.Value.RemovePicture();
+        }
+
         public bool ChangeProductName(Maybe<Product> product, string name)
         {
             IfProductIsEmptyThenThrow(product);
