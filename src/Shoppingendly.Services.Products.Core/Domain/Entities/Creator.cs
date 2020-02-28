@@ -92,6 +92,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         {
             if (email.IsEmpty())
                 throw new InvalidCreatorEmailException("Creator email can not be empty.");
+            if (email.IsShorterThan(8))
+                throw new InvalidCreatorEmailException("Creator email can not be shorter than 6 characters.");
             if (email.IsLongerThan(100))
                 throw new InvalidCreatorEmailException("Creator email can not be longer than 100 characters.");
             if (!EmailRegex.IsMatch(email))
