@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -14,17 +15,17 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
 
             creatorsConfiguration.Property(c => c.Name)
                 .HasColumnName("CreatorName")
-                .HasMaxLength(50)
-                .IsRequired();
+                .HasMaxLength(CreatorNameMaxLength)
+                .IsRequired(IsCreatorNameRequired);
             
             creatorsConfiguration.Property(c => c.Email)
                 .HasColumnName("CreatorEmail")
-                .HasMaxLength(100)
+                .HasMaxLength(CreatorEmailMaxLength)
                 .IsRequired();
 
             creatorsConfiguration.Property<int>("_roleId")
                 .HasColumnName("CreatorRoleId")
-                .IsRequired();
+                .IsRequired(IsCreatorEmailRequired);
 
             creatorsConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");

@@ -2,6 +2,5 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
 {
     public class DbContextTests
     {
-        
     }
 }

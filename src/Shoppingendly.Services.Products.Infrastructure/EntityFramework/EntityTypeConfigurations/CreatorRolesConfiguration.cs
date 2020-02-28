@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -18,7 +19,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
                 .IsRequired();
 
             creatorRolesConfiguration.Property(cr => cr.Name)
-                .HasMaxLength(200)
+                .HasMaxLength(RoleNameMaxLength)
                 .IsRequired();
         }
     }

@@ -9,34 +9,34 @@ namespace Shoppingendly.Services.Products.Core.Validation
     public static class GlobalValidationVariables
     {
         // Product
-        public static readonly int ProductNameMinLength = 4;
-        public static readonly int ProductNameMaxLength = 30;
-        public static readonly bool IsProductNameRequired = true;
-        public static readonly int ProductProducerMinLength = 2;
-        public static readonly int ProductProducerMaxLength = 50;
-        public static readonly bool IsProductProducerRequired = true;
-        
+        public const int ProductNameMinLength = 4;
+        public const int ProductNameMaxLength = 30;
+        public const bool IsProductNameRequired = true;
+        public const int ProductProducerMinLength = 2;
+        public const int ProductProducerMaxLength = 50;
+        public const bool IsProductProducerRequired = true;
+
         // Creator
-        public static readonly int CreatorNameMinLength = 3;
-        public static readonly int CreatorNameMaxLength = 50;
-        public static readonly bool IsCreatorNameRequired = true;
-        public static readonly int CreatorEmailMinLength = 8;
-        public static readonly int CreatorEmailMaxLength = 100;
-        public static readonly bool IsCreatorEmailRequired = true;
-        
+        public const int CreatorNameMinLength = 3;
+        public const int CreatorNameMaxLength = 50;
+        public const bool IsCreatorNameRequired = true;
+        public const int CreatorEmailMinLength = 8;
+        public const int CreatorEmailMaxLength = 100;
+        public const bool IsCreatorEmailRequired = true;
+
         // Category
-        public static readonly int CategoryNameMinLength = 4;
-        public static readonly int CategoryNameMaxLength = 30;
-        public static readonly bool IsCategoryNameRequired = true;
-        public static readonly int CategoryDescriptionMinLength = 20;
-        public static readonly int CategoryDescriptionMaxLength = 4000;
-        public static readonly bool IsCreatorDescriptionRequired = false;
+        public const int CategoryNameMinLength = 4;
+        public const int CategoryNameMaxLength = 30;
+        public const bool IsCategoryNameRequired = true;
+        public const int CategoryDescriptionMinLength = 20;
+        public const int CategoryDescriptionMaxLength = 4000;
+        public const bool IsCategoryDescriptionRequired = false;
 
         // Role
-        public static readonly int RoleNameMaxLength = 50;
-        
+        public const int RoleNameMaxLength = 50;
+
         // Picture
-        public static readonly int PictureNameMaxLength = 200;
-        public static readonly int PictureUrlMaxLength = 500;
+        public const int PictureNameMaxLength = 200;
+        public const int PictureUrlMaxLength = 500;
     }
 }
