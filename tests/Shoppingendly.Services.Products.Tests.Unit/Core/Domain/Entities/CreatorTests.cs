@@ -153,7 +153,22 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
         
         [Fact]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsLongerThan100Characters()
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooShort()
+        {
+            // Arrange
+            const string email = "j@jc.de";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Creator email can not be shorter than 8 characters.");
+        }
+        
+        [Fact]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooLong()
         {
             // Arrange
             const string email =

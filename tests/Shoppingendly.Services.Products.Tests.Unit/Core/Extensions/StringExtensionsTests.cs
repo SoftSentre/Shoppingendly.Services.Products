@@ -21,6 +21,20 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
             isEmpty.Should().BeTrue();
         }
 
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(500)]
+        public void CheckIfCreateStringWithSpecificNumberOfCharactersMethodWorkingProperly(int numberOfCharacters)
+        {
+            // act
+            var testResult = StringExtensionMethods.CreateStringWithSpecificNumberOfCharacters(numberOfCharacters);
+            
+            // assert
+            testResult.Should().NotBeEmpty();
+            testResult.Should().HaveLength(numberOfCharacters);
+        }
+
         [Fact]
         public void CheckIfIsEmptyMethodReturnFalseIfValueIsNotNullOrNotEmpty()
         {

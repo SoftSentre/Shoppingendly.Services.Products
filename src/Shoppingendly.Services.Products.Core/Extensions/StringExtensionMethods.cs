@@ -9,6 +9,9 @@ namespace Shoppingendly.Services.Products.Core.Extensions
 
         public static bool IsNotEmpty(this string target) => !target.IsEmpty();
 
+        public static string CreateStringWithSpecificNumberOfCharacters(int length) 
+            => new string('*', length);
+        
         public static string TrimToUpper(this string value)
         {
             return value.OrEmpty().Trim().ToUpperInvariant();

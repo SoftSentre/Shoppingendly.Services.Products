@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -14,12 +15,13 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
 
             categoriesConfiguration.Property(c => c.Name)
                 .HasColumnName("CategoryName")
-                .HasMaxLength(30)
+                .HasMaxLength(CategoryNameMaxLength)
                 .IsRequired();
 
             categoriesConfiguration.Property(c => c.Description)
                 .HasColumnName("CategoryDescription")
-                .HasMaxLength(4000);
+                .HasMaxLength(CategoryDescriptionMaxLength)
+                .IsRequired(IsCategoryDescriptionRequired);
             
             categoriesConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
