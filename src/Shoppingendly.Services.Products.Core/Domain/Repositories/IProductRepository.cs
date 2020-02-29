@@ -8,9 +8,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Repositories
     public interface IProductRepository 
     {
         Task<Maybe<Product>> GetByIdAsync(ProductId productId);
-        Task<Maybe<Product>> GetByNameAsync(ProductId productId);
-        Task<Maybe<Product>> GetByNameWithIncludesAsync(ProductId productId);
-        Task<bool> AddAsync(Product product);
+        Task<Maybe<Product>> GetByNameAsync(string name);
+        Task<Maybe<Product>> GetByNameWithIncludesAsync(string name);
+        Task AddAsync(Product product);
         void Update(Product product);
         void Delete(Product product);
     }

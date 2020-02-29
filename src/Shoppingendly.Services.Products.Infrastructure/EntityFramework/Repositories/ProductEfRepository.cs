@@ -1,4 +1,6 @@
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -17,34 +19,35 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.Reposit
                 .IfEmptyThenThrowAndReturnValue();
         }
 
-        public Task<Maybe<Product>> GetByIdAsync(ProductId productId)
+        public async Task<Maybe<Product>> GetByIdAsync(ProductId productId)
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(productId));
         }
 
-        public Task<Maybe<Product>> GetByNameAsync(ProductId productId)
+        public async Task<Maybe<Product>> GetByNameAsync(string name)
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.Name == name);
         }
 
-        public Task<Maybe<Product>> GetByNameWithIncludesAsync(ProductId productId)
+        public async Task<Maybe<Product>> GetByNameWithIncludesAsync(string name)
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Products.Include(p => p.ProductCategories)
+                .FirstOrDefaultAsync(p => p.Name == name);
         }
 
-        public Task<bool> AddAsync(Product product)
+        public async Task AddAsync(Product product)
         {
-            throw new System.NotImplementedException();
+            await _productServiceDbContext.Products.AddAsync(product);
         }
 
         public void Update(Product product)
         {
-            throw new System.NotImplementedException();
+            _productServiceDbContext.Update(product);
         }
 
         public void Delete(Product product)
         {
-            throw new System.NotImplementedException();
+            _productServiceDbContext.Remove(product);
         }
     }
 }

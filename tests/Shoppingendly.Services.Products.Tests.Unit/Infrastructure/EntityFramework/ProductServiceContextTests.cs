@@ -1,6 +1,6 @@
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework
 {
-    public class UnitOfWorkTests
+    public class ProductServiceContextTests
     {
         
     }
