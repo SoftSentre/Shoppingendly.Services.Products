@@ -28,7 +28,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.Reposit
             throw new System.NotImplementedException();
         }
 
-        public Task<Maybe<Category>> GetByNameWitIncludesAsync(string name)
+        public Task<Maybe<Category>> GetByNameWithIncludesAsync(string name)
         {
             throw new System.NotImplementedException();
         }

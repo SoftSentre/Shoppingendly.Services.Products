@@ -97,7 +97,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             const string creatorId = nameof(Product.CreatorId);
             const string updatedDate = nameof(Product.UpdatedDate);
             const string createdDate = nameof(Product.CreatedAt);
-
             var creatorIdDbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(creatorId);
             var updatedDateDbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(updatedDate);
             var createdDateDbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(createdDate);
@@ -118,7 +117,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         {
             // Arrange
             const string productId = nameof(Product.Id);
-
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
 
             // Act

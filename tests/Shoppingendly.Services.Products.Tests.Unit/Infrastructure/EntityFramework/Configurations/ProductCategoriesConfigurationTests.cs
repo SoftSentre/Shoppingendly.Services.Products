@@ -25,7 +25,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         {
             // Arrange
             const string productId = nameof(ProductCategory.FirstKey);
-
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
 
             // Act
@@ -42,7 +41,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         {
             // Arrange
             const string categoryId = nameof(ProductCategory.SecondKey);
-
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
 
             // Act

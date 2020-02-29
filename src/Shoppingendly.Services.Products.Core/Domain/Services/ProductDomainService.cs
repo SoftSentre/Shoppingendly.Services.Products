@@ -13,16 +13,16 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
     {
         public Maybe<ProductCategory> GetAssignedCategory(Maybe<Product> product, CategoryId categoryId)
         {
-            IfProductIsEmptyThenThrow(product);
-            var assignedCategory = product.Value.GetAssignedCategory(categoryId);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var assignedCategory = validatedProduct.GetAssignedCategory(categoryId);
 
             return assignedCategory;
         }
 
         public Maybe<IEnumerable<ProductCategory>> GetAssignedCategories(Maybe<Product> product)
         {
-            IfProductIsEmptyThenThrow(product);
-            var assignedCategories = product.Value.GetAllAssignedCategories();
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var assignedCategories = validatedProduct.GetAllAssignedCategories();
 
             return assignedCategories;
         }
@@ -49,30 +49,30 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public bool AddOrChangeProductPicture(Maybe<Product> product, Picture picture)
         {
-            IfProductIsEmptyThenThrow(product);
-            var isPictureChanged = product.Value.AddOrChangePicture(picture);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var isPictureChanged = validatedProduct.AddOrChangePicture(picture);
 
             return isPictureChanged;
         }
 
         public void RemovePictureFromProduct(Maybe<Product> product)
         {
-            IfProductIsEmptyThenThrow(product);
-            product.Value.RemovePicture();
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            validatedProduct.RemovePicture();
         }
 
         public bool ChangeProductName(Maybe<Product> product, string name)
         {
-            IfProductIsEmptyThenThrow(product);
-            var isNameChanged = product.Value.SetName(name);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var isNameChanged = validatedProduct.SetName(name);
 
             return isNameChanged;
         }
 
         public bool ChangeProductProducer(Maybe<Product> product, string producer)
         {
-            IfProductIsEmptyThenThrow(product);
-            var isProducerChanged = product.Value.SetProducer(producer);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var isProducerChanged = validatedProduct.SetProducer(producer);
 
             return isProducerChanged;
         }
@@ -84,32 +84,34 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public void DeallocateProductFromCategory(Maybe<Product> product, CategoryId categoryId)
         {
-            IfProductIsEmptyThenThrow(product);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
             
-            product.Value.DeallocateCategory(categoryId);
+            validatedProduct.DeallocateCategory(categoryId);
         }
 
         public void DeallocateProductFromAllCategories(Maybe<Product> product)
         {
-            IfProductIsEmptyThenThrow(product);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
             
-            product.Value.DeallocateAllCategories();
+            validatedProduct.DeallocateAllCategories();
         }
 
         private static void AssignProduct(Maybe<Product> product, CategoryId categoryId)
         {
-            IfProductIsEmptyThenThrow(product);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
 
-            product.Value.AssignCategory(categoryId);
+            validatedProduct.AssignCategory(categoryId);
         }
 
-        private static void IfProductIsEmptyThenThrow(Maybe<Product> product)
+        private static Product IfProductIsEmptyThenThrow(Maybe<Product> product)
         {
             if (product.HasNoValue)
             {
                 throw new EmptyProductProvidedException(
                     "Unable to mutate product state, because provided value is empty.");
             }
+
+            return product.Value;
         }
     }
 }

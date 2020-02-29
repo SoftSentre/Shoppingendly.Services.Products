@@ -42,7 +42,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         {
             // Arrange
             const string roleId = nameof(Role.Id);
-
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(roleId);
 
             // Act
