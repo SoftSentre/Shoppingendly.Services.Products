@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -15,7 +16,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             where TEntityConfiguration : class, IEntityTypeConfiguration<TEntity>
         {
             var options = new DbContextOptionsBuilder<ProductServiceDbContext>()
-                .UseSqlServer(Constants.ConnectionString)
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
