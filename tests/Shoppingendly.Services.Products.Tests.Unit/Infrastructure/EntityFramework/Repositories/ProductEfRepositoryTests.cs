@@ -36,7 +36,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             // Act
             var testResult = await productRepository.GetByIdAsync(_product.Id);
 
-            // Arrange
+            // Assert
             testResult.Value.Name.Should().Be(_product.Name);
             testResult.Value.Producer.Should().Be(_product.Producer);
             testResult.Value.CreatorId.Should().Be(_product.CreatorId);
@@ -55,7 +55,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             // Act
             var testResult = await productRepository.GetByNameAsync(_product.Name);
 
-            // Arrange
+            // Assert
             testResult.Value.Name.Should().Be(_product.Name);
             testResult.Value.Producer.Should().Be(_product.Producer);
             testResult.Value.CreatorId.Should().Be(_product.CreatorId);
@@ -79,7 +79,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
 
             var testResult = await productRepository.GetByNameWithIncludesAsync(product.Name);
 
-            // Arrange
+            // Assert
             testResult.Value.Name.Should().Be(product.Name);
             testResult.Value.Producer.Should().Be(product.Producer);
             testResult.Value.CreatorId.Should().Be(product.CreatorId);

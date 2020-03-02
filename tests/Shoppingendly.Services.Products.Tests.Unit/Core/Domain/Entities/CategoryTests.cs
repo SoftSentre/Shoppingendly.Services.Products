@@ -232,9 +232,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             category.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent?.CategoryId.Should().Be(category.Id);
-            newCategoryCreatedDomainEvent?.CategoryName.Should().Be(category.Name);
-            newCategoryCreatedDomainEvent?.CategoryDescription.Should().Be(category.Description);
+            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
+            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
+            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.Description);
         }
 
         [Fact]
@@ -250,9 +250,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             category.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent?.CategoryId.Should().Be(category.Id);
-            newCategoryCreatedDomainEvent?.CategoryName.Should().Be(category.Name);
-            newCategoryCreatedDomainEvent?.CategoryDescription.Should().Be(category.Description);
+            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
+            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
+            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.Description);
         }
 
         [Fact]
@@ -269,8 +269,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             category.DomainEvents.Should().NotBeEmpty();
             categoryNameChangedDomainEvent.Should().BeOfType<CategoryNameChangedDomainEvent>();
             categoryNameChangedDomainEvent.Should().NotBeNull();
-            categoryNameChangedDomainEvent?.CategoryId.Should().Be(category.Id);
-            categoryNameChangedDomainEvent?.CategoryName.Should().Be(category.Name);
+            categoryNameChangedDomainEvent.CategoryId.Should().Be(category.Id);
+            categoryNameChangedDomainEvent.CategoryName.Should().Be(category.Name);
         }
 
         [Fact]
@@ -287,8 +287,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             category.DomainEvents.Should().NotBeEmpty();
             categoryDescriptionChanged.Should().BeOfType<CategoryDescriptionChangedDomainEvent>();
             categoryDescriptionChanged.Should().NotBeNull();
-            categoryDescriptionChanged?.CategoryId.Should().Be(category.Id);
-            categoryDescriptionChanged?.CategoryDescription.Should().Be(category.Description);
+            categoryDescriptionChanged.CategoryId.Should().Be(category.Id);
+            categoryDescriptionChanged.CategoryDescription.Should().Be(category.Description);
         }
 
         [Fact]

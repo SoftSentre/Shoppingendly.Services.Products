@@ -13,7 +13,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Repositories
         Task<Maybe<Category>> GetByNameWithIncludesAsync(string name);
         Task<Maybe<IEnumerable<Category>>> GetAllAsync();
         Task<Maybe<IEnumerable<Category>>> GetAllWithIncludesAsync();
-        Task<bool> AddAsync(Category category);
+        Task AddAsync(Category category);
         void Update(Category category);
         void Delete(Category category);
     }
