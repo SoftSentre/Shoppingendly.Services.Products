@@ -8,8 +8,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Repositories
     public interface ICreatorRepository 
     {
         Task<Maybe<Creator>> GetByIdAsync(CreatorId creatorId);
-        Task<Maybe<Creator>> GetByNameAsync(CreatorId creatorId);
-        Task<bool> AddAsync(Creator creator);
+        Task<Maybe<Creator>> GetByNameAsync(string name);
+        Task AddAsync(Creator creator);
         void Update(Creator creator);
         void Delete(Creator creator);
     }

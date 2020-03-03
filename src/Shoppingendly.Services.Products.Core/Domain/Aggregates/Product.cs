@@ -8,6 +8,7 @@ using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Products;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 {
@@ -84,7 +85,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 
             if (!Picture.IsEmpty && Picture.Equals(validatePicture))
                 return false;
-            
+
             Picture = validatePicture;
             SetUpdatedDate();
             AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, validatePicture));
@@ -96,7 +97,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             if (Picture.IsEmpty)
                 throw new CanNotRemoveEmptyPictureException(
                     "Unable to remove picture, because it's already empty.");
-            
+
             Picture = Picture.Empty;
             SetUpdatedDate();
             AddDomainEvent(new PictureRemovedDomainEvent(Id));
@@ -160,24 +161,28 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 
         private static string ValidateName(string name)
         {
-            if (name.IsEmpty())
+            if (IsProductNameRequired && name.IsEmpty())
                 throw new InvalidProductNameException("Product name can not be empty.");
-            if (name.IsLongerThan(30))
-                throw new InvalidProductNameException("Product name can not be longer than 30 characters.");
-            if (name.IsShorterThan(4))
-                throw new InvalidProductNameException("Product name can not be shorter than 4 characters.");
+            if (name.IsLongerThan(ProductNameMaxLength))
+                throw new InvalidProductNameException(
+                    $"Product name can not be longer than {ProductNameMaxLength} characters.");
+            if (name.IsShorterThan(ProductNameMinLength))
+                throw new InvalidProductNameException(
+                    $"Product name can not be shorter than {ProductNameMinLength} characters.");
 
             return name;
         }
 
         private static string ValidateProducer(string producer)
         {
-            if (producer.IsEmpty())
+            if (IsProductProducerRequired && producer.IsEmpty())
                 throw new InvalidProductProducerException("Product producer can not be empty.");
-            if (producer.IsLongerThan(50))
-                throw new InvalidProductProducerException("Product producer can not be longer than 50 characters.");
-            if (producer.IsShorterThan(2))
-                throw new InvalidProductProducerException("Product producer can not be shorter than 2 characters.");
+            if (producer.IsLongerThan(ProductProducerMaxLength))
+                throw new InvalidProductProducerException(
+                    $"Product producer can not be longer than {ProductProducerMaxLength} characters.");
+            if (producer.IsShorterThan(ProductProducerMinLength))
+                throw new InvalidProductProducerException(
+                    $"Product producer can not be shorter than {ProductProducerMinLength} characters.");
 
             return producer;
         }
@@ -189,7 +194,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
 
             return picture.Value;
         }
-        
+
         private Maybe<ProductCategory> GetProductCategory(CategoryId categoryId)
         {
             var assignedCategory = _productCategories.FirstOrDefault(pr => pr.SecondKey.Equals(categoryId));

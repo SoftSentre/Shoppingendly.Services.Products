@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -18,44 +20,45 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.Reposit
                 .IfEmptyThenThrowAndReturnValue();
         }
 
-        public Task<Maybe<Category>> GetByIdAsync(CategoryId categoryId)
+        public async Task<Maybe<Category>> GetByIdAsync(CategoryId categoryId)
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Id.Equals(categoryId));
         }
 
-        public Task<Maybe<Category>> GetByNameAsync(string name)
+        public async Task<Maybe<Category>> GetByNameAsync(string name)
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public Task<Maybe<Category>> GetByNameWitIncludesAsync(string name)
+        public async Task<Maybe<Category>> GetByNameWithIncludesAsync(string name)
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Categories.Include(c => c.ProductCategories)
+                .FirstOrDefaultAsync(c => c.Name == name);
         }
 
-        public Task<Maybe<IEnumerable<Category>>> GetAllAsync()
+        public async Task<Maybe<IEnumerable<Category>>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Categories.ToListAsync();
         }
 
-        public Task<Maybe<IEnumerable<Category>>> GetAllWithIncludesAsync()
+        public async Task<Maybe<IEnumerable<Category>>> GetAllWithIncludesAsync()
         {
-            throw new System.NotImplementedException();
+            return await _productServiceDbContext.Categories.Include(c => c.ProductCategories).ToListAsync();
         }
 
-        public Task<bool> AddAsync(Category category)
+        public async Task AddAsync(Category category)
         {
-            throw new System.NotImplementedException();
+            await _productServiceDbContext.AddAsync(category);
         }
 
         public void Update(Category category)
         {
-            throw new System.NotImplementedException();
+            _productServiceDbContext.Update(category);
         }
 
         public void Delete(Category category)
         {
-            throw new System.NotImplementedException();
+            _productServiceDbContext.Remove(category);
         }
     }
 }

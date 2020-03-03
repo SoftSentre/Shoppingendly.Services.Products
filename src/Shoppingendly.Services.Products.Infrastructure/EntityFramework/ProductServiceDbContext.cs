@@ -10,7 +10,7 @@ using Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeC
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
-    public class ProductServiceDbContext : DbContext
+    public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
         private Maybe<IDbContextTransaction> _currentTransaction;
 
@@ -94,6 +94,13 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
                     _currentTransaction = null;
                 }
             }
+        }
+
+        public async Task<bool> SaveAsync()
+        {
+            var numberOfRows = await SaveChangesAsync();
+
+            return numberOfRows > 0;
         }
     }
 }

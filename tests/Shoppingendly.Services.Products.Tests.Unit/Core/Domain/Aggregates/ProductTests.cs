@@ -274,8 +274,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.ProductCategories.Should().NotBeEmpty();
             product.UpdatedDate.Should().NotBe(default);
             var assignedProduct = product.ProductCategories.FirstOrDefault();
-            assignedProduct?.FirstKey.Should().Be(expectedValue.FirstKey);
-            assignedProduct?.SecondKey.Should().Be(expectedValue.SecondKey);
+            assignedProduct.FirstKey.Should().Be(expectedValue.FirstKey);
+            assignedProduct.SecondKey.Should().Be(expectedValue.SecondKey);
         }
 
         [Fact]
@@ -457,10 +457,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewProductCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent?.ProductId.Should().Be(product.Id);
-            newCategoryCreatedDomainEvent?.CreatorId.Should().Be(product.CreatorId);
-            newCategoryCreatedDomainEvent?.ProductName.Should().Be(product.Name);
-            newCategoryCreatedDomainEvent?.ProductProducer.Should().Be(product.Producer);
+            newCategoryCreatedDomainEvent.ProductId.Should().Be(product.Id);
+            newCategoryCreatedDomainEvent.CreatorId.Should().Be(product.CreatorId);
+            newCategoryCreatedDomainEvent.ProductName.Should().Be(product.Name);
+            newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.Producer);
         }
 
         [Fact]
@@ -478,8 +478,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productNameChangedDomainEvent.Should().BeOfType<ProductNameChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent?.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent?.ProductName.Should().Be(product.Name);
+            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent.ProductName.Should().Be(product.Name);
         }
 
         [Fact]
@@ -497,8 +497,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productProducerChanged.Should().BeOfType<ProductProducerChangedDomainEvent>();
             productProducerChanged.Should().NotBeNull();
-            productProducerChanged?.ProductId.Should().Be(product.Id);
-            productProducerChanged?.ProductProducer.Should().Be(product.Producer);
+            productProducerChanged.ProductId.Should().Be(product.Id);
+            productProducerChanged.ProductProducer.Should().Be(product.Producer);
         }
 
         [Fact]
@@ -517,8 +517,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productAssignedToCategory.Should().BeOfType<ProductAssignedToCategoryDomainEvent>();
             productAssignedToCategory.Should().NotBeNull();
-            productAssignedToCategory?.ProductId.Should().Be(product.Id);
-            productAssignedToCategory?.CategoryId.Should().Be(categoryId);
+            productAssignedToCategory.ProductId.Should().Be(product.Id);
+            productAssignedToCategory.CategoryId.Should().Be(categoryId);
         }
 
         [Fact]
@@ -538,8 +538,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productDeallocatedFromCategory.Should().BeOfType<ProductDeallocatedFromCategoryDomainEvent>();
             productDeallocatedFromCategory.Should().NotBeNull();
-            productDeallocatedFromCategory?.ProductId.Should().Be(product.Id);
-            productDeallocatedFromCategory?.CategoryId.Should().Be(categoryId);
+            productDeallocatedFromCategory.ProductId.Should().Be(product.Id);
+            productDeallocatedFromCategory.CategoryId.Should().Be(categoryId);
         }
 
         [Fact]
@@ -559,8 +559,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productDeallocatedFromAllCategories.Should().BeOfType<ProductDeallocatedFromAllCategoriesDomainEvent>();
             productDeallocatedFromAllCategories.Should().NotBeNull();
-            productDeallocatedFromAllCategories?.ProductId.Should().Be(product.Id);
-            productDeallocatedFromAllCategories?.CategoriesIds.Should().HaveCount(2);
+            productDeallocatedFromAllCategories.ProductId.Should().Be(product.Id);
+            productDeallocatedFromAllCategories.CategoriesIds.Should().HaveCount(2);
         }
 
         [Fact]
@@ -578,8 +578,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productNameChangedDomainEvent.Should().BeOfType<PictureAddedOrChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent?.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent?.Picture.Should().Be(product.Picture);
+            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent.Picture.Should().Be(product.Picture);
         }
 
         [Fact]
@@ -598,7 +598,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.DomainEvents.Should().NotBeEmpty();
             productNameChangedDomainEvent.Should().BeOfType<PictureRemovedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent?.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
         }
 
         [Fact]
