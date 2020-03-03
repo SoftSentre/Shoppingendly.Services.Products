@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -14,13 +15,13 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
 
             productsConfiguration.Property(p => p.Name)
                 .HasColumnName("ProductName")
-                .HasMaxLength(30)
-                .IsRequired();
+                .HasMaxLength(ProductNameMaxLength)
+                .IsRequired(IsProductNameRequired);
 
             productsConfiguration.Property(p => p.Producer)
                 .HasColumnName("ProductProducer")
-                .HasMaxLength(50)
-                .IsRequired();
+                .HasMaxLength(ProductProducerMaxLength)
+                .IsRequired(IsProductProducerRequired);
 
             productsConfiguration.Property(p => p.CreatorId)
                 .HasColumnName("ProductCreatorId")
@@ -39,11 +40,11 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
                 {
                     pi.Property(pp => pp.Name)
                         .HasColumnName("ProductPictureName")
-                        .HasMaxLength(200);
+                        .HasMaxLength(PictureNameMaxLength);
 
                     pi.Property(pp => pp.Url)
                         .HasColumnName("ProductPictureUrl")
-                        .HasMaxLength(500);
+                        .HasMaxLength(PictureUrlMaxLength);
 
                     pi.Property(pp => pp.IsEmpty)
                         .HasColumnName("IsProductPictureEmpty");

@@ -60,7 +60,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             Action action = () => Picture.Create(string.Empty, url);
 
             //Assert
-            action.Should().Throw<PictureNameCanNotBeEmptyException>()
+            action.Should().Throw<InvalidPictureNameException>()
                 .WithMessage("Picture name can not be empty.");
         }
         
@@ -74,7 +74,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             Action action = () => Picture.Create(new string('*', 201), url);
 
             //Assert
-            action.Should().Throw<PictureNameIsTooLongException>()
+            action.Should().Throw<InvalidPictureNameException>()
                 .WithMessage("Picture name can not be longer than 200 characters.");
         }
         
@@ -88,7 +88,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             Action action = () => Picture.Create(name, string.Empty);
 
             //Assert
-            action.Should().Throw<PictureUrlCanNotBeEmptyException>()
+            action.Should().Throw<InvalidPictureUrlException>()
                 .WithMessage("Picture url can not be empty.");
         }
         
@@ -102,7 +102,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             Action action = () => Picture.Create(name, new string('*', 501));
 
             //Assert
-            action.Should().Throw<PictureUrlIsTooLongException>()
+            action.Should().Throw<InvalidPictureUrlException>()
                 .WithMessage("Picture url can not be longer than 500 characters.");
         }
         
@@ -116,7 +116,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             Action action = () => Picture.Create(name, "Some   url");
 
             //Assert
-            action.Should().Throw<PictureUrlCanNotHaveWhiteSpacesException>()
+            action.Should().Throw<InvalidPictureUrlException>()
                 .WithMessage("Picture url can not have whitespaces.");
         }
 

@@ -17,29 +17,31 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public void SetCreatorName(Maybe<Creator> creator, string creatorName)
         {
-            IfCreatorIsEmptyThenThrow(creator);
-            creator.Value.SetName(creatorName);
+            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
+            validatedCreator.SetName(creatorName);
         }
 
         public void SetCreatorEmail(Maybe<Creator> creator, string creatorEmail)
         {
-            IfCreatorIsEmptyThenThrow(creator);
-            creator.Value.SetEmail(creatorEmail);
+            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
+            validatedCreator.SetEmail(creatorEmail);
         }
 
         public void SetCreatorRole(Maybe<Creator> creator, Role creatorRole)
         {
-            IfCreatorIsEmptyThenThrow(creator);
-            creator.Value.SetRole(creatorRole);
+            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
+            validatedCreator.SetRole(creatorRole);
         }
 
-        private static void IfCreatorIsEmptyThenThrow(Maybe<Creator> creator)
+        private static Creator IfCreatorIsEmptyThenThrow(Maybe<Creator> creator)
         {
             if (creator.HasNoValue)
             {
                 throw new EmptyCreatorProvidedException(
                     "Unable to mutate creator state, because provided value is empty.");
             }
+
+            return creator.Value;
         }
     }
 }
