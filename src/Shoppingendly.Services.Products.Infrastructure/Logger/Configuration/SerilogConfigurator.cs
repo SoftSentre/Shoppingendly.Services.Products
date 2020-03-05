@@ -10,7 +10,7 @@ using Shoppingendly.Services.Products.Infrastructure.Options;
 
 namespace Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
 {
-    public class SerilogConfiguration : ISerilogConfiguration
+    public class SerilogConfigurator : ISerilogConfigurator
     {
         public void ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
             AppOptions appOptions, string environmentName)
