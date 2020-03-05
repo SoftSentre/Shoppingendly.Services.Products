@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -14,13 +15,17 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
 
             creatorsConfiguration.Property(c => c.Name)
                 .HasColumnName("CreatorName")
-                .HasMaxLength(50)
-                .IsRequired();
+                .HasMaxLength(CreatorNameMaxLength)
+                .IsRequired(IsCreatorNameRequired);
             
             creatorsConfiguration.Property(c => c.Email)
                 .HasColumnName("CreatorEmail")
-                .HasMaxLength(100)
+                .HasMaxLength(CreatorEmailMaxLength)
                 .IsRequired();
+
+            creatorsConfiguration.Property<int>("_roleId")
+                .HasColumnName("CreatorRoleId")
+                .IsRequired(IsCreatorEmailRequired);
 
             creatorsConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
@@ -29,6 +34,10 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
                 .HasColumnName("CreatedDate")
                 .IsRequired();
 
+            creatorsConfiguration.HasOne(c => c.Role)
+                .WithMany()
+                .HasForeignKey("_roleId");
+            
             creatorsConfiguration.HasMany(c => c.Products)
                 .WithOne(p => p.Creator)
                 .HasForeignKey(p => p.CreatorId)
@@ -36,10 +45,6 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
             
             creatorsConfiguration.Metadata.FindNavigation(nameof(Creator.Products))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
-            
-            creatorsConfiguration.HasOne(c => c.Role)
-                .WithMany()
-                .HasForeignKey("_roleId");
 
             creatorsConfiguration.Ignore(c => c.DomainEvents);
         }

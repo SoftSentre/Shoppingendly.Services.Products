@@ -153,7 +153,22 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
         }
         
         [Fact]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsLongerThan100Characters()
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooShort()
+        {
+            // Arrange
+            const string email = "j@jc.de";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Creator email can not be shorter than 8 characters.");
+        }
+        
+        [Fact]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooLong()
         {
             // Arrange
             const string email =
@@ -215,10 +230,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             creator.DomainEvents.Should().NotBeEmpty();
             newCreatorCreatedDomainEvent.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             newCreatorCreatedDomainEvent.Should().NotBeNull();
-            newCreatorCreatedDomainEvent?.CreatorId.Should().Be(creator.Id);
-            newCreatorCreatedDomainEvent?.Name.Should().Be(creator.Name);
-            newCreatorCreatedDomainEvent?.Email.Should().Be(creator.Email);
-            newCreatorCreatedDomainEvent?.Role.Should().Be(creator.Role);
+            newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.Id);
+            newCreatorCreatedDomainEvent.Name.Should().Be(creator.Name);
+            newCreatorCreatedDomainEvent.Email.Should().Be(creator.Email);
+            newCreatorCreatedDomainEvent.Role.Should().Be(creator.Role);
         }
         
         [Fact]
@@ -235,8 +250,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             creator.DomainEvents.Should().NotBeEmpty();
             creatorNameChangedDomainEvent.Should().BeOfType<CreatorNameChangedDomainEvent>();
             creatorNameChangedDomainEvent.Should().NotBeNull();
-            creatorNameChangedDomainEvent?.CreatorId.Should().Be(creator.Id);
-            creatorNameChangedDomainEvent?.Name.Should().Be(creator.Name);
+            creatorNameChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorNameChangedDomainEvent.Name.Should().Be(creator.Name);
         }
         
         [Fact]
@@ -253,8 +268,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             creator.DomainEvents.Should().NotBeEmpty();
             creatorEmailChangedDomainEvent.Should().BeOfType<CreatorEmailChangedDomainEvent>();
             creatorEmailChangedDomainEvent.Should().NotBeNull();
-            creatorEmailChangedDomainEvent?.CreatorId.Should().Be(creator.Id);
-            creatorEmailChangedDomainEvent?.Email.Should().Be(creator.Email);
+            creatorEmailChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorEmailChangedDomainEvent.Email.Should().Be(creator.Email);
         }
         
         [Fact]
@@ -271,8 +286,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             creator.DomainEvents.Should().NotBeEmpty();
             creatorRoleChangedDomainEvent.Should().BeOfType<CreatorRoleChangedDomainEvent>();
             creatorRoleChangedDomainEvent.Should().NotBeNull();
-            creatorRoleChangedDomainEvent?.CreatorId.Should().Be(creator.Id);
-            creatorRoleChangedDomainEvent?.Role.Should().Be(creator.Role);
+            creatorRoleChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorRoleChangedDomainEvent.Role.Should().Be(creator.Role);
         }
         
         [Fact]

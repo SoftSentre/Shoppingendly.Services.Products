@@ -4,6 +4,7 @@ using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Categories;
 using Shoppingendly.Services.Products.Core.Extensions;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
@@ -30,7 +31,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             Name = ValidateCategoryName(name);
             AddDomainEvent(new NewCategoryCreatedDomainEvent(Id, name));
         }
-        
+
         public Category(CategoryId categoryId, string name, string description) : base(categoryId)
         {
             Name = ValidateCategoryName(name);
@@ -41,10 +42,10 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         public bool SetName(string name)
         {
             ValidateCategoryName(name);
-            
-            if (Name.EqualsCaseInvariant(name)) 
+
+            if (Name.EqualsCaseInvariant(name))
                 return false;
-            
+
             Name = name;
             SetUpdatedDate();
             AddDomainEvent(new CategoryNameChangedDomainEvent(Id, name));
@@ -54,21 +55,21 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         public bool SetDescription(string description)
         {
             ValidateCategoryDescription(description);
-            
-            if (Description.EqualsCaseInvariant(description)) 
+
+            if (Description.EqualsCaseInvariant(description))
                 return false;
-            
+
             Description = description;
             SetUpdatedDate();
             AddDomainEvent(new CategoryDescriptionChangedDomainEvent(Id, description));
             return true;
         }
-        
+
         public static Category Create(CategoryId categoryId, string name)
         {
             return new Category(categoryId, name);
         }
-        
+
         public static Category Create(CategoryId categoryId, string name, string description)
         {
             return new Category(categoryId, name, description);
@@ -76,24 +77,28 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 
         private static string ValidateCategoryName(string name)
         {
-            if (name.IsEmpty())
+            if (IsCategoryNameRequired && name.IsEmpty())
                 throw new InvalidCategoryNameException("Category name can not be empty.");
-            if (name.IsLongerThan(30))
-                throw new InvalidCategoryNameException("Category name can not be longer than 30 characters.");
-            if (name.IsShorterThan(4))
-                throw new InvalidCategoryNameException("Category name can not be shorter than 4 characters.");
+            if (name.IsLongerThan(CategoryNameMaxLength))
+                throw new InvalidCategoryNameException(
+                    $"Category name can not be longer than {CategoryNameMaxLength} characters.");
+            if (name.IsShorterThan(CategoryNameMinLength))
+                throw new InvalidCategoryNameException(
+                    $"Category name can not be shorter than {CategoryNameMinLength} characters.");
 
             return name;
         }
 
         private static string ValidateCategoryDescription(string description)
         {
-            if (description.IsShorterThan(20))
+            if (IsCategoryDescriptionRequired && description.IsEmpty())
+                throw new InvalidCategoryDescriptionException("Category description can not be empty.");
+            if (description.IsShorterThan(CategoryDescriptionMinLength))
                 throw new InvalidCategoryDescriptionException(
-                    "Category description can not be shorter than 20 characters.");
-            if (description.IsLongerThan(4000))
+                    $"Category description can not be shorter than {CategoryDescriptionMinLength} characters.");
+            if (description.IsLongerThan(CategoryDescriptionMaxLength))
                 throw new InvalidCategoryDescriptionException(
-                    "Category description can not be longer than 4000 characters.");
+                    $"Category description can not be longer than {CategoryDescriptionMaxLength} characters.");
 
             return description;
         }

@@ -17,6 +17,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services.Base
         Maybe<Product> AddNewProduct(ProductId productId, CreatorId creatorId, string name,
             string producer, IEnumerable<CategoryId> categoryIds);
 
+        bool AddOrChangeProductPicture(Maybe<Product> product, Picture picture);
+        void RemovePictureFromProduct(Maybe<Product> product);
         bool ChangeProductName(Maybe<Product> product, string name);
         bool ChangeProductProducer(Maybe<Product> product, string producer);
         void AssignProductToCategory(Maybe<Product> product, CategoryId categoryId);

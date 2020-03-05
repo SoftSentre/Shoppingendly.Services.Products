@@ -24,27 +24,29 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public bool SetCategoryName(Maybe<Category> category, string categoryName)
         {
-            IfCategoryIsEmptyThenThrow(category);
-            var isNameChanged = category.Value.SetName(categoryName);
+            var validatedCategory = IfCategoryIsEmptyThenThrow(category);
+            var isNameChanged = validatedCategory.SetName(categoryName);
             
             return isNameChanged;
         }
 
         public bool SetCategoryDescription(Maybe<Category> category, string categoryDescription)
         {
-            IfCategoryIsEmptyThenThrow(category);
-            var isDescriptionChanged = category.Value.SetDescription(categoryDescription);
+            var validatedCategory = IfCategoryIsEmptyThenThrow(category);
+            var isDescriptionChanged = validatedCategory.SetDescription(categoryDescription);
             
             return isDescriptionChanged;
         }
         
-        private static void IfCategoryIsEmptyThenThrow(Maybe<Category> category)
+        private static Category IfCategoryIsEmptyThenThrow(Maybe<Category> category)
         {
             if (category.HasNoValue)
             {
                 throw new EmptyCategoryProvidedException(
                     "Unable to mutate category state, because provided value is empty.");
             }
+
+            return category.Value;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
@@ -7,6 +6,7 @@ using Shoppingendly.Services.Products.Core.Domain.Events.Creators;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Exceptions.Creators;
 using Shoppingendly.Services.Products.Core.Extensions;
+using static Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
@@ -19,13 +19,13 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 
         private HashSet<Product> _products;
         private int _roleId;
-        
+
         public string Name { get; private set; }
         public string Email { get; private set; }
 
         // Navigation property
         public Role Role { get; private set; }
-        
+
         public HashSet<Product> Products
         {
             get => _products;
@@ -66,7 +66,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         public void SetRole(Role role)
         {
             ValidateRole(role);
-            
+
             Role = role;
             SetUpdatedDate();
             AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, role));
@@ -79,22 +79,28 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 
         private static string ValidateName(string name)
         {
-            if (name.IsEmpty())
+            if (IsCreatorNameRequired && name.IsEmpty())
                 throw new InvalidCreatorNameException("Creator name can not be empty.");
-            if (name.IsLongerThan(50))
-                throw new InvalidCreatorNameException("Creator name can not be longer than 50 characters.");
-            if (name.IsShorterThan(3))
-                throw new InvalidCreatorNameException("Creator name can not be shorter than 3 characters.");
+            if (name.IsLongerThan(CreatorNameMaxLength))
+                throw new InvalidCreatorNameException(
+                    $"Creator name can not be longer than {CreatorNameMaxLength} characters.");
+            if (name.IsShorterThan(CreatorNameMinLength))
+                throw new InvalidCreatorNameException(
+                    $"Creator name can not be shorter than {CreatorNameMinLength} characters.");
 
             return name;
         }
 
         private static string ValidateEmail(string email)
         {
-            if (email.IsEmpty())
+            if (IsCreatorEmailRequired && email.IsEmpty())
                 throw new InvalidCreatorEmailException("Creator email can not be empty.");
-            if (email.IsLongerThan(100))
-                throw new InvalidCreatorEmailException("Creator email can not be longer than 100 characters.");
+            if (email.IsShorterThan(CreatorEmailMinLength))
+                throw new InvalidCreatorEmailException(
+                    $"Creator email can not be shorter than {CreatorEmailMinLength} characters.");
+            if (email.IsLongerThan(CreatorEmailMaxLength))
+                throw new InvalidCreatorEmailException(
+                    $"Creator email can not be longer than {CreatorEmailMaxLength} characters.");
             if (!EmailRegex.IsMatch(email))
                 throw new InvalidCreatorEmailException("Invalid email has been provided.");
 
@@ -103,8 +109,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 
         private static Role ValidateRole(Role role)
         {
-            if (role.Name.IsLongerThan(50))
-                throw new InvalidCreatorRoleException("Creator role name can not be longer than 50 characters.");
+            if (role.Name.IsLongerThan(RoleNameMaxLength))
+                throw new InvalidCreatorRoleException(
+                    $"Creator role name can not be longer than {CreatorNameMinLength} characters.");
 
             return role;
         }

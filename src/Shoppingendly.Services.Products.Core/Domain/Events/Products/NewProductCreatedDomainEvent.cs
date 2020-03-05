@@ -9,14 +9,16 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Products
         public CreatorId CreatorId { get; }
         public string ProductName { get; }
         public string ProductProducer { get; }
+        public Picture Picture { get; }
 
         public NewProductCreatedDomainEvent(ProductId productId, CreatorId creatorId, string productName,
-            string productProducer)
+            string productProducer, Picture picture)
         {
             ProductId = productId;
             CreatorId = creatorId;
             ProductName = productName;
             ProductProducer = productProducer;
+            Picture = picture;
         }
     }
 }

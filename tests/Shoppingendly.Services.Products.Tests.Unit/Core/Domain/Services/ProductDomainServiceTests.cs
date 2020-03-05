@@ -51,7 +51,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             testResult.Value.FirstKey.Should().Be(product.Id);
             testResult.Value.SecondKey.Should().Be(categoryId);
         }
-        
+
         [Fact]
         public void CheckIfGetAssignedCategoryMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -65,7 +65,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             action.Should().Throw<EmptyProductProvidedException>()
                 .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
-        
+
         [Fact]
         public void CheckIfGetAssignedCategoriesMethodReturnNoValueWhenProductHasNotAssignAnyCategory()
         {
@@ -101,7 +101,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             testResult.HasValue.Should().BeTrue();
             testResult.Value.Should().HaveCount(2);
         }
-        
+
         [Fact]
         public void CheckIfGetAssignedCategoriesMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -139,7 +139,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             testResult.Value.Producer.Should().Be(productProducer);
             testResult.Value.CreatedAt.Should().NotBe(default);
         }
-        
+
         [Fact]
         public void CheckIfAddNewProductMethodWithCategoriesCreateValidObjectAndDoNotThrown()
         {
@@ -174,6 +174,64 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
         }
 
         [Fact]
+        public void CheckIfAddOrChangeProductPictureMethodCreateValidObject()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            const string pictureName = "ExamplePictureName";
+            const string pictureUrl = "ExamplePictureUrl";
+            var picture = Picture.Create(pictureName, pictureUrl);
+            IProductDomainService productDomainService = new ProductDomainService();
+
+            // Act
+            Func<bool> func = () =>
+                productDomainService.AddOrChangeProductPicture(product, picture);
+
+            //Assert
+            var testResult = func.Invoke();
+            testResult.Should().BeTrue();
+            product.Picture.Should().Be(picture);
+            product.Picture.IsEmpty.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangeProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            const string pictureName = "ExamplePictureName";
+            const string pictureUrl = "ExamplePictureUrl";
+            var picture = Picture.Create(pictureName, pictureUrl);
+            IProductDomainService productDomainService = new ProductDomainService();
+
+            // Act
+            Action action = () =>
+                productDomainService.AddOrChangeProductPicture(product, picture);
+
+            //Assert
+            action.Should().NotThrow();
+        }
+
+        [Fact]
+        public void CheckIfRemoveProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(),
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
+            IProductDomainService productDomainService = new ProductDomainService();
+
+            // Act
+            Action action = () =>
+                productDomainService.RemovePictureFromProduct(product);
+
+            //Assert
+            action.Should().NotThrow();
+            product.Picture.IsEmpty.Should().BeTrue();
+            product.Picture.Name.Should().Be(null);
+            product.Picture.Url.Should().Be(null);
+        }
+
+        [Fact]
         public void CheckIfChangeProductNameMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
         {
             // Arrange
@@ -203,7 +261,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             //Assert
             action.Should().NotThrow();
         }
-        
+
         [Fact]
         public void CheckIfChangeProductNameMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -217,7 +275,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             action.Should().Throw<EmptyProductProvidedException>()
                 .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
-        
+
         [Fact]
         public void CheckIfChangeProductProducerMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
         {
@@ -243,12 +301,13 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             IProductDomainService productDomainService = new ProductDomainService();
 
             // Act
-            Func<bool> action = () => productDomainService.ChangeProductProducer(product, "OtherExampleProductProducer");
+            Func<bool> action = () =>
+                productDomainService.ChangeProductProducer(product, "OtherExampleProductProducer");
 
             //Assert
             action.Should().NotThrow();
         }
-        
+
         [Fact]
         public void CheckIfChangeProductProducerMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -294,7 +353,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             //Assert
             action.Should().NotThrow();
         }
-        
+
         [Fact]
         public void CheckIfAssignProductToCategoryMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -308,7 +367,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             action.Should().Throw<EmptyProductProvidedException>()
                 .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
-        
+
         [Fact]
         public void CheckIfDeallocatedProductToCategoryMethodAddedOneElementToList()
         {
@@ -340,7 +399,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             //Assert
             action.Should().NotThrow();
         }
-        
+
         [Fact]
         public void CheckIfDeallocateProductFromCategoryMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -354,7 +413,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             action.Should().Throw<EmptyProductProvidedException>()
                 .WithMessage("Unable to mutate product state, because provided value is empty.");
         }
-        
+
         [Fact]
         public void CheckIfDeallocatedProductFromAllCategoriesMethodAddedOneElementToList()
         {
@@ -386,7 +445,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             //Assert
             action.Should().NotThrow();
         }
-        
+
         [Fact]
         public void CheckIfDeallocateProductFromAllCategoriesMethodThrowExceptionWhenProductHasNoValue()
         {
@@ -395,6 +454,34 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             // Act
             Action action = () => productDomainService.DeallocateProductFromAllCategories(null);
+
+            //Assert
+            action.Should().Throw<EmptyProductProvidedException>()
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangeProductPictureMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            IProductDomainService productDomainService = new ProductDomainService();
+
+            // Act
+            Action action = () => productDomainService.AddOrChangeProductPicture(null, Picture.Empty);
+
+            //Assert
+            action.Should().Throw<EmptyProductProvidedException>()
+                .WithMessage("Unable to mutate product state, because provided value is empty.");
+        }
+        
+        [Fact]
+        public void CheckIfRemovePictureFromProductMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            IProductDomainService productDomainService = new ProductDomainService();
+
+            // Act
+            Action action = () => productDomainService.RemovePictureFromProduct(null);
 
             //Assert
             action.Should().Throw<EmptyProductProvidedException>()
