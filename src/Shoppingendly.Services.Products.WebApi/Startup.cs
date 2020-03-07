@@ -24,20 +24,6 @@ namespace Shoppingendly.Services.Products.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddEntityFrameworkSqlServer()
-                .AddDbContext<ProductServiceDbContext>(options =>
-                    {
-                        options.UseSqlServer(_configuration["ConnectionString"],
-                            sqlOptions =>
-                            {
-                                sqlOptions.MigrationsAssembly(typeof(ProductServiceDbContext).GetTypeInfo().Assembly
-                                    .GetName().Name);
-                                sqlOptions.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
-                            });
-                        options.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
-                    },
-                    ServiceLifetime.Scoped
-                );
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -48,11 +34,8 @@ namespace Shoppingendly.Services.Products.WebApi
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
