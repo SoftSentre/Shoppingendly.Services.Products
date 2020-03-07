@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Shoppingendly.Services.Products.Infrastructure.Logger.Extensions;
+using Serilog;
 
 namespace Shoppingendly.Services.Products.WebApi
 {
@@ -13,10 +13,10 @@ namespace Shoppingendly.Services.Products.WebApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseLogging()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
                 });
     }
 }
