@@ -24,4 +24,10 @@
     <ProjectReference Include="..\..\src\Shoppingendly.Services.Products.WebApi\Shoppingendly.Services.Products.WebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

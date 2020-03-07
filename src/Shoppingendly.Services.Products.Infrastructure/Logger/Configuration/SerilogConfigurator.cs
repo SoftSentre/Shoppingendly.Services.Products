@@ -12,7 +12,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
 {
     public class SerilogConfigurator : ISerilogConfigurator
     {
-        public void ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
+        public LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
             AppOptions appOptions, string environmentName)
         {
             loggerConfiguration
@@ -38,6 +38,8 @@ namespace Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
             ConfigureConsoleLogger(loggerSettings.ConsoleSettings, loggerConfiguration);
             ConfigureElkStack(loggerSettings.ElkSettings, loggerConfiguration);
             ConfigureSeq(loggerSettings.SeqSettings, loggerConfiguration);
+
+            return loggerConfiguration;
         }
 
         private static void ConfigureFileLogger(FileSettings fileSettings, LoggerConfiguration loggerConfiguration)
