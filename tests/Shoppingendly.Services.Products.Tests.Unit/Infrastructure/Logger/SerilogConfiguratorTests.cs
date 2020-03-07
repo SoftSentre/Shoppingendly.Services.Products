@@ -17,93 +17,85 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger
     public class SerilogConfiguratorTests
     {
         [Fact]
-        public void CheckIfConfigureMethodSetCorrectValuesInSerilogConfiguration()
+        public void CheckIfConfigureMethodSetCorrectSinksInSerilogConfiguration()
         {
             // Arrange
-            ISerilogConfigurator serilogConfigurator = new SerilogConfigurator();
-            var loggerConfiguration = new LoggerConfiguration();
-            const string environment = "development";
-            
-            var loggerSettings = new LoggerSettings()
-            {
-                FileSettings = new FileSettings
-                {
-                    Enabled = true,
-                    Interval = "day",
-                    LoggingLevel = "Information",
-                    Path = "Logs/logs.txt"
-                },
-                ConsoleSettings = new ConsoleSettings
-                {
-                    Enabled = true,
-                    LoggingLevel = "Debug"
-                },
-                ElkSettings = new ElkSettings()
-                {
-                    Enabled = true,
-                    BasicAuthEnabled = false,
-                    LoggingLevel = "Information",
-                    Url = "http://localhost:8000"
-                },
-                SeqSettings = new SeqSettings
-                {
-                    Enabled = true,
-                    Url = "http://localhost:5341",
-                    ApiKey = "secret"
-                }
-            };
-
-            var appOptions = new AppOptions
-            {
-                Application = "Shoppingendly",
-                Instance = "1",
-                Service = "Products",
-                Version = "1.0.0"
-            };
+            var logger = CreateLoggerForTests();
 
             // Act
-            var logger = serilogConfigurator
-                .ConfigureLogger(loggerConfiguration, loggerSettings, appOptions, environment)
-                .CreateLogger();
+            var sinks = GetSinks(logger);
 
             // Assert
-            var sinks = GetSinks(logger);
+            sinks.Count.Should().Be(4);
+            GetSinkFullName(sinks, 0).Should().Be("Serilog.Sinks.File.RollingFileSink");
+            GetSinkFullName(sinks, 1).Should().Be("Serilog.Sinks.SystemConsole.ConsoleSink");
+            GetSinkFullName(sinks, 2).Should().Be("Serilog.Sinks.Elasticsearch.ElasticsearchSink");
+            GetSinkFullName(sinks, 3).Should().Be("Serilog.Sinks.Seq.SeqSink");
+            GetLoggingLevel(sinks, 0).MinimumLevel.Should().Be(LogEventLevel.Information);
+            GetLoggingLevel(sinks, 1).MinimumLevel.Should().Be(LogEventLevel.Debug);
+            GetLoggingLevel(sinks, 2).MinimumLevel.Should().Be(LogEventLevel.Information);
+            GetLoggingLevel(sinks, 3).MinimumLevel.Should().Be(LogEventLevel.Information);
+        }
+
+        [Fact]
+        public void CheckIfConfigureMethodSetCorrectEnrichersInSerilogConfiguration()
+        {
+            // Arrange
+            var appOptions = new AppOptions
+            {
+                Name = "Shoppingendly",
+                Instance = "1",
+                Service = "Products",
+                Version = "1.0.5"
+            };
+
+            var logger = CreateLoggerForTests(appOptions, interval: "wrong");
+
+            // Act
             var enrichers = GetEnrichers(logger).ToList();
 
-            var fileSink = GetSinkFullName(sinks, 0);
-            var consoleSink = GetSinkFullName(sinks, 1);
-            var elkSink = GetSinkFullName(sinks, 2);
-            var seqSink = GetSinkFullName(sinks, 3);
-
-            var fileMinimumLoggingLevel = GetLoggingLevel(sinks, 0).MinimumLevel;
-            var consoleMinimumLoggingLevel = GetLoggingLevel(sinks, 1).MinimumLevel;
-            var elkMinimumLoggingLevel = GetLoggingLevel(sinks, 2).MinimumLevel;
-            var seqMinimumLoggingLevel = GetLoggingLevel(sinks, 3).MinimumLevel;
-
+            // Assert
             var enricherDictionary = new Dictionary<string, string>()
             {
                 {GetPropertyEnricherName(enrichers, 0), GetPropertyEnricherValue(enrichers, 0)},
                 {GetPropertyEnricherName(enrichers, 1), GetPropertyEnricherValue(enrichers, 1)},
                 {GetPropertyEnricherName(enrichers, 2), GetPropertyEnricherValue(enrichers, 2)},
                 {GetPropertyEnricherName(enrichers, 3), GetPropertyEnricherValue(enrichers, 3)},
+                {GetPropertyEnricherName(enrichers, 4), GetPropertyEnricherValue(enrichers, 4)},
             };
 
-            sinks.Count.Should().Be(4);
+            enrichers.Count.Should().Be(enricherDictionary.Count);
+            enricherDictionary["Environment"].Should().Be("development");
+            enricherDictionary["Application"].Should().Be(appOptions.Service);
+            enricherDictionary["Instance"].Should().Be(appOptions.Instance);
+            enricherDictionary["Version"].Should().Be(appOptions.Version);
+            enricherDictionary["Author"].Should().Be("tomato-sauce");
+        }
 
-            fileSink.Should().Be("Serilog.Sinks.File.RollingFileSink");
-            consoleSink.Should().Be("Serilog.Sinks.SystemConsole.ConsoleSink");
-            elkSink.Should().Be("Serilog.Sinks.Elasticsearch.ElasticsearchSink");
-            seqSink.Should().Be("Serilog.Sinks.Seq.SeqSink");
+        [Fact]
+        public void CheckIfConfigureMethodSetCorrectFiltersInSerilogConfiguration()
+        {
+            // Arrange
+            var excludePaths = new[]
+            {
+                "/ping",
+                "/metrics"
+            };
 
-            fileMinimumLoggingLevel.Should().Be(LogEventLevel.Information);
-            consoleMinimumLoggingLevel.Should().Be(LogEventLevel.Debug);
-            elkMinimumLoggingLevel.Should().Be(LogEventLevel.Information);
-            seqMinimumLoggingLevel.Should().Be(LogEventLevel.Information);
+            var excludeProperties = new[]
+            {
+                "api_key",
+                "access_key",
+                "ApiKey"
+            };
 
-            enricherDictionary["Environment"].Should().Be(environment);
-            enricherDictionary[nameof(appOptions.Application)].Should().Be(appOptions.Service);
-            enricherDictionary[nameof(appOptions.Instance)].Should().Be(appOptions.Instance);
-            enricherDictionary[nameof(appOptions.Version)].Should().Be(appOptions.Version);
+            var logger = CreateLoggerForTests(excludePaths: excludePaths, excludeProperties: excludeProperties);
+
+            // Act
+            var filters = GetFilters(logger).ToArray();
+
+            // Assert
+            filters.Length.Should().Be(excludePaths.Length + excludeProperties.Length);
         }
 
         private static IReadOnlyList<ILogEventSink> GetSinks(Serilog.Core.Logger logger)
@@ -140,6 +132,22 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger
             return propertyEnrichers;
         }
 
+        private static IEnumerable<ILogEventFilter> GetFilters(Serilog.Core.Logger logger)
+        {
+            var aggregateSinkFieldInfo = logger.GetType()
+                .GetField("_sink", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            var aggregateSink = (ILogEventSink) aggregateSinkFieldInfo?.GetValue(logger);
+
+            var filterEnumerableFieldInfo = aggregateSink?.GetType()
+                .GetField("_filters", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            var filters = (ILogEventFilter[]) filterEnumerableFieldInfo?
+                .GetValue(aggregateSink);
+
+            return filters;
+        }
+
         private static string GetPropertyEnricherName(IReadOnlyList<ILogEventEnricher> enrichers, int index)
             => enrichers[index].GetType().GetField("_name", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?.GetValue(enrichers[index]).ToString();
@@ -156,5 +164,61 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger
             => (LoggingLevelSwitch) sinks[index].GetType()
                 .GetField("_levelSwitch", BindingFlags.Instance | BindingFlags.NonPublic)
                 ?.GetValue(sinks[index]);
+
+        private static Serilog.Core.Logger CreateLoggerForTests(AppOptions appOptions = null,
+            IEnumerable<string> excludePaths = null, IEnumerable<string> excludeProperties = null,
+            string interval = "day")
+        {
+            ISerilogConfigurator serilogConfigurator = new SerilogConfigurator();
+            var loggerConfiguration = new LoggerConfiguration();
+            const string environment = "development";
+
+            var loggerSettings = new LoggerSettings()
+            {
+                FileSettings = new FileSettings
+                {
+                    Enabled = true,
+                    Interval = interval,
+                    LoggingLevel = "Information",
+                    Path = "Logs/logs.txt"
+                },
+                ConsoleSettings = new ConsoleSettings
+                {
+                    Enabled = true,
+                    LoggingLevel = "Debug"
+                },
+                ElkSettings = new ElkSettings()
+                {
+                    Enabled = true,
+                    BasicAuthEnabled = false,
+                    LoggingLevel = "Information",
+                    Url = "http://localhost:8000"
+                },
+                SeqSettings = new SeqSettings
+                {
+                    Enabled = true,
+                    Url = "http://localhost:5341",
+                    ApiKey = "secret"
+                },
+                Tags = new Dictionary<string, object>
+                {
+                    {"Author", "tomato-sauce"}
+                },
+                ExcludePaths = excludePaths,
+                ExcludeProperties = excludeProperties
+            };
+
+            var applicationOptions = appOptions ?? new AppOptions
+            {
+                Name = "Shoppingendly",
+                Instance = "1",
+                Service = "Products",
+                Version = "1.0.0"
+            };
+
+            return serilogConfigurator
+                .ConfigureLogger(loggerConfiguration, loggerSettings, applicationOptions, environment)
+                .CreateLogger();
+        }
     }
 }
