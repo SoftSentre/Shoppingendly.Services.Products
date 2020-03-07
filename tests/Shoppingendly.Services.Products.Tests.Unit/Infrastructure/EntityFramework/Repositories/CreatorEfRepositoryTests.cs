@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Repositories
@@ -122,12 +125,14 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         {
             var dbName = Guid.NewGuid().ToString();
 
+            var loggerFactory = new Mock<ILoggerFactory>();
             var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
                 .UseInMemoryDatabase(dbName)
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
-            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions);
+            var productServiceDbContext =
+                new ProductServiceDbContext(new SqlSettings(), loggerFactory.Object, dbContextOptions);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 

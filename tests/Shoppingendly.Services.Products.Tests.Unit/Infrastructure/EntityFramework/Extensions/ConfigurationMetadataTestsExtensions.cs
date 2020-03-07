@@ -3,8 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions
 {
@@ -20,7 +23,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
-            var dbContext = new ProductServiceDbContext(options);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var dbContext = new ProductServiceDbContext(new SqlSettings(), loggerFactory.Object, options);
             var conventionSet = ConventionSet.CreateConventionSet(dbContext);
             var modelBuilder = new ModelBuilder(conventionSet);
             var entityTypeBuilder = modelBuilder.Entity<TEntity>();
