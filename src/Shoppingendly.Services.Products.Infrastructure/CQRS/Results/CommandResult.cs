@@ -9,14 +9,14 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Results
             return new CommandResult {Ok = true};
         }
 
-        public static CommandResult Failed(string error, ErrorType errorType)
+        public static CommandResult Failed(string error)
         {
-            return new CommandResult {Ok = false, ErrorType = errorType, Message = error};
+            return new CommandResult {Ok = false, Message = error};
         }
 
-        public static CommandResult Failed(IDictionary<string, string> errors, ErrorType errorType)
+        public static CommandResult Failed(IDictionary<string, string> errors)
         {
-            return new CommandResult {Ok = false, ErrorType = errorType, Errors = errors};
+            return new CommandResult {Ok = false, Errors = errors};
         }
     }
 }

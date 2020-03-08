@@ -5,8 +5,6 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Results
     public interface IResult
     {
         bool Ok { get; }
-        
-        ErrorType ErrorType { get; }
 
         string Message { get; }
 

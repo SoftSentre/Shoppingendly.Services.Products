@@ -11,14 +11,14 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Results
             return new QueryResult<T> {Ok = true, Data = data};
         }
 
-        public static QueryResult<T> Failed(string error, ErrorType errorType)
+        public static QueryResult<T> Failed(string error)
         {
-            return new QueryResult<T> {Ok = false, ErrorType = errorType, Message = error};
+            return new QueryResult<T> {Ok = false, Message = error};
         }
 
-        public static QueryResult<T> Failed(IDictionary<string, string> errors, ErrorType errorType)
+        public static QueryResult<T> Failed(IDictionary<string, string> errors)
         {
-            return new QueryResult<T> {Ok = false, ErrorType = errorType, Errors = errors};
+            return new QueryResult<T> {Ok = false, Errors = errors};
         }
     }
 }
