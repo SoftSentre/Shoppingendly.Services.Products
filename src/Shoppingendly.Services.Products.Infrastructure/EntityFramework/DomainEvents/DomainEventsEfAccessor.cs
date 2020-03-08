@@ -25,8 +25,8 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
             _productServiceDbContext = productServiceDbContext.IfEmptyThenThrowAndReturnValue();
         }
 
-        public Maybe<IEnumerable<IDomainEvent>> GetUncommitted()
-            => GetDomainEvents();
+        public Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents()
+            => GetDomainEvents().Value.ToList();
 
         public async Task DispatchEventsAsync()
         {

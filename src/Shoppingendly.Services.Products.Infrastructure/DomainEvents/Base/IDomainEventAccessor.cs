@@ -7,7 +7,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base
 {
     public interface IDomainEventAccessor
     {
-        Maybe<IEnumerable<IDomainEvent>> GetUncommitted();
+        Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents();
         Task DispatchEventsAsync();
         void ClearAllDomainEvents();
     }
