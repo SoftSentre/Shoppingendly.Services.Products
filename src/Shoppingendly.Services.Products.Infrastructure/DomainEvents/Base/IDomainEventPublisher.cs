@@ -3,9 +3,9 @@ using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 
 namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base
 {
-    public interface IDomainEventHandler<in TEvent> 
-        where TEvent : class, IDomainEvent
+    public interface IDomainEventPublisher
     {
-        Task HandleAsync(TEvent @event);
+        Task PublishAsync<TEvent>(TEvent @event)
+            where TEvent : class, IDomainEvent;
     }
 }
