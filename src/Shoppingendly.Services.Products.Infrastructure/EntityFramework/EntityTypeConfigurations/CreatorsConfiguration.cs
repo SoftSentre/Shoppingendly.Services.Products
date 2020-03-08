@@ -23,7 +23,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
                 .HasMaxLength(CreatorEmailMaxLength)
                 .IsRequired();
 
-            creatorsConfiguration.Property<int>("_roleId")
+            creatorsConfiguration.Property(p => p.RoleId)
                 .HasColumnName("CreatorRoleId")
                 .IsRequired(IsCreatorEmailRequired);
 
@@ -36,7 +36,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityT
 
             creatorsConfiguration.HasOne(c => c.Role)
                 .WithMany()
-                .HasForeignKey("_roleId");
+                .HasForeignKey(c => c.RoleId);
             
             creatorsConfiguration.HasMany(c => c.Products)
                 .WithOne(p => p.Creator)
