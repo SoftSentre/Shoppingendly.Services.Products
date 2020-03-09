@@ -6,6 +6,7 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
     {
         public PictureProfile()
         {
+            
         }
     }
 }
