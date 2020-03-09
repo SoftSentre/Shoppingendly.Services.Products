@@ -1,6 +1,7 @@
 using AutoMapper;
 using Shoppingendly.Services.Products.Application.DTO;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
 namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
 {
@@ -16,21 +17,25 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
                 });
 
             CreateMap<Creator, CreatorDto>()
-                .ConstructUsing(c => new CreatorDto
-                {
-                    Id = c.Id.Id.ToString(),
-                    Name = c.Name,
-                    Role = c.Role.Name
-                });
+                .ConstructUsing((c, context)
+                    => new CreatorDto
+                    {
+                        Id = c.Id.Id.ToString(),
+                        Name = c.Name,
+                        Role = context.Mapper
+                            .Map<Role, RoleDto>(c.Role)
+                    });
 
             CreateMap<Creator, CreatorWithProducts>()
-                .ConstructUsing(c => new CreatorWithProducts
-                {
-                    Id = c.Id.Id.ToString(),
-                    Name = c.Name,
-                    Role = c.Role.Name,
-                    Products = c.Products
-                });
+                .ConstructUsing((c, context)
+                    => new CreatorWithProducts
+                    {
+                        Id = c.Id.Id.ToString(),
+                        Name = c.Name,
+                        Role = context.Mapper
+                            .Map<Role, RoleDto>(c.Role),
+                        Products = c.Products
+                    });
         }
     }
 }
