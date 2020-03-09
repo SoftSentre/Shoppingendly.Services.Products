@@ -5,6 +5,6 @@ namespace Shoppingendly.Services.Products.Application.DTO
 {
     public class CreatorWithProducts : CreatorDto
     {
-        public IEnumerable<Product> Product { get; set; }
+        public IEnumerable<Product> Products { get; set; }
     }
 }
