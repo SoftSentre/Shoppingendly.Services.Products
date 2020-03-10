@@ -38,7 +38,8 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
             foreach (var domainEvent in domainEvents.Value)
             {
                 if (domainEvent == null)
-                    throw new DomainEventCanNotBeEmptyException("Domain event can not be null.");
+                    throw new DomainEventCanNotBeEmptyException(
+                        "Domain event can not be null.");
 
                 await _domainEventBus.PublishAsync(domainEvent);
             }
