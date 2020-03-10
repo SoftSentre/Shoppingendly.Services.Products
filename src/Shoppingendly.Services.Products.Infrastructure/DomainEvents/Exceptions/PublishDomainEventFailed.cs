@@ -2,9 +2,9 @@
 
 namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
 {
-    public class UnableToPublishDomainEventException : ShoppingendlyException
+    public class PublishDomainEventFailed : ShoppingendlyException
     {
-        public UnableToPublishDomainEventException(string message) : base(message)
+        public PublishDomainEventFailed(string message) : base(message)
         {
         }
     }
