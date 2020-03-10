@@ -23,7 +23,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Commands
             _validators = validators.IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<ICommandResult> HandleAsync(TCommand command)
+        public async Task<ICommandResult> SendAsync(TCommand command)
         {
             var errors = _validators
                 .Select(v => v.Validate(command))
@@ -32,7 +32,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Commands
                 .ToList();
 
             if (!errors.Any())
-                return await _decorated.HandleAsync(command);
+                return await _decorated.SendAsync(command);
 
             var errorBuilder = new StringBuilder();
             errorBuilder.AppendLine("Invalid command, reason: ");

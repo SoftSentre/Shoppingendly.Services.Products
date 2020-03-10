@@ -23,14 +23,14 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Commands
             _logger = logger.IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<ICommandResult> HandleAsync(TCommand command)
+        public async Task<ICommandResult> SendAsync(TCommand command)
         {
             ICommandResult result;
 
             try
             {
                 _logger.LogInformation(Smart.Format("Processing command:", command));
-                result = await _decorated.HandleAsync(command);
+                result = await _decorated.SendAsync(command);
                 _logger.LogInformation(Smart.Format("Command processed with result:", result));
                 return result;
             }

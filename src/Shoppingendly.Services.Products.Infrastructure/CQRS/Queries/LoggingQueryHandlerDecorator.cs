@@ -22,14 +22,14 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
             _logger = logger.IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<IQueryResult<TResult>> HandleAsync(TQuery query)
+        public async Task<IQueryResult<TResult>> QueryAsync(TQuery query)
         {
             IQueryResult<TResult> result;
 
             try
             {
                 _logger.LogInformation(Smart.Format("Processing query:", query));
-                result = await _decorated.HandleAsync(query);
+                result = await _decorated.QueryAsync(query);
                 _logger.LogInformation(Smart.Format("Query processed with result:", result));
                 return result;
             }

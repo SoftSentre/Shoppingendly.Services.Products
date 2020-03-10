@@ -19,11 +19,11 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Commands
             _unitOfWork = unitOfWork.IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<ICommandResult> HandleAsync(TCommand command)
+        public async Task<ICommandResult> SendAsync(TCommand command)
         {
             var transaction = await _unitOfWork.BeginTransactionAsync();
             
-            var result = await _decorated.HandleAsync(command);
+            var result = await _decorated.SendAsync(command);
             
             await _unitOfWork.CommitTransactionAsync(transaction);
             
