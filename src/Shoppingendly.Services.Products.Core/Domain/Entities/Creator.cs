@@ -18,8 +18,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private HashSet<Product> _products;
-        private int _roleId;
-
+        
+        public int RoleId { get; private set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         public HashSet<Product> Products
         {
             get => _products;
-            set => _products = new HashSet<Product>(value);
+            private set => _products = new HashSet<Product>(value);
         }
 
         public Creator()
