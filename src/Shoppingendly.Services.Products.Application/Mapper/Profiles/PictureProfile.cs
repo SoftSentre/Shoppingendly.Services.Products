@@ -9,10 +9,7 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
         public PictureProfile()
         {
             CreateMap<Picture, PictureDto>()
-                .ConstructUsing(p => new PictureDto
-                {
-                    Url = p.Url
-                });
+                .ConstructUsing(p => new PictureDto(p.Url));
         }
     }
 }

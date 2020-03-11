@@ -3,12 +3,12 @@ using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 
 namespace Shoppingendly.Services.Products.Application.DTO
 {
-    public class CategoryWithProductsDto : CategoryDto
+    public class CreatorWithProductsDto : CreatorDto
     {
         public IEnumerable<Product> Products { get; }
 
-        public CategoryWithProductsDto(string id, string name, string description, IEnumerable<Product> products) :
-            base(id, name, description)
+        public CreatorWithProductsDto(string id, string name, RoleDto role, IEnumerable<Product> products)
+            : base(id, name, role)
         {
             Products = products;
         }

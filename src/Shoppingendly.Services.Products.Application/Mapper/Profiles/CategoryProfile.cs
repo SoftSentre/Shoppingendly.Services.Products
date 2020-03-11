@@ -10,28 +10,15 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
         public CategoryProfile()
         {
             CreateMap<Category, BasicCategoryDto>()
-                .ConstructUsing(c => new BasicCategoryDto
-                {
-                    Id = c.Id.Id.ToString(),
-                    Name = c.Name
-                });
-
+                .ConstructUsing(c =>
+                    new BasicCategoryDto(c.Id.Id.ToString(), c.Name));
+            
             CreateMap<Category, CategoryDto>()
-                .ConstructUsing(c => new CategoryDto
-                {
-                    Id = c.Id.Id.ToString(),
-                    Name = c.Name,
-                    Description = c.Description
-                });
+                .ConstructUsing(c => new CategoryDto(c.Id.Id.ToString(), c.Name, c.Description));
 
             CreateMap<Category, CategoryWithProductsDto>()
-                .ConstructUsing(c => new CategoryWithProductsDto
-                {
-                    Id = c.Id.Id.ToString(),
-                    Name = c.Name,
-                    Description = c.Description,
-                    Products = c.ProductCategories.Select(pc => pc.Product)
-                });
+                .ConstructUsing(c => new CategoryWithProductsDto(c.Id.Id.ToString(), c.Name, c.Description,
+                    c.ProductCategories.Select(pc => pc.Product)));
         }
     }
 }

@@ -12,27 +12,13 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
         {
             CreateMap<Product, ProductDto>()
                 .ConstructUsing((p, context)
-                    => new ProductDto
-                    {
-                        Id = p.Id.Id.ToString(),
-                        Name = p.Name,
-                        Producer = p.Producer,
-                        Icon = context.Mapper
-                            .Map<Picture, PictureDto>(p.Picture)
-                    });
+                    => new ProductDto(p.Id.Id.ToString(), context.Mapper
+                        .Map<Picture, PictureDto>(p.Picture), p.Name, p.Producer));
 
             CreateMap<Product, ProductDetailsDto>()
                 .ConstructUsing((p, context)
-                    => new ProductDetailsDto
-                    {
-                        Id = p.Id.Id.ToString(),
-                        Name = p.Name,
-                        Producer = p.Producer,
-                        Picture = context.Mapper
-                            .Map<Picture, PictureDto>(p.Picture),
-                        Categories = p.ProductCategories
-                            .Select(pc => pc.Category.Name)
-                    });
+                    => new ProductDetailsDto(p.Id.Id.ToString(), p.Name, p.Producer, context.Mapper
+                        .Map<Picture, PictureDto>(p.Picture), p.ProductCategories.Select(pc => pc.Category.Name)));
         }
     }
 }

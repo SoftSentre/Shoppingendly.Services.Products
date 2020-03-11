@@ -42,9 +42,9 @@ namespace Shoppingendly.Services.Products.Application.Mapper
             return _mapper.Map<Creator, CreatorDto>(creator);
         }
 
-        public CreatorWithProducts MapCreatorToCreatorWithProductsDto(Creator creator)
+        public CreatorWithProductsDto MapCreatorToCreatorWithProductsDto(Creator creator)
         {
-            return _mapper.Map<Creator, CreatorWithProducts>(creator);
+            return _mapper.Map<Creator, CreatorWithProductsDto>(creator);
         }
 
         public RoleDto MapRoleToRoleDto(Role role)

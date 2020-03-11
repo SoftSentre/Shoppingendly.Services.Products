@@ -9,10 +9,7 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
         public RoleProfile()
         {
             CreateMap<Role, RoleDto>()
-                .ConstructUsing(r => new RoleDto
-                {
-                    Role = r.Name
-                });
+                .ConstructUsing(r => new RoleDto(r.Id.ToString(), r.Name));
         }
     }
 }

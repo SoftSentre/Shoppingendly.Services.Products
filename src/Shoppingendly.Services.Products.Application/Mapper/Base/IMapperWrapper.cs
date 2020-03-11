@@ -13,7 +13,7 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Base
 
         BasicCreatorDto MapCreatorToBasicCreatorDto(Creator creator);
         CreatorDto MapCreatorToCreatorDto(Creator creator);
-        CreatorWithProducts MapCreatorToCreatorWithProductsDto(Creator creator);
+        CreatorWithProductsDto MapCreatorToCreatorWithProductsDto(Creator creator);
 
         RoleDto MapRoleToRoleDto(Role role);
 

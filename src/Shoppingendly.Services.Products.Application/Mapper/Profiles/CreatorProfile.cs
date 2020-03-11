@@ -10,32 +10,16 @@ namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
         public CreatorProfile()
         {
             CreateMap<Creator, BasicCreatorDto>()
-                .ConstructUsing(c => new BasicCreatorDto
-                {
-                    Id = c.Id.Id.ToString(),
-                    Name = c.Name
-                });
+                .ConstructUsing(c => new BasicCreatorDto(c.Id.Id.ToString(), c.Name));
 
             CreateMap<Creator, CreatorDto>()
                 .ConstructUsing((c, context)
-                    => new CreatorDto
-                    {
-                        Id = c.Id.Id.ToString(),
-                        Name = c.Name,
-                        Role = context.Mapper
-                            .Map<Role, RoleDto>(c.Role)
-                    });
+                    => new CreatorDto(c.Id.Id.ToString(), c.Name, context.Mapper.Map<Role, RoleDto>(c.Role)));
 
-            CreateMap<Creator, CreatorWithProducts>()
+            CreateMap<Creator, CreatorWithProductsDto>()
                 .ConstructUsing((c, context)
-                    => new CreatorWithProducts
-                    {
-                        Id = c.Id.Id.ToString(),
-                        Name = c.Name,
-                        Role = context.Mapper
-                            .Map<Role, RoleDto>(c.Role),
-                        Products = c.Products
-                    });
+                    => new CreatorWithProductsDto(c.Id.Id.ToString(), c.Name, context.Mapper.Map<Role, RoleDto>(c.Role),
+                        c.Products));
         }
     }
 }
