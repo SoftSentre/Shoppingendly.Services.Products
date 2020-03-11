@@ -15,8 +15,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.InversionOfControl.Reso
 
         public TDependency Resolve<TDependency>()
         {
-            using var scope = _lifetimeScope.BeginLifetimeScope();
-            var resolvedDependency = scope.Resolve<TDependency>();
+            var resolvedDependency = _lifetimeScope.Resolve<TDependency>();
             return resolvedDependency;
         }
     }

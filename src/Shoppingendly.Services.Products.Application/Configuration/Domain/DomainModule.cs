@@ -2,7 +2,7 @@ using Autofac;
 using Shoppingendly.Services.Products.Core.Domain.Services;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 
-namespace Shoppingendly.Services.Products.Infrastructure.InversionOfControl.Modules
+namespace Shoppingendly.Services.Products.Application.Configuration.Domain
 {
     public class DomainModule : Module
     {

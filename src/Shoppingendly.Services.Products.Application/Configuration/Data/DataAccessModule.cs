@@ -1,17 +1,15 @@
 using Autofac;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
-using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Shoppingendly.Services.Products.Infrastructure.Extensions;
 
-namespace Shoppingendly.Services.Products.Infrastructure.InversionOfControl.Modules
+namespace Shoppingendly.Services.Products.Application.Configuration.Data
 {
     public class DataAccessModule : Module
     {
