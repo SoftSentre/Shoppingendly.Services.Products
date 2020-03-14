@@ -27,7 +27,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
         public HashSet<ProductCategory> ProductCategories
         {
             get => _productCategories;
-            private set => _productCategories = new HashSet<ProductCategory>(value);
+            set => _productCategories = new HashSet<ProductCategory>(value);
         }
 
         private Product()

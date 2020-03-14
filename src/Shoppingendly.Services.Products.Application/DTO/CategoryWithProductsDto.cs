@@ -5,9 +5,9 @@ namespace Shoppingendly.Services.Products.Application.DTO
 {
     public class CategoryWithProductsDto : CategoryDto
     {
-        public IEnumerable<Product> Products { get; }
+        public IEnumerable<ProductDto> Products { get; }
 
-        public CategoryWithProductsDto(string id, string name, string description, IEnumerable<Product> products) :
+        public CategoryWithProductsDto(string id, string name, string description, IEnumerable<ProductDto> products) :
             base(id, name, description)
         {
             Products = products;

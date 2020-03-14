@@ -29,7 +29,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         public HashSet<Product> Products
         {
             get => _products;
-            private set => _products = new HashSet<Product>(value);
+            set => _products = new HashSet<Product>(value);
         }
 
         public Creator()
