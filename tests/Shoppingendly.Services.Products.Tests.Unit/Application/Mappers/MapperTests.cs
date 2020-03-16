@@ -142,5 +142,20 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
                 p.Id == product.Id.Id.ToString() && p.Name == product.Name && p.Producer == product.Producer &&
                 p.Icon.Url == product.Picture.Url);
         }
+
+        [Fact]
+        public void CheckIfItPossibleMapRoleToRoleDto()
+        {
+            // Arrange
+            var role = Role.Moderator;
+
+            // Act
+            var testResult = _mapperWrapper.MapRoleToRoleDto(role);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(role.Id.ToString());
+            testResult.Role.Should().Be(role.Name);
+        }
     }
 }
