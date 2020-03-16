@@ -6,8 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All"/>
+    <ProjectReference Include="..\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All" />
     <ProjectReference Include="..\Shoppingendly.Services.Products.Infrastructure\Shoppingendly.Services.Products.Infrastructure.csproj" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
   </ItemGroup>
 
 </Project>

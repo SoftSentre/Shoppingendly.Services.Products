@@ -7,10 +7,10 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
     public class ProductCategory : AuditableDoubleKeyEntity<ProductId, CategoryId>
     {
         // Navigation property
-        public Product Product { get; private set; }
+        public Product Product { get; set; }
         
         // Navigation property
-        public Category Category { get; private set; }
+        public Category Category { get; set; }
 
         private ProductCategory()
         {
