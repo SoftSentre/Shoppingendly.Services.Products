@@ -127,7 +127,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
             var picture = new Picture("Example", "eeee.jpg");
             product.AddOrChangePicture(picture);
             creator.Products.Add(product);
-            
+
             // Act
             var testResult = _mapperWrapper.MapCreatorToCreatorWithProductsDto(creator);
 
@@ -156,7 +156,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
             testResult.Id.Should().Be(role.Id.ToString());
             testResult.Role.Should().Be(role.Name);
         }
-        
+
         [Fact]
         public void CheckIfItPossibleMapPictureToPictureDto()
         {
@@ -171,5 +171,52 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
             testResult.Url.Should().Be(picture.Url);
         }
 
+        [Fact]
+        public void CheckIfItPossibleMapProductToProductDto()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
+            var picture = Picture.Create("Name", "eeee.jpg");
+            product.AddOrChangePicture(picture);
+
+            // Act
+            var testResult = _mapperWrapper.MapProductToProductDto(product);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(product.Id.Id.ToString());
+            testResult.Name.Should().Be(product.Name);
+            testResult.Producer.Should().Be(product.Producer);
+            testResult.Icon.Url.Should().Be(product.Picture.Url);
+        }
+
+        [Fact]
+        public void CheckIfItPossibleMapProductToProductDetailsDto()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
+            var picture = Picture.Create("Name", "eeee.jpg");
+            product.AddOrChangePicture(picture);
+            var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
+            var secondCategory = new Category(new CategoryId(), "SecondExampleCategory", "Other correct description");
+            var productCategory = ProductCategory.Create(product.Id, category.Id);
+            productCategory.Category = category;
+            var secondProductCategory = ProductCategory.Create(product.Id, secondCategory.Id);
+            secondProductCategory.Category = secondCategory;
+            product.ProductCategories.Add(productCategory);
+            product.ProductCategories.Add(secondProductCategory);
+
+            // Act
+            var testResult = _mapperWrapper.MapProductToProductDetailsDto(product);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(product.Id.Id.ToString());
+            testResult.Name.Should().Be(product.Name);
+            testResult.Producer.Should().Be(product.Producer);
+            testResult.Picture.Url.Should().Be(product.Picture.Url);
+            testResult.Categories.Should().Contain(c => c == category.Name);
+            testResult.Categories.Should().Contain(c => c == secondCategory.Name);
+        }
     }
 }
