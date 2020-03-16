@@ -10,7 +10,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
 {
     public class Category : AuditableAndEventSourcingEntity<CategoryId>
     {
-        private HashSet<ProductCategory> _productCategories;
+        private HashSet<ProductCategory> _productCategories = new HashSet<ProductCategory>();
 
         public string Name { get; private set; }
         public string Description { get; private set; }
