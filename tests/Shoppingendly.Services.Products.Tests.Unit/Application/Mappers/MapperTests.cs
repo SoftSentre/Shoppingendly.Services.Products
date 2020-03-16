@@ -86,5 +86,61 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
                 p.Id == product.Id.Id.ToString() && p.Icon.Url == product.Picture.Url && p.Name == product.Name &&
                 p.Producer == product.Producer);
         }
+
+        [Fact]
+        public void CheckIfItPossibleMapCreatorToBasicCreatorDto()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            var testResult = _mapperWrapper.MapCreatorToBasicCreatorDto(creator);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(creator.Id.Id.ToString());
+            testResult.Name.Should().Be(creator.Name);
+        }
+
+        [Fact]
+        public void CheckIfItPossibleMapCreatorToCreatorDto()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            var testResult = _mapperWrapper.MapCreatorToCreatorDto(creator);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(creator.Id.Id.ToString());
+            testResult.Name.Should().Be(creator.Name);
+            testResult.Role.Id.Should().Be(creator.Role.Id.ToString());
+            testResult.Role.Role.Should().Be(creator.Role.Name);
+        }
+
+        [Fact]
+        public void CheckIfItPossibleMapCreatorToCreatorWithProductsDto()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
+            var picture = new Picture("Example", "eeee.jpg");
+            product.AddOrChangePicture(picture);
+            creator.Products.Add(product);
+            
+            // Act
+            var testResult = _mapperWrapper.MapCreatorToCreatorWithProductsDto(creator);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(creator.Id.Id.ToString());
+            testResult.Name.Should().Be(creator.Name);
+            testResult.Role.Id.Should().Be(creator.Role.Id.ToString());
+            testResult.Role.Role.Should().Be(creator.Role.Name);
+            testResult.Products.Should().Contain(p =>
+                p.Id == product.Id.Id.ToString() && p.Name == product.Name && p.Producer == product.Producer &&
+                p.Icon.Url == product.Picture.Url);
+        }
     }
 }

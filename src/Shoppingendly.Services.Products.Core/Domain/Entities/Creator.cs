@@ -17,7 +17,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        private HashSet<Product> _products;
+        private HashSet<Product> _products = new HashSet<Product>();
         
         public int RoleId { get; private set; }
         public string Name { get; private set; }
