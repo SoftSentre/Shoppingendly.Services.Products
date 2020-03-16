@@ -1,7 +1,6 @@
 using System.Linq;
 using AutoMapper;
 using FluentAssertions;
-using Shoppingendly.Services.Products.Application.DTO;
 using Shoppingendly.Services.Products.Application.Mapper;
 using Shoppingendly.Services.Products.Application.Mapper.Base;
 using Shoppingendly.Services.Products.Application.Mapper.Profiles;
@@ -157,5 +156,20 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
             testResult.Id.Should().Be(role.Id.ToString());
             testResult.Role.Should().Be(role.Name);
         }
+        
+        [Fact]
+        public void CheckIfItPossibleMapPictureToPictureDto()
+        {
+            // Arrange
+            var picture = Picture.Create("Name", "eeee.jpg");
+
+            // Act
+            var testResult = _mapperWrapper.MapPictureToPictureDto(picture);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Url.Should().Be(picture.Url);
+        }
+
     }
 }
