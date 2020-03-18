@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
@@ -26,25 +27,38 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
         }
 
         public Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents()
-            => GetDomainEvents().Value.ToList();
-
-        public async Task DispatchEventsAsync()
         {
-            var domainEvents = GetDomainEvents();
+            var entities = _productServiceDbContext.ChangeTracker
+                .Entries<AuditableAndEventSourcingEntity<Identity<Guid>>>()
+                .Where(e => e.Entity.DomainEvents.IsNotEmpty())
+                .ToList();
 
-            if (domainEvents.HasNoValue || domainEvents.Value.IsEmpty())
+            var domainEvents = entities.IsEmpty()
+                ? new List<IDomainEvent>()
+                : entities.SelectMany(x => x.Entity.DomainEvents
+                    .OrderBy(de => de.OccuredAt));
+
+            return domainEvents.ToList();
+        }
+
+        public void DispatchEvents(IEnumerable<IDomainEvent> domainEvents)
+        {
+            var tasks = new List<Task>();
+            var domainEventsList = domainEvents.ToList();
+
+            if (domainEventsList.IsEmpty())
                 return;
 
-            foreach (var domainEvent in domainEvents.Value)
+            foreach (var domainEvent in domainEventsList)
             {
                 if (domainEvent == null)
                     throw new DomainEventCanNotBeEmptyException(
                         "Domain event can not be null.");
 
-                await _domainEventBus.PublishAsync(domainEvent);
+                tasks.Add(_domainEventBus.PublishAsync(domainEvent));
             }
 
-            Task.WaitAll();
+            Task.WaitAll(tasks.ToArray(), default(CancellationToken));
         }
 
         public void ClearAllDomainEvents()
@@ -58,21 +72,6 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
                 return;
 
             entities.ForEach(entity => entity.Entity.ClearDomainEvents());
-        }
-
-        private Maybe<IEnumerable<IDomainEvent>> GetDomainEvents()
-        {
-            var entities = _productServiceDbContext.ChangeTracker
-                .Entries<AuditableAndEventSourcingEntity<Identity<Guid>>>()
-                .Where(e => e.Entity.DomainEvents.IsNotEmpty())
-                .ToList();
-
-            var domainEvents = entities.IsEmpty()
-                ? new List<IDomainEvent>()
-                : entities.SelectMany(x => x.Entity.DomainEvents
-                    .OrderBy(de => de.OccuredAt));
-
-            return domainEvents.ToList();
         }
     }
 }

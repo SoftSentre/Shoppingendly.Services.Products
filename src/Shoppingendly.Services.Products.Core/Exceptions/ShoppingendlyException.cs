@@ -7,5 +7,10 @@ namespace Shoppingendly.Services.Products.Core.Exceptions
         protected ShoppingendlyException(string message) : base(message)
         {
         }
+
+        protected ShoppingendlyException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

@@ -162,8 +162,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
-            var domainEventAccessor = new Mock<IDomainEventAccessor>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions, domainEventAccessor);
+            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
+            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions, domainEventDispatcher);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 

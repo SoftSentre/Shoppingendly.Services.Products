@@ -14,7 +14,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
     public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
-        private readonly IDomainEventAccessor _domainEventAccessor;
+        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
         private Maybe<IDbContextTransaction> _currentTransaction;
 
         public const string DefaultSchema = "products";
@@ -26,10 +26,10 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Role> CreatorRoles { get; set; }
 
-        public ProductServiceDbContext(DbContextOptions options, IDomainEventAccessor domainEventAccessor) :
+        public ProductServiceDbContext(DbContextOptions options, IDomainEventsDispatcher domainEventsDispatcher) :
             base(options)
         {
-            _domainEventAccessor = domainEventAccessor.IfEmptyThenThrowAndReturnValue();
+            _domainEventsDispatcher = domainEventsDispatcher.IfEmptyThenThrowAndReturnValue();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,7 +67,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 
             try
             {
-                await _domainEventAccessor.DispatchEventsAsync();
+                await _domainEventsDispatcher.DispatchAsync();
                 await SaveChangesAsync();
                 transaction.Commit();
             }
