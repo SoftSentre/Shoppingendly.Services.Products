@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
 

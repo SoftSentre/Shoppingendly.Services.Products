@@ -4,7 +4,6 @@ using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
-using SmartFormat;
 
 namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 {
@@ -28,7 +27,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
             if (queryHandler == null)
                 throw new SendingQueryFailedException(
-                    Smart.Format($"Can not send query: {query}."));
+                    $"Can not send query: {query.GetType().Name}.");
 
             return await queryHandler.QueryAsync((dynamic) query);
         }
@@ -42,7 +41,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
             if (queryHandler == null)
                 throw new SendingQueryFailedException(
-                    Smart.Format($"Can not send query: {query}."));
+                    $"Can not send query: {query.GetType().Name}.");
 
             return await queryHandler.QueryAsync(query);
         }

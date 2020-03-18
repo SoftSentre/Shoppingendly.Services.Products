@@ -4,7 +4,6 @@ using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
-using SmartFormat;
 
 namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 {
@@ -25,7 +24,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
             if (commandHandler == null)
                 throw new CommandPublishedFailedException(
-                    Smart.Format("Unable to publish command:", command));
+                    $"Unable to publish command: {command.GetType().Name}");
 
             return await commandHandler.SendAsync(command);
         }

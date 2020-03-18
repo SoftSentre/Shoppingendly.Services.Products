@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Exceptions;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
-using SmartFormat;
+using Shoppingendly.Services.Products.Infrastructure.Extensions;
 
 namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
 {
@@ -28,23 +28,21 @@ namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
 
             try
             {
-                _logger.LogInformation(Smart.Format("Processing query:", query));
+                _logger.LogInformation("Processing query: {QueryName} ({@Query})", query.GetGenericTypeName(), query);
                 result = await _decorated.QueryAsync(query);
-                _logger.LogInformation(Smart.Format("Query processed with result:", result));
-                return result;
+                _logger.LogInformation("Query successfully processed.");
             }
             catch (ShoppingendlyException shoppingendlyException)
             {
-                _logger.LogError(Smart.Format(
+                _logger.LogError(
                     $"Custom exception occured when processing a query. Message: {shoppingendlyException.Message}",
-                    query));
+                    shoppingendlyException);
 
                 result = QueryResult<TResult>.Failed(shoppingendlyException.Message);
             }
             catch (Exception exception)
             {
-                _logger.LogError(Smart.Format(
-                    $"Exception occured when processing a query. Message: {exception.Message}", query));
+                _logger.LogError($"Exception occured when processing a query. Message: {exception.Message}", exception);
 
                 result = QueryResult<TResult>.Failed(exception.Message);
             }
