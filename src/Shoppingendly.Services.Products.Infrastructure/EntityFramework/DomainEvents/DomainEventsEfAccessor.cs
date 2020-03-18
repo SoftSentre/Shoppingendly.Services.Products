@@ -43,6 +43,8 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
 
                 await _domainEventBus.PublishAsync(domainEvent);
             }
+
+            Task.WaitAll();
         }
 
         public void ClearAllDomainEvents()
@@ -67,7 +69,8 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
 
             var domainEvents = entities.IsEmpty()
                 ? new List<IDomainEvent>()
-                : entities.SelectMany(x => x.Entity.DomainEvents);
+                : entities.SelectMany(x => x.Entity.DomainEvents
+                    .OrderBy(de => de.OccuredAt));
 
             return domainEvents.ToList();
         }

@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
+using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
@@ -83,10 +85,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             var dbContext = await CreateDbContext();
             ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
             dbContext.AddRange(
-                new Category(new CategoryId(), "Name"), 
+                new Category(new CategoryId(), "Name"),
                 new Category(new CategoryId(), "OtherName"));
             await dbContext.SaveChangesAsync();
-            
+
             // Act
             var testResult = await categoryRepository.GetAllAsync();
 
@@ -95,7 +97,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
 
             dbContext.Dispose();
         }
-        
+
         [Fact]
         public async void CheckIfGetAllCategoriesWithIncludesMethodReturnValidObjects()
         {
@@ -103,10 +105,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             var dbContext = await CreateDbContext();
             ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
             dbContext.AddRange(
-                new Category(new CategoryId(), "Name"), 
+                new Category(new CategoryId(), "Name"),
                 new Category(new CategoryId(), "OtherName"));
             await dbContext.SaveChangesAsync();
-            
+
             // Act
             var testResult = await categoryRepository.GetAllWithIncludesAsync();
 
@@ -187,7 +189,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
-            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions);
+            var domainEventAccessor = new Mock<IDomainEventAccessor>().Object;
+            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions, domainEventAccessor);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 

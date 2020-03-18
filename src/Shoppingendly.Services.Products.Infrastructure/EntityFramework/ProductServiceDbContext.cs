@@ -5,13 +5,16 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
+using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
+using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
     public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
+        private readonly IDomainEventAccessor _domainEventAccessor;
         private Maybe<IDbContextTransaction> _currentTransaction;
 
         public const string DefaultSchema = "products";
@@ -23,8 +26,10 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Role> CreatorRoles { get; set; }
 
-        public ProductServiceDbContext(DbContextOptions options) : base(options)
+        public ProductServiceDbContext(DbContextOptions options, IDomainEventAccessor domainEventAccessor) :
+            base(options)
         {
+            _domainEventAccessor = domainEventAccessor.IfEmptyThenThrowAndReturnValue();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -38,7 +43,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction.Value;
 
-        protected void SetDbContextTransaction(IDbContextTransaction transaction)
+        private void SetDbContextTransaction(IDbContextTransaction transaction)
         {
             if (transaction == null) return;
 
@@ -62,6 +67,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 
             try
             {
+                await _domainEventAccessor.DispatchEventsAsync();
                 await SaveChangesAsync();
                 transaction.Commit();
             }
