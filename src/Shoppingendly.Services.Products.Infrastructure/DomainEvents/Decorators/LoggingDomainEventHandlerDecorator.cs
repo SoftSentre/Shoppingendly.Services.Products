@@ -5,7 +5,6 @@ using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 using Shoppingendly.Services.Products.Core.Exceptions;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
-using SmartFormat;
 
 namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Decorators
 {
@@ -27,20 +26,21 @@ namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Decorators
         {
             try
             {
-                _logger.LogInformation(Smart.Format("Processing domain event:", @event));
+                _logger.LogInformation("Processing domain event: {EventName} ({@Event})", @event.GetType().FullName,
+                    @event);
                 await _decorated.HandleAsync(@event);
-                _logger.LogInformation(Smart.Format("Domain event processed with result:", @event));
+                _logger.LogInformation("Domain event successfully processed.");
             }
             catch (ShoppingendlyException shoppingendlyException)
             {
-                _logger.LogError(Smart.Format(
+                _logger.LogError(
                     $"Custom exception occured when processing a domain event. Message: {shoppingendlyException.Message}",
-                    @event));
+                    @event);
             }
             catch (Exception exception)
             {
-                _logger.LogError(Smart.Format(
-                    $"Exception occured when processing a domain event. Message: {exception.Message}", @event));
+                _logger.LogError($"Exception occured when processing a domain event. Message: {exception.Message}",
+                    @event);
             }
         }
     }
