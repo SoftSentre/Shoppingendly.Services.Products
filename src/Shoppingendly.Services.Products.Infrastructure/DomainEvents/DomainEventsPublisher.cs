@@ -7,11 +7,11 @@ using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions;
 
 namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents
 {
-    public class DomainEventsPublisher : IDomainEventPublisher
+    public class DomainEventPublisher : IDomainEventPublisher
     {
         private readonly ILifetimeScope _lifetimeScope;
 
-        public DomainEventsPublisher(ILifetimeScope lifetimeScope)
+        public DomainEventPublisher(ILifetimeScope lifetimeScope)
         {
             _lifetimeScope = lifetimeScope.IfEmptyThenThrowAndReturnValue();
         }

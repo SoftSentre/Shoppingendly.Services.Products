@@ -15,14 +15,14 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
 {
     public class DomainEventsEfAccessor : IDomainEventAccessor
     {
-        private readonly IDomainEventPublisher _domainEventBus;
+        private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly ProductServiceDbContext _productServiceDbContext;
 
         public DomainEventsEfAccessor(
-            IDomainEventPublisher domainEventBus,
+            IDomainEventPublisher domainEventPublisher,
             ProductServiceDbContext productServiceDbContext)
         {
-            _domainEventBus = domainEventBus.IfEmptyThenThrowAndReturnValue();
+            _domainEventPublisher = domainEventPublisher.IfEmptyThenThrowAndReturnValue();
             _productServiceDbContext = productServiceDbContext.IfEmptyThenThrowAndReturnValue();
         }
 
@@ -55,7 +55,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
                     throw new DomainEventCanNotBeEmptyException(
                         "Domain event can not be null.");
 
-                tasks.Add(_domainEventBus.PublishAsync(domainEvent));
+                tasks.Add(_domainEventPublisher.PublishAsync(domainEvent));
             }
 
             Task.WaitAll(tasks.ToArray(), default(CancellationToken));
