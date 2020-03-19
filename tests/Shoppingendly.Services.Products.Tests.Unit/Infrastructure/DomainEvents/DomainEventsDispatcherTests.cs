@@ -22,6 +22,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.DomainEvents
         {
             // Arrange
             var domainEventsAccessor = new Mock<IDomainEventAccessor>();
+            domainEventsAccessor.Setup(dea => dea.GetUncommittedEvents())
+                .Returns(new Maybe<IEnumerable<IDomainEvent>>());
+            
             var logger = new Mock<ILogger<DomainEventsDispatcher>>();
             var domainEventsDispatcher = new DomainEventsDispatcher(logger.Object, domainEventsAccessor.Object);
 
@@ -61,7 +64,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.DomainEvents
         }
 
         [Fact]
-        public async void CheckIfDispatchMethodThrowingExceptionWhenProvidedEventIsNull()
+        public void CheckIfDispatchMethodThrowingExceptionWhenProvidedEventIsNull()
         {
             var domainEventsAccessor = new Mock<IDomainEventAccessor>();
             var domainEvents = new List<IDomainEvent> {null};

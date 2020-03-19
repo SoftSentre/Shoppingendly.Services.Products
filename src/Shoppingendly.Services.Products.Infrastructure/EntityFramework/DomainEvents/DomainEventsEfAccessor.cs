@@ -31,7 +31,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
         {
             var entities = GetEntities();
 
-            var domainEvents = entities.Value.IsEmpty()
+            var domainEvents = entities.HasNoValue || entities.Value.IsEmpty()
                 ? new List<IDomainEvent>()
                 : entities.Value.SelectMany(x => x.Entity.DomainEvents
                     .OrderBy(de => de.OccuredAt));
@@ -63,7 +63,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
         {
             var entities = GetEntities();
 
-            if (entities.Value.IsEmpty())
+            if (entities.HasNoValue || entities.Value.IsEmpty())
                 return;
 
             entities.Value.ForEach(entity => entity.Entity.ClearDomainEvents());

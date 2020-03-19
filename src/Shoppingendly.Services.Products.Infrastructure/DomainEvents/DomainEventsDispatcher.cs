@@ -26,7 +26,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents
             {
                 var uncommittedEvents = _domainEventAccessor.GetUncommittedEvents();
 
-                if (uncommittedEvents.HasNoValue && uncommittedEvents.Value.IsEmpty())
+                if (uncommittedEvents.HasNoValue || uncommittedEvents.Value.IsEmpty())
                 {
                     _logger.LogInformation("In this transactional scope any domain event hasn't been produced.");
                     return;
