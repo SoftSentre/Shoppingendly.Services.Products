@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Base.Identification;
@@ -28,14 +29,11 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
 
         public Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents()
         {
-            var entities = _productServiceDbContext.ChangeTracker
-                .Entries<AuditableAndEventSourcingEntity<Identity<Guid>>>()
-                .Where(e => e.Entity.DomainEvents.IsNotEmpty())
-                .ToList();
+            var entities = GetEntities();
 
-            var domainEvents = entities.IsEmpty()
+            var domainEvents = entities.Value.IsEmpty()
                 ? new List<IDomainEvent>()
-                : entities.SelectMany(x => x.Entity.DomainEvents
+                : entities.Value.SelectMany(x => x.Entity.DomainEvents
                     .OrderBy(de => de.OccuredAt));
 
             return domainEvents.ToList();
@@ -63,15 +61,20 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainE
 
         public void ClearAllDomainEvents()
         {
-            var entities = _productServiceDbContext.ChangeTracker
-                .Entries<AuditableAndEventSourcingEntity<Identity<Guid>>>()
-                .Where(e => e.Entity.DomainEvents.IsNotEmpty())
-                .ToList();
+            var entities = GetEntities();
 
-            if (entities.IsEmpty())
+            if (entities.Value.IsEmpty())
                 return;
 
-            entities.ForEach(entity => entity.Entity.ClearDomainEvents());
+            entities.Value.ForEach(entity => entity.Entity.ClearDomainEvents());
+        }
+
+        private Maybe<List<EntityEntry<IEventSourcingEntity>>> GetEntities()
+        {
+            return _productServiceDbContext.ChangeTracker
+                .Entries<IEventSourcingEntity>()
+                .Where(e => e.Entity.DomainEvents.IsNotEmpty())
+                .ToList();
         }
     }
 }
