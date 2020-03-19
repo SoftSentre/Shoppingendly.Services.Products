@@ -33,6 +33,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents
                 }
 
                 _domainEventAccessor.DispatchEvents(uncommittedEvents.Value);
+                _domainEventAccessor.ClearAllDomainEvents();
                 await Task.CompletedTask;
             }
             catch (Exception exception)
@@ -41,10 +42,6 @@ namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents
                     exception);
                 throw new DispatchedDomainEventsFailedException(
                     $"Error occured when dispatching the domain events. Message: {exception.Message}", exception);
-            }
-            finally
-            {
-                _domainEventAccessor.ClearAllDomainEvents();
             }
         }
     }
