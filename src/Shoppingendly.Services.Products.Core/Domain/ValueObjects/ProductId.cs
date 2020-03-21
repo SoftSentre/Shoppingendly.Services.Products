@@ -5,12 +5,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
 {
     public class ProductId : Identity<Guid>
     {
-        public ProductId()
+        internal ProductId()
         {
             Id = Guid.NewGuid();
         }
 
-        public ProductId(Guid value) : base(value)
+        internal ProductId(Guid value) : base(value)
         {
         }
     }

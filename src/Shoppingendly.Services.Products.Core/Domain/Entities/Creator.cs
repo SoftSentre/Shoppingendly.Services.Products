@@ -32,12 +32,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             set => _products = new HashSet<Product>(value);
         }
 
-        public Creator()
+        private Creator()
         {
             // Required for EF
         }
 
-        public Creator(CreatorId creatorId, string name, string email, Role role) : base(creatorId)
+        internal Creator(CreatorId creatorId, string name, string email, Role role) : base(creatorId)
         {
             Name = ValidateName(name);
             Email = ValidateEmail(email);
@@ -45,7 +45,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, email, role));
         }
 
-        public void SetName(string name)
+        internal void SetName(string name)
         {
             ValidateName(name);
 
@@ -54,7 +54,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorNameChangedDomainEvent(Id, name));
         }
 
-        public void SetEmail(string email)
+        internal void SetEmail(string email)
         {
             ValidateEmail(email);
 
@@ -63,7 +63,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorEmailChangedDomainEvent(Id, email));
         }
 
-        public void SetRole(Role role)
+        internal void SetRole(Role role)
         {
             ValidateRole(role);
 
@@ -72,7 +72,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, role));
         }
 
-        public static Creator Create(CreatorId creatorId, string name, string email, Role role)
+        internal static Creator Create(CreatorId creatorId, string name, string email, Role role)
         {
             return new Creator(creatorId, name, email, role);
         }

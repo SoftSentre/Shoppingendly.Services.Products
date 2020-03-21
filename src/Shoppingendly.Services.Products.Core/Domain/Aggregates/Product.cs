@@ -35,7 +35,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             // Required for EF
         }
 
-        public Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)
+        internal Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)
         {
             CreatorId = creatorId;
             Picture = Picture.Empty;
@@ -44,7 +44,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, Picture.Empty));
         }
 
-        public Product(ProductId id, CreatorId creatorId, Picture picture, string name, string producer) : base(id)
+        internal Product(ProductId id, CreatorId creatorId, Picture picture, string name, string producer) : base(id)
         {
             CreatorId = creatorId;
             Picture = picture;
@@ -53,7 +53,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, picture));
         }
 
-        public bool SetName(string name)
+        internal bool SetName(string name)
         {
             ValidateName(name);
 
@@ -66,7 +66,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             return true;
         }
 
-        public bool SetProducer(string producer)
+        internal bool SetProducer(string producer)
         {
             ValidateProducer(producer);
 
@@ -79,7 +79,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             return true;
         }
 
-        public bool AddOrChangePicture(Maybe<Picture> picture)
+        internal bool AddOrChangePicture(Maybe<Picture> picture)
         {
             var validatePicture = ValidatePicture(picture);
 
@@ -92,7 +92,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             return true;
         }
 
-        public void RemovePicture()
+        internal void RemovePicture()
         {
             if (Picture.IsEmpty)
                 throw new CanNotRemoveEmptyPictureException(
@@ -103,7 +103,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             AddDomainEvent(new PictureRemovedDomainEvent(Id));
         }
 
-        public void AssignCategory(CategoryId categoryId)
+        internal void AssignCategory(CategoryId categoryId)
         {
             var assignedCategory = GetProductCategory(categoryId);
 
@@ -118,7 +118,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
                 newAssignedCategory.SecondKey));
         }
 
-        public void DeallocateCategory(CategoryId categoryId)
+        internal void DeallocateCategory(CategoryId categoryId)
         {
             var assignedCategory = GetProductCategory(categoryId);
 
@@ -132,7 +132,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
                 assignedCategory.Value.SecondKey));
         }
 
-        public void DeallocateAllCategories()
+        internal void DeallocateAllCategories()
         {
             if (!_productCategories.Any())
                 throw new AnyProductWithAssignedCategoryNotFoundException(
@@ -144,17 +144,17 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             AddDomainEvent(new ProductDeallocatedFromAllCategoriesDomainEvent(Id, categoriesIds));
         }
 
-        public Maybe<IEnumerable<ProductCategory>> GetAllAssignedCategories()
+        internal Maybe<IEnumerable<ProductCategory>> GetAllAssignedCategories()
         {
             return _productCategories;
         }
 
-        public Maybe<ProductCategory> GetAssignedCategory(CategoryId categoryId)
+        internal Maybe<ProductCategory> GetAssignedCategory(CategoryId categoryId)
         {
             return GetProductCategory(categoryId);
         }
 
-        public static Product Create(ProductId id, CreatorId creatorId, string name, string producer)
+        internal static Product Create(ProductId id, CreatorId creatorId, string name, string producer)
         {
             return new Product(id, creatorId, name, producer);
         }

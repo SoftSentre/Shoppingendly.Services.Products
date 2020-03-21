@@ -1,8 +1,8 @@
 namespace Shoppingendly.Services.Products.Core.Exceptions.Services
 {
-    public class EmptyCategoryProvidedException : ShoppingendlyException
+    internal class EmptyCategoryProvidedException : ShoppingendlyException
     {
-        public EmptyCategoryProvidedException(string message) : base(message)
+        internal EmptyCategoryProvidedException(string message) : base(message)
         {
         }
     }

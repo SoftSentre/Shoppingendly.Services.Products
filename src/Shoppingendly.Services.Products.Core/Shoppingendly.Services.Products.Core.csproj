@@ -6,4 +6,10 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Shoppingendly.Services.Products.Tests.Unit</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
 </Project>

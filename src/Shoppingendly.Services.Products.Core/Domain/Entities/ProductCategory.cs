@@ -17,12 +17,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             // Required for EF
         }
 
-        public ProductCategory(ProductId productId, CategoryId categoryId) 
+        internal ProductCategory(ProductId productId, CategoryId categoryId) 
             : base(productId, categoryId)
         {
         }
 
-        public static ProductCategory Create(ProductId productId, CategoryId categoryId)
+        internal static ProductCategory Create(ProductId productId, CategoryId categoryId)
         {
             return new ProductCategory(productId, categoryId);
         }

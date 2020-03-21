@@ -11,7 +11,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Products
         public string ProductProducer { get; }
         public Picture Picture { get; }
 
-        public NewProductCreatedDomainEvent(ProductId productId, CreatorId creatorId, string productName,
+        internal NewProductCreatedDomainEvent()
+        {
+            // only for blocking creation of new object in other assembly than this.
+        }
+        
+        internal NewProductCreatedDomainEvent(ProductId productId, CreatorId creatorId, string productName,
             string productProducer, Picture picture)
         {
             ProductId = productId;

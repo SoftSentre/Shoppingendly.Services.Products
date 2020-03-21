@@ -1,8 +1,8 @@
 ﻿namespace Shoppingendly.Services.Products.Core.Exceptions.Categories
 {
-    public class InvalidCategoryNameException : ShoppingendlyException
+    internal class InvalidCategoryNameException : ShoppingendlyException
     {
-        public InvalidCategoryNameException(string message) : base(message)
+        internal InvalidCategoryNameException(string message) : base(message)
         {
         }
     }
