@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 {
-    public class CategoryTests
+    public class CategoryTests : CategoryDataGenerator
     {
         #region domain logic
 
