@@ -32,9 +32,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             set => _products = new HashSet<Product>(value);
         }
 
+        // Required for EF
         private Creator()
         {
-            // Required for EF
         }
 
         internal Creator(CreatorId creatorId, string name, string email, Role role) : base(creatorId)

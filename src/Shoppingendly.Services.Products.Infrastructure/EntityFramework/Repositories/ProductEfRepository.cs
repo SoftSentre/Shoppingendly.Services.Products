@@ -28,6 +28,12 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.Reposit
             return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.Name == name);
         }
 
+        public async Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId)
+        {
+            return await _productServiceDbContext.Products.Include(p => p.ProductCategories)
+                .FirstOrDefaultAsync(p => p.Id.Equals(productId));
+        }
+
         public async Task<Maybe<Product>> GetByNameWithIncludesAsync(string name)
         {
             return await _productServiceDbContext.Products.Include(p => p.ProductCategories)

@@ -30,9 +30,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Aggregates
             set => _productCategories = new HashSet<ProductCategory>(value);
         }
 
+        // Required for EF
         private Product()
         {
-            // Required for EF
         }
 
         internal Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)

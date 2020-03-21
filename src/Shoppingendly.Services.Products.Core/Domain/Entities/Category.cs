@@ -21,9 +21,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             set => _productCategories = new HashSet<ProductCategory>(value);
         }
 
+        // Required for EF
         private Category()
         {
-            // Required for EF
         }
 
         internal Category(CategoryId categoryId, string name) : base(categoryId)

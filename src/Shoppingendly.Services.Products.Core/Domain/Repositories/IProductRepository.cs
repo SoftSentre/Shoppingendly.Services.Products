@@ -9,6 +9,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Repositories
     {
         Task<Maybe<Product>> GetByIdAsync(ProductId productId);
         Task<Maybe<Product>> GetByNameAsync(string name);
+        Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId);
         Task<Maybe<Product>> GetByNameWithIncludesAsync(string name);
         Task AddAsync(Product product);
         void Update(Product product);

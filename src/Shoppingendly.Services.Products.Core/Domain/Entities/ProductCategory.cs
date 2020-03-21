@@ -12,9 +12,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         // Navigation property
         public Category Category { get; set; }
 
+        // Required for EF
         private ProductCategory()
         {
-            // Required for EF
         }
 
         internal ProductCategory(ProductId productId, CategoryId categoryId) 
