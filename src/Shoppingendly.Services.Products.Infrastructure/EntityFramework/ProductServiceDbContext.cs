@@ -11,6 +11,7 @@ using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
+using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
@@ -19,6 +20,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
     public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
+        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
         private readonly ILoggerFactory _loggerFactory;
         private readonly SqlSettings _sqlSettings;
         private Maybe<IDbContextTransaction> _currentTransaction;
@@ -33,8 +35,11 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
         public DbSet<Role> CreatorRoles { get; set; }
 
         public ProductServiceDbContext(SqlSettings sqlSettings, ILoggerFactory loggerFactory,
-            DbContextOptions options) : base(options)
+            IDomainEventsDispatcher domainEventsDispatcher, DbContextOptions options) : base(options)
         {
+            _domainEventsDispatcher = domainEventsDispatcher
+            .IfEmptyThenThrowAndReturnValue();
+            
             _sqlSettings = sqlSettings
                 .IfEmptyThenThrowAndReturnValue();
             
@@ -72,7 +77,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction.Value;
 
-        protected void SetDbContextTransaction(IDbContextTransaction transaction)
+        private void SetDbContextTransaction(IDbContextTransaction transaction)
         {
             if (transaction == null) return;
 
@@ -96,6 +101,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 
             try
             {
+                await _domainEventsDispatcher.DispatchAsync();
                 await SaveChangesAsync();
                 transaction.Commit();
             }
