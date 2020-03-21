@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -34,15 +33,16 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Role> CreatorRoles { get; set; }
 
-        public ProductServiceDbContext(SqlSettings sqlSettings, ILoggerFactory loggerFactory,
-            IDomainEventsDispatcher domainEventsDispatcher, DbContextOptions options) : base(options)
+        public ProductServiceDbContext(ILoggerFactory loggerFactory,
+            IDomainEventsDispatcher domainEventsDispatcher, SqlSettings sqlSettings,
+            DbContextOptions options) : base(options)
         {
             _domainEventsDispatcher = domainEventsDispatcher
-            .IfEmptyThenThrowAndReturnValue();
-            
+                .IfEmptyThenThrowAndReturnValue();
+
             _sqlSettings = sqlSettings
                 .IfEmptyThenThrowAndReturnValue();
-            
+
             _loggerFactory = loggerFactory
                 .IfEmptyThenThrowAndReturnValue();
         }
@@ -57,7 +57,7 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
                 optionsBuilder.UseInMemoryDatabase(_sqlSettings.Database)
                     .UseStronglyTypedIds()
                     .UseLogging(_loggerFactory);
-                    
+
                 return;
             }
 

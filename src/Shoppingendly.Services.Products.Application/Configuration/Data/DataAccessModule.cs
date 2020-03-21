@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Extensions;
+using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
@@ -46,10 +47,12 @@ namespace Shoppingendly.Services.Products.Application.Configuration.Data
 
             builder.Register(context =>
                 {
+                    var domainEventsDispatcher = context.Resolve<IDomainEventsDispatcher>();
                     var sqlSettings = context.Resolve<SqlSettings>();
                     var dbContextOptions = new DbContextOptionsBuilder();
 
-                    return new ProductServiceDbContext(sqlSettings, _loggerFactory, dbContextOptions.Options);
+                    return new ProductServiceDbContext(_loggerFactory, domainEventsDispatcher, sqlSettings,
+                        dbContextOptions.Options);
                 })
                 .AsSelf()
                 .As<IUnitOfWork>();

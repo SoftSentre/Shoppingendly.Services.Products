@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moq;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -127,15 +126,15 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         {
             var dbName = Guid.NewGuid().ToString();
 
-            var loggerFactory = new Mock<ILoggerFactory>();
             var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
                 .UseInMemoryDatabase(dbName)
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
+            var loggerFactory = new Mock<ILoggerFactory>();
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext =
-                new ProductServiceDbContext(new SqlSettings(), loggerFactory.Object, domainEventDispatcher, dbContextOptions);
+            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
+                new SqlSettings(), dbContextOptions);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 
