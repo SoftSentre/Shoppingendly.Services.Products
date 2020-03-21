@@ -24,7 +24,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.DomainEvents
             var domainEventsAccessor = new Mock<IDomainEventAccessor>();
             domainEventsAccessor.Setup(dea => dea.GetUncommittedEvents())
                 .Returns(new Maybe<IEnumerable<IDomainEvent>>());
-            
+
             var logger = new Mock<ILogger<DomainEventsDispatcher>>();
             var domainEventsDispatcher = new DomainEventsDispatcher(logger.Object, domainEventsAccessor.Object);
 
@@ -66,6 +66,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.DomainEvents
         [Fact]
         public void CheckIfDispatchMethodThrowingExceptionWhenProvidedEventIsNull()
         {
+            // Arrange
             var domainEventsAccessor = new Mock<IDomainEventAccessor>();
             var domainEvents = new List<IDomainEvent> {null};
 
@@ -74,7 +75,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.DomainEvents
                     new Maybe<IEnumerable<IDomainEvent>>(domainEvents));
 
             domainEventsAccessor.Setup(dea => dea.DispatchEvents(domainEvents))
-                .Throws<Exception>();
+                .Throws<DomainEventCanNotBeEmptyException>();
 
             var logger = new Mock<ILogger<DomainEventsDispatcher>>();
             var domainEventsDispatcher = new DomainEventsDispatcher(logger.Object, domainEventsAccessor.Object);
@@ -84,7 +85,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.DomainEvents
 
             // Assert
             action.Should().Throw<DispatchedDomainEventsFailedException>()
-                .WithMessage("Error occured when dispatching the domain events. Message: Exception of type 'System.Exception' was thrown.");
+                .WithMessage(
+                    "Error occured when dispatching the domain events. Message: Exception of type 'Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions.DomainEventCanNotBeEmptyException' was thrown.")
+                .WithInnerExceptionExactly<DomainEventCanNotBeEmptyException>();
         }
     }
 }
