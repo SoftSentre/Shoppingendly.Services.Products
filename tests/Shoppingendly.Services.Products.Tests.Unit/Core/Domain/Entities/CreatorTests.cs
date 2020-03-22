@@ -193,7 +193,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             Action action = () => creator.SetRole(creatorRole);
 
             //Assert
-            action.Should().NotThrow<InvalidCreatorRoleException>();
+            action.Should().NotThrow<Exception>();
         }
 
         [Fact]

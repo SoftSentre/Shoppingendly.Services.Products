@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
@@ -18,7 +19,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private HashSet<Product> _products = new HashSet<Product>();
-        
+
         public int RoleId { get; private set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
@@ -110,7 +111,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         private static Role ValidateRole(Role role)
         {
             if (role.Name.IsLongerThan(RoleNameMaxLength))
-                throw new InvalidCreatorRoleException(
+                throw new ArgumentException(
                     $"Creator role name can not be longer than {CreatorNameMinLength} characters.");
 
             return role;
