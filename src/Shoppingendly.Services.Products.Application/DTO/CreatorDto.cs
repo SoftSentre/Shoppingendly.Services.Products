@@ -9,4 +9,4 @@ namespace Shoppingendly.Services.Products.Application.DTO
             Role = role;
         }
     }
-}S
+}
