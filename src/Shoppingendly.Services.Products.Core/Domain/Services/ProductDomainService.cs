@@ -6,7 +6,7 @@ using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services;
+using Shoppingendly.Services.Products.Core.Exceptions.Services.Products;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
 
@@ -28,15 +28,21 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             return product;
         }
 
-        public async Task<Maybe<Product>> GetProductByNameAsync(string name)
+        public async Task<Maybe<Product>> GetProductWithCategoriesAsync(ProductId productId)
         {
-            var product = await _productRepository.GetByNameAsync(name);
+            var product = await _productRepository.GetByIdWithIncludesAsync(productId);
             return product;
         }
 
-        public async Task<Maybe<Product>> GetProductByNameWithCategoriesAsync(string name)
+        public async Task<Maybe<IEnumerable<Product>>> GetProductsByNameAsync(string name)
         {
-            var product = await _productRepository.GetByNameWithIncludesAsync(name);
+            var products = await _productRepository.GetManyByNameAsync(name);
+            return products;
+        }
+
+        public async Task<Maybe<IEnumerable<Product>>> GetProductsByNameWithCategoriesAsync(string name)
+        {
+            var product = await _productRepository.GetManyByNameWithIncludesAsync(name);
             return product;
         }
 
@@ -52,15 +58,31 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer)
         {
+            var product = await _productRepository.GetByIdAsync(productId);
+
+            if (product.HasValue)
+            {
+                throw new ProductAlreadyExistsException(
+                    $"Unable to add new product, because product with id: {productId} is already exists.");
+            }
+
             var newProduct = Product.Create(productId, creatorId, name, producer);
             await _productRepository.AddAsync(newProduct);
 
             return newProduct;
         }
-        
+
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer, IEnumerable<CategoryId> categoryIds)
         {
+            var product = await _productRepository.GetByIdAsync(productId);
+
+            if (product.HasValue)
+            {
+                throw new ProductAlreadyExistsException(
+                    $"Unable to add new product, because product with id: {productId} is already exists.");
+            }
+
             var newProduct = Product.Create(productId, creatorId, name, producer);
             var categoryIdsAsList = categoryIds.ToList();
 
@@ -74,8 +96,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
         public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture picture)
         {
             var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product.Value);
+            var validatedProduct = IfProductIsEmptyThenThrow(product);
             var isPictureChanged = validatedProduct.AddOrChangePicture(picture);
+
+            if (isPictureChanged)
+                _productRepository.Update(product.Value);
 
             return isPictureChanged;
         }
@@ -84,7 +109,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
         {
             var product = await _productRepository.GetByIdAsync(productId);
             var validatedProduct = IfProductIsEmptyThenThrow(product);
+
             validatedProduct.RemovePicture();
+            _productRepository.Update(product.Value);
         }
 
         public async Task<bool> ChangeProductNameAsync(ProductId productId, string name)
@@ -92,6 +119,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             var product = await _productRepository.GetByIdAsync(productId);
             var validatedProduct = IfProductIsEmptyThenThrow(product);
             var isNameChanged = validatedProduct.SetName(name);
+
+            if (isNameChanged)
+                _productRepository.Update(product.Value);
 
             return isNameChanged;
         }
@@ -102,29 +132,36 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             var validatedProduct = IfProductIsEmptyThenThrow(product);
             var isProducerChanged = validatedProduct.SetProducer(producer);
 
+            if (isProducerChanged)
+                _productRepository.Update(product.Value);
+
             return isProducerChanged;
         }
 
         public async Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId)
         {
             var product = await _productRepository.GetByIdAsync(productId);
+
             AssignProduct(product, categoryId);
+            _productRepository.Update(product.Value);
         }
 
         public async Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId)
         {
             var product = await _productRepository.GetByIdAsync(productId);
             var validatedProduct = IfProductIsEmptyThenThrow(product);
-            
+
             validatedProduct.DeallocateCategory(categoryId);
+            _productRepository.Update(product.Value);
         }
 
         public async Task DeallocateProductFromAllCategoriesAsync(ProductId productId)
         {
             var product = await _productRepository.GetByIdAsync(productId);
             var validatedProduct = IfProductIsEmptyThenThrow(product);
-            
+
             validatedProduct.DeallocateAllCategories();
+            _productRepository.Update(product.Value);
         }
 
         private static void AssignProduct(Maybe<Product> product, CategoryId categoryId)
@@ -138,8 +175,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
         {
             if (product.HasNoValue)
             {
-                throw new EmptyProductProvidedException(
-                    "Unable to mutate product state, because provided value is empty.");
+                throw new ProductNotFoundException(
+                    "Unable to mutate product state, because value is empty.");
             }
 
             return product.Value;

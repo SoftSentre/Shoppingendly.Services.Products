@@ -10,8 +10,9 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services.Base
     public interface IProductDomainService
     {
         Task<Maybe<Product>> GetProductAsync(ProductId productId);
-        Task<Maybe<Product>> GetProductByNameAsync(string name);
-        Task<Maybe<Product>> GetProductByNameWithCategoriesAsync(string name);
+        Task<Maybe<Product>> GetProductWithCategoriesAsync(ProductId productId);
+        Task<Maybe<IEnumerable<Product>>> GetProductsByNameAsync(string name);
+        Task<Maybe<IEnumerable<Product>>> GetProductsByNameWithCategoriesAsync(string name);
         Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId);
         
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,

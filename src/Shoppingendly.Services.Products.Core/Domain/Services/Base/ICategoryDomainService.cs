@@ -14,6 +14,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services.Base
         Task<Maybe<IEnumerable<Category>>> GetAllCategoriesAsync();
         Task<Maybe<IEnumerable<Category>>> GetAllCategoriesWithProductsAsync();
         Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName);
+        
         Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, 
             string categoryName, string description);
         

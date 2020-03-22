@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Products;
@@ -14,8 +15,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
 {
     public class ProductTests
     {
-        #region domain logic
-
         [Fact]
         public void CheckIfSetNameMethodReturnTrueWhenInputIsDifferentThenExistingValue()
         {
@@ -273,7 +272,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             action.Should().NotThrow();
             product.ProductCategories.Should().NotBeEmpty();
             product.UpdatedDate.Should().NotBe(default);
-            var assignedProduct = product.ProductCategories.FirstOrDefault();
+            var assignedProduct = product.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
             assignedProduct.FirstKey.Should().Be(expectedValue.FirstKey);
             assignedProduct.SecondKey.Should().Be(expectedValue.SecondKey);
         }
@@ -439,10 +438,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             product.Picture.IsEmpty.Should().BeTrue();
         }
 
-        #endregion
-
-        #region domain events
-
         [Fact]
         public void CheckIfCreateNewProductProduceDomainEventWithAppropriateTypeAndValues()
         {
@@ -451,7 +446,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             var newCategoryCreatedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as NewProductCreatedDomainEvent;
+                product.GetUncommitted().LastOrDefault() as NewProductCreatedDomainEvent ??
+                It.IsAny<NewProductCreatedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -472,7 +468,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.SetName("NewProductName");
             var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as ProductNameChangedDomainEvent;
+                product.GetUncommitted().LastOrDefault() as ProductNameChangedDomainEvent ??
+                It.IsAny<ProductNameChangedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -491,7 +488,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.SetProducer("Other producer");
             var productProducerChanged =
-                product.GetUncommitted().LastOrDefault() as ProductProducerChangedDomainEvent;
+                product.GetUncommitted().LastOrDefault() as ProductProducerChangedDomainEvent ??
+                It.IsAny<ProductProducerChangedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -511,7 +509,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.AssignCategory(categoryId);
             var productAssignedToCategory =
-                product.GetUncommitted().LastOrDefault() as ProductAssignedToCategoryDomainEvent;
+                product.GetUncommitted().LastOrDefault() as ProductAssignedToCategoryDomainEvent ??
+                It.IsAny<ProductAssignedToCategoryDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -532,7 +531,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.DeallocateCategory(categoryId);
             var productDeallocatedFromCategory =
-                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromCategoryDomainEvent;
+                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromCategoryDomainEvent ??
+                It.IsAny<ProductDeallocatedFromCategoryDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -553,7 +553,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.DeallocateAllCategories();
             var productDeallocatedFromAllCategories =
-                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromAllCategoriesDomainEvent;
+                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromAllCategoriesDomainEvent ??
+                It.IsAny<ProductDeallocatedFromAllCategoriesDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -572,7 +573,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.AddOrChangePicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
             var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent;
+                product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent ??
+                It.IsAny<PictureAddedOrChangedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -592,7 +594,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             // Act
             product.RemovePicture();
             var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent;
+                product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent ??
+                It.IsAny<PictureRemovedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
@@ -627,7 +630,5 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates
             domainEvents.Should().NotBeNull();
             domainEvents.LastOrDefault().Should().BeOfType<NewProductCreatedDomainEvent>();
         }
-
-        #endregion
     }
 }

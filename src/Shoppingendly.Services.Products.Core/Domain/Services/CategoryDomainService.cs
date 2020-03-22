@@ -4,7 +4,7 @@ using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services;
+using Shoppingendly.Services.Products.Core.Exceptions.Services.Categories;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
 
@@ -52,18 +52,34 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName)
         {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+
+            if (category.HasValue)
+            {
+                throw new CategoryAlreadyExistsException(
+                    $"Unable to add new category, because category with id: {categoryId} is already exists.");
+            }
+
             var newCategory = Category.Create(categoryId, categoryName);
             await _categoryRepository.AddAsync(newCategory);
-            
+
             return newCategory;
         }
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
             string description)
         {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+
+            if (category.HasValue)
+            {
+                throw new CategoryAlreadyExistsException(
+                    $"Unable to add new category, because category with id: {categoryId} is already exists.");
+            }
+
             var newCategory = Category.Create(categoryId, categoryName, description);
             await _categoryRepository.AddAsync(newCategory);
-            
+
             return newCategory;
         }
 
@@ -95,8 +111,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
         {
             if (category.HasNoValue)
             {
-                throw new EmptyCategoryProvidedException(
-                    "Unable to mutate category state, because provided value is empty.");
+                throw new CategoryNotFoundException(
+                    "Unable to mutate category state, because provided is empty.");
             }
 
             return category.Value;

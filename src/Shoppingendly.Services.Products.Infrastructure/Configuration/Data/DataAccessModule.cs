@@ -10,7 +10,7 @@ using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositorie
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Shoppingendly.Services.Products.Infrastructure.Extensions;
 
-namespace Shoppingendly.Services.Products.Application.Configuration.Data
+namespace Shoppingendly.Services.Products.Infrastructure.Configuration.Data
 {
     public class DataAccessModule : Module
     {

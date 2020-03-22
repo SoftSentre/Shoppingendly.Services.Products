@@ -68,7 +68,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
             // Arrange
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
-            product.AddOrChangePicture(new Picture("name", "eeee.jpg"));
+            product.AddOrChangePicture(new Picture("name", "picture.jpg"));
             var productCategory = new ProductCategory(product.Id, category.Id) {Product = product};
             category.ProductCategories.Add(productCategory);
 
@@ -124,7 +124,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
             // Arrange
             var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
-            var picture = new Picture("Example", "eeee.jpg");
+            var picture = new Picture("Example", "picture.jpg");
             product.AddOrChangePicture(picture);
             creator.Products.Add(product);
 
@@ -161,7 +161,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
         public void CheckIfItPossibleMapPictureToPictureDto()
         {
             // Arrange
-            var picture = Picture.Create("Name", "eeee.jpg");
+            var picture = Picture.Create("Name", "picture.jpg");
 
             // Act
             var testResult = _mapperWrapper.MapPictureToPictureDto(picture);
@@ -176,7 +176,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
-            var picture = Picture.Create("Name", "eeee.jpg");
+            var picture = Picture.Create("Name", "picture.jpg");
             product.AddOrChangePicture(picture);
 
             // Act
@@ -195,7 +195,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
-            var picture = Picture.Create("Name", "eeee.jpg");
+            var picture = Picture.Create("Name", "picture.jpg");
             product.AddOrChangePicture(picture);
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var secondCategory = new Category(new CategoryId(), "SecondExampleCategory", "Other correct description");

@@ -35,7 +35,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
 
             // Assert
             testEventsResult.Value.Should().NotBeNull();
-            var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault();
+            var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault() ??
+                                  It.IsAny<NewCreatorCreatedDomainEvent>();
+            
             testEventResult.Should().NotBeNull();
             testEventResult.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             testEventResult.CreatorId.Id.Should().Be(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A"));
@@ -83,7 +85,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             testResult.Value.Should().BeEmpty();
         }
 
-        private async Task<ProductServiceDbContext> CreateDbContext()
+        private static async Task<ProductServiceDbContext> CreateDbContext()
         {
             var dbName = Guid.NewGuid().ToString();
 

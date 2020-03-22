@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.Services;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services;
+using Shoppingendly.Services.Products.Core.Exceptions.Services.Products;
 using Shoppingendly.Services.Products.Core.Types;
 using Xunit;
 
@@ -15,373 +18,633 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 {
     public class ProductDomainServiceTests
     {
-        [Fact]
-        public void CheckIfGetAssignedCategoryMethodReturnNoValueWhenProductHasNotAssignAnyCategory()
+        private const string ProductName = "ExampleProductName";
+        private const string ProductProducer = "ExampleProducer";
+
+        private readonly ProductId _productId;
+        private readonly Picture _picture;
+        private readonly Product _product;
+
+        public ProductDomainServiceTests()
         {
-            // Arrange
-            var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
-
-            // Act
-            Func<Maybe<ProductCategory>> func = () => productDomainService.GetAssignedCategory(product, categoryId);
-
-            //Assert
-            func.Should().NotThrow();
-            var testResult = func.Invoke();
-            testResult.HasValue.Should().BeFalse();
+            _productId = new ProductId();
+            _picture = Picture.Create("PictureName", "PictureUrl");
+            _product = Product.Create(_productId, new CreatorId(), ProductName, ProductProducer);
         }
 
         [Fact]
-        public void CheckIfGetAssignedCategoryMethodReturnValueWhenProductHasAssignSomeCategory()
+        public async Task CheckIfGetProductMethodReturnValidObject()
         {
             // Arrange
-            var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            product.ProductCategories.Add(ProductCategory.Create(product.Id, categoryId));
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<Maybe<ProductCategory>> func = () => productDomainService.GetAssignedCategory(product, categoryId);
+            var testResult = await productDomainService.GetProductAsync(_productId);
 
-            //Assert
-            func.Should().NotThrow();
-            var testResult = func.Invoke();
-            testResult.HasValue.Should().BeTrue();
-            testResult.Value.FirstKey.Should().Be(product.Id);
-            testResult.Value.SecondKey.Should().Be(categoryId);
+            // Assert
+            testResult.Should().Be(_product);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
         }
 
         [Fact]
-        public void CheckIfGetAssignedCategoryMethodThrowExceptionWhenProductHasNoValue()
+        public async Task CheckIfGetProductWithCategoriesMethodReturnValidObject()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductName);
+            product.AssignCategory(new CategoryId());
+            product.AssignCategory(new CategoryId());
+            productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(product.Id))
+                .ReturnsAsync(product);
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.GetAssignedCategory(null, new CategoryId());
+            var testResult = await productDomainService.GetProductWithCategoriesAsync(product.Id);
 
-            //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            // Assert
+            testResult.Should().Be(product);
+            testResult.Value.ProductCategories.Should().HaveCount(2);
+            productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(product.Id), Times.Once);
         }
 
         [Fact]
-        public void CheckIfGetAssignedCategoriesMethodReturnNoValueWhenProductHasNotAssignAnyCategory()
+        public async Task CheckIfGetProductsByNameMethodReturnValidObject()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var productList = new List<Product>
+            {
+                _product
+            };
+
+            productRepository.Setup(pr => pr.GetManyByNameAsync(ProductName))
+                .ReturnsAsync(productList);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<Maybe<IEnumerable<ProductCategory>>> func = () => productDomainService.GetAssignedCategories(product);
+            var testResult = await productDomainService.GetProductsByNameAsync(ProductName);
+
+            // Assert
+            testResult.Should().Be(productList);
+            productRepository.Verify(pr => pr.GetManyByNameAsync(ProductName), Times.Once);
+        }
+
+        [Fact]
+        public async Task CheckIfGetManyProductsWithCategoriesMethodReturnValidObject()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductName);
+            product.AssignCategory(new CategoryId());
+            product.AssignCategory(new CategoryId());
+            var productList = new List<Product> {product};
+
+            productRepository.Setup(cr => cr.GetManyByNameWithIncludesAsync(ProductName))
+                .ReturnsAsync(productList);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+
+            // Act
+            var testResult = await productDomainService.GetProductsByNameWithCategoriesAsync(ProductName);
+
+            // Assert
+            testResult.Should().Be(productList);
+            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
+            firstItem.ProductCategories.Should().HaveCount(2);
+            firstItem.Should().Be(product);
+            productRepository.Verify(pr => pr.GetManyByNameWithIncludesAsync(ProductName), Times.Once);
+        }
+
+        [Fact]
+        public async Task CheckIfGetAssignedCategoriesMethodReturnNoValueWhenProductHasNotAssignAnyCategory()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+
+            // Act
+            var testResult = await productDomainService.GetAssignedCategoriesAsync(_productId);
 
             //Assert
-            func.Should().NotThrow();
-            var testResult = func.Invoke();
             testResult.HasValue.Should().BeTrue();
             testResult.Value.Should().BeEmpty();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
         }
 
         [Fact]
-        public void CheckIfGetAssignedCategoriesMethodReturnValueWhenProductHasAssignSomeCategory()
+        public async Task CheckIfGetAssignedCategoriesMethodReturnValueWhenProductHasAssignSomeCategory()
         {
             // Arrange
+            var productRepository = new Mock<IProductRepository>();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
             product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
-            IProductDomainService productDomainService = new ProductDomainService();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<Maybe<IEnumerable<ProductCategory>>> func = () => productDomainService.GetAssignedCategories(product);
+            var testResult = await productDomainService.GetAssignedCategoriesAsync(_productId);
 
             //Assert
-            func.Should().NotThrow();
-            var testResult = func.Invoke();
             testResult.HasValue.Should().BeTrue();
             testResult.Value.Should().HaveCount(2);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
         }
 
         [Fact]
         public void CheckIfGetAssignedCategoriesMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.GetAssignedCategories(null);
+            Func<Task> func = async () => await productDomainService.GetAssignedCategoriesAsync(null);
 
             //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(null), Times.Once);
         }
-
+        
         [Fact]
-        public void CheckIfAddNewProductMethodWithNoCategoriesCreateValidObjectAndDoNotThrown()
+        public async Task CheckIfAddNewProductMethodWithNoCategoriesCreateValidObject()
         {
             // Arrange
-            var productId = new ProductId();
-            var creatorId = new CreatorId();
-            const string productName = "ExampleProductName";
-            const string productProducer = "ExampleProductProducer";
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<Maybe<Product>> func = () =>
-                productDomainService.AddNewProduct(productId, creatorId, productName, productProducer);
+            var testResult = await productDomainService.AddNewProductAsync(_productId, _product.CreatorId,
+                _product.Name, _product.Producer);
 
             //Assert
-            func.Should().NotThrow();
-            var testResult = func.Invoke();
-            testResult.Value.Id.Should().Be(productId);
-            testResult.Value.CreatorId.Should().Be(creatorId);
-            testResult.Value.Name.Should().Be(productName);
-            testResult.Value.Producer.Should().Be(productProducer);
+            testResult.Value.Id.Should().Be(_product.Id);
+            testResult.Value.CreatorId.Should().Be(_product.CreatorId);
+            testResult.Value.Name.Should().Be(_product.Name);
+            testResult.Value.Producer.Should().Be(_product.Producer);
             testResult.Value.CreatedAt.Should().NotBe(default);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Once);
         }
 
         [Fact]
-        public void CheckIfAddNewProductMethodWithCategoriesCreateValidObjectAndDoNotThrown()
+        public async Task CheckIfAddNewProductMethodWithCategoriesCreateValidObject()
         {
             // Arrange
-            var productId = new ProductId();
-            var creatorId = new CreatorId();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(_productId, new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId));
+            productRepository.Setup(pr => pr.AddAsync(product));
+
             var firstAssignedCategory = new CategoryId();
             var secondAssignedCategory = new CategoryId();
-            const string productName = "ExampleProductName";
-            const string productProducer = "ExampleProductProducer";
             IEnumerable<CategoryId> categories = new[] {firstAssignedCategory, secondAssignedCategory};
-            IProductDomainService productDomainService = new ProductDomainService();
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<Maybe<Product>> func = () =>
-                productDomainService.AddNewProduct(productId, creatorId, productName, productProducer, categories);
+            var testResult = await productDomainService.AddNewProductAsync(product.Id, product.CreatorId, product.Name,
+                product.Producer, categories);
 
             //Assert
-            func.Should().NotThrow();
-            var testResult = func.Invoke();
-            testResult.Value.Id.Should().Be(productId);
-            testResult.Value.CreatorId.Should().Be(creatorId);
-            testResult.Value.Name.Should().Be(productName);
-            testResult.Value.Producer.Should().Be(productProducer);
+            testResult.Value.Id.Should().Be(product.Id);
+            testResult.Value.CreatorId.Should().Be(product.CreatorId);
+            testResult.Value.Name.Should().Be(product.Name);
+            testResult.Value.Producer.Should().Be(product.Producer);
             testResult.Value.CreatedAt.Should().NotBe(default);
             var expectedFirstCategory =
-                productDomainService.GetAssignedCategory(testResult.Value, firstAssignedCategory);
-            expectedFirstCategory.Value.Should().NotBeNull();
+                testResult.Value.ProductCategories.FirstOrDefault(pr => pr.SecondKey.Equals(firstAssignedCategory)) ??
+                It.IsAny<ProductCategory>();
+            expectedFirstCategory.Should().NotBeNull();
             var expectedSecondCategory =
-                productDomainService.GetAssignedCategory(testResult.Value, secondAssignedCategory);
-            expectedSecondCategory.Value.Should().NotBeNull();
+                testResult.Value.ProductCategories.FirstOrDefault(pr => pr.SecondKey.Equals(secondAssignedCategory)) ??
+                It.IsAny<ProductCategory>();
+            expectedSecondCategory.Should().NotBeNull();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Once);
         }
 
         [Fact]
-        public void CheckIfAddOrChangeProductPictureMethodCreateValidObject()
+        public void CheckIfAddNewProductMethodDoNotThrowException()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            const string pictureName = "ExamplePictureName";
-            const string pictureUrl = "ExamplePictureUrl";
-            var picture = Picture.Create(pictureName, pictureUrl);
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<bool> func = () =>
-                productDomainService.AddOrChangeProductPicture(product, picture);
+            Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
+                _product.CreatorId, _product.Name, _product.Producer);
 
             //Assert
-            var testResult = func.Invoke();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfAddNewProductWithCategoriesMethodDoNotThrowException()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+
+            // Act
+            Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
+                _product.CreatorId, _product.Name, _product.Producer,
+                new List<CategoryId> {new CategoryId(), new CategoryId()});
+
+            //Assert
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfAddNewProductMethodThrowExceptionWhenCreatorAlreadyExists()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+
+            // Act
+            Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
+                _product.CreatorId, _product.Name, _product.Producer);
+
+            //Assert
+            func.Should().Throw<ProductAlreadyExistsException>()
+                .WithMessage($"Unable to add new product, because product with id: {_productId} is already exists.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Never);
+        }
+
+        [Fact]
+        public void CheckIfAddNewProductWithCategoriesMethodThrowExceptionWhenCreatorAlreadyExists()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+
+            // Act
+            Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
+                _product.CreatorId, _product.Name, _product.Producer,
+                new List<CategoryId> {new CategoryId(), new CategoryId()});
+
+            //Assert
+            func.Should().Throw<ProductAlreadyExistsException>()
+                .WithMessage($"Unable to add new product, because product with id: {_productId} is already exists.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Never);
+        }
+
+
+        [Fact]
+        public async Task CheckIfAddOrChangeProductPictureMethodCreateValidObject()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+
+            // Act
+            var testResult = await productDomainService.AddOrChangeProductPictureAsync(_productId, _picture);
+
+            //Assert
             testResult.Should().BeTrue();
-            product.Picture.Should().Be(picture);
+            product.Picture.Should().Be(_picture);
             product.Picture.IsEmpty.Should().BeFalse();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangeProductPictureMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+        
+            // Act
+            Func<Task> func = async () => await productDomainService.AddOrChangeProductPictureAsync(_productId, Picture.Empty);
+        
+            //Assert
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
         public void CheckIfAddOrChangeProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            const string pictureName = "ExamplePictureName";
-            const string pictureUrl = "ExamplePictureUrl";
-            var picture = Picture.Create(pictureName, pictureUrl);
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () =>
-                productDomainService.AddOrChangeProductPicture(product, picture);
+            Func<Task> func = async () =>
+                await productDomainService.AddOrChangeProductPictureAsync(_productId, _picture);
 
             //Assert
-            action.Should().NotThrow();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
-        public void CheckIfRemoveProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
+        public async Task CheckIfRemoveProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), _picture, ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () =>
-                productDomainService.RemovePictureFromProduct(product);
+            await productDomainService.RemovePictureFromProductAsync(_productId);
 
             //Assert
-            action.Should().NotThrow();
             product.Picture.IsEmpty.Should().BeTrue();
             product.Picture.Name.Should().Be(null);
             product.Picture.Url.Should().Be(null);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
+        }
+        
+        [Fact]
+        public void CheckIfRemovePictureFromProductMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
+        
+            // Act
+            Func<Task> func = async () => await productDomainService.RemovePictureFromProductAsync(_productId);
+        
+            //Assert
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void CheckIfChangeProductNameMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
+        public async Task CheckIfChangeProductNameMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
         {
             // Arrange
             const string newProductName = "OtherExampleProductName";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<bool> func = () => productDomainService.ChangeProductName(product, newProductName);
+            var testResult = await productDomainService.ChangeProductNameAsync(_productId, newProductName);
 
             //Assert
-            var testResult = func.Invoke();
             testResult.Should().BeTrue();
-            product.Name.Should().Be("OtherExampleProductName");
+            product.Name.Should().Be(newProductName);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfChangeProductNameMethodDoNotThrownAnyException()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            const string newProductName = "OtherExampleProductName";
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<bool> action = () => productDomainService.ChangeProductName(product, "OtherExampleProductName");
+            Func<Task<bool>> func = async () =>
+                await productDomainService.ChangeProductNameAsync(_productId, newProductName);
 
             //Assert
-            action.Should().NotThrow();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfChangeProductNameMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            const string newProductName = "OtherExampleProductName";
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.ChangeProductName(null, "ExampleProductName");
+            Func<Task<bool>> func = async () =>
+                await productDomainService.ChangeProductNameAsync(_productId, newProductName);
 
             //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
 
+
         [Fact]
-        public void CheckIfChangeProductProducerMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
+        public async Task CheckIfChangeProductProducerMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
         {
             // Arrange
             const string newProductProducer = "OtherExampleProductProducer";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<bool> func = () => productDomainService.ChangeProductProducer(product, newProductProducer);
+            var testResult = await productDomainService.ChangeProductProducerAsync(_productId, newProductProducer);
 
             //Assert
-            var testResult = func.Invoke();
             testResult.Should().BeTrue();
-            product.Producer.Should().Be("OtherExampleProductProducer");
+            product.Producer.Should().Be(newProductProducer);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfChangeProductProducerMethodDoNotThrownAnyException()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            const string newProductProducer = "OtherExampleProductProducer";
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<bool> action = () =>
-                productDomainService.ChangeProductProducer(product, "OtherExampleProductProducer");
+            Func<Task<bool>> func = async () =>
+                await productDomainService.ChangeProductProducerAsync(_productId, newProductProducer);
 
             //Assert
-            action.Should().NotThrow();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfChangeProductProducerMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            const string newProductProducer = "OtherExampleProductProducer";
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.ChangeProductProducer(null, "ExampleProducerName");
+            Func<Task<bool>> func = async () =>
+                await productDomainService.ChangeProductProducerAsync(_productId, newProductProducer);
 
             //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void CheckIfAssignProductToCategoryMethodAddedOneElementToList()
+        public async Task CheckIfAssignProductToCategoryMethodAddedOneElementToList()
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            productDomainService.AssignProductToCategory(product, categoryId);
+            await productDomainService.AssignProductToCategoryAsync(_productId, categoryId);
 
             //Assert
             product.ProductCategories.Should().NotBeEmpty();
-            var expectedValue = product.ProductCategories.FirstOrDefault();
-            expectedValue?.FirstKey.Should().Be(product.Id);
-            expectedValue?.SecondKey.Should().Be(categoryId);
+            var expectedValue = product.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            expectedValue.FirstKey.Should().Be(product.Id);
+            expectedValue.SecondKey.Should().Be(categoryId);
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfAssignProductToCategoryMethodDoNotThrown()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
+            var categoryId = new CategoryId();
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.AssignProductToCategory(product, new CategoryId());
+            Func<Task> func = async () =>
+                await productDomainService.AssignProductToCategoryAsync(_productId, categoryId);
 
             //Assert
-            action.Should().NotThrow();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfAssignProductToCategoryMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            var categoryId = new CategoryId();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.AssignProductToCategory(null, new CategoryId());
+            Func<Task> func = async () =>
+                await productDomainService.AssignProductToCategoryAsync(_productId, categoryId);
 
             //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void CheckIfDeallocatedProductToCategoryMethodAddedOneElementToList()
+        public async Task CheckIfDeallocatedProductFromCategoryMethodAddedOneElementToList()
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
-            product.AssignCategory(categoryId);
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            product.ProductCategories.Add(new ProductCategory(_productId, categoryId));
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            productDomainService.DeallocateProductFromCategory(product, categoryId);
+            await productDomainService.DeallocateProductFromCategoryAsync(_productId, categoryId);
 
             //Assert
             product.ProductCategories.Should().BeEmpty();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
@@ -389,103 +652,110 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
-            product.AssignCategory(categoryId);
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            product.ProductCategories.Add(new ProductCategory(_productId, categoryId));
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.DeallocateProductFromCategory(product, categoryId);
+            Func<Task> func = async () =>
+                await productDomainService.DeallocateProductFromCategoryAsync(_productId, categoryId);
 
             //Assert
-            action.Should().NotThrow();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfDeallocateProductFromCategoryMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            var categoryId = new CategoryId();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.DeallocateProductFromCategory(null, new CategoryId());
+            Func<Task> func = async () =>
+                await productDomainService.DeallocateProductFromCategoryAsync(_productId, categoryId);
 
             //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
 
         [Fact]
-        public void CheckIfDeallocatedProductFromAllCategoriesMethodAddedOneElementToList()
+        public async Task CheckIfDeallocatedProductFromAllCategoriesMethodAddedOneElementToList()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
-            product.AssignCategory(new CategoryId());
-            product.AssignCategory(new CategoryId());
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
+            product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            productDomainService.DeallocateProductFromAllCategories(product);
+            await productDomainService.DeallocateProductFromAllCategoriesAsync(_productId);
 
             //Assert
             product.ProductCategories.Should().BeEmpty();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfDeallocatedProductFromAllCategoriesMethodDoNotThrown()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            IProductDomainService productDomainService = new ProductDomainService();
-            product.AssignCategory(new CategoryId());
-            product.AssignCategory(new CategoryId());
+            var productRepository = new Mock<IProductRepository>();
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
+            product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(product);
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.DeallocateProductFromAllCategories(product);
+            Func<Task> func = async () =>
+                await productDomainService.DeallocateProductFromAllCategoriesAsync(_productId);
 
             //Assert
-            action.Should().NotThrow();
+            func.Should().NotThrow();
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
 
         [Fact]
         public void CheckIfDeallocateProductFromAllCategoriesMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
+            var productRepository = new Mock<IProductRepository>();
+            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Action action = () => productDomainService.DeallocateProductFromAllCategories(null);
+            Func<Task> func = async () =>
+                await productDomainService.DeallocateProductFromAllCategoriesAsync(_productId);
 
             //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
-        }
-
-        [Fact]
-        public void CheckIfAddOrChangeProductPictureMethodThrowExceptionWhenProductHasNoValue()
-        {
-            // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
-
-            // Act
-            Action action = () => productDomainService.AddOrChangeProductPicture(null, Picture.Empty);
-
-            //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
-        }
-        
-        [Fact]
-        public void CheckIfRemovePictureFromProductMethodThrowExceptionWhenProductHasNoValue()
-        {
-            // Arrange
-            IProductDomainService productDomainService = new ProductDomainService();
-
-            // Act
-            Action action = () => productDomainService.RemovePictureFromProduct(null);
-
-            //Assert
-            action.Should().Throw<EmptyProductProvidedException>()
-                .WithMessage("Unable to mutate product state, because provided value is empty.");
+            func.Should().Throw<ProductNotFoundException>()
+                .WithMessage("Unable to mutate product state, because value is empty.");
+            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
     }
 }

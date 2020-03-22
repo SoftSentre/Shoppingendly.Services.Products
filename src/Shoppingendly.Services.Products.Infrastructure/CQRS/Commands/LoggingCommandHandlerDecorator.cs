@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using Shoppingendly.Services.Products.Core.Exceptions;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions;

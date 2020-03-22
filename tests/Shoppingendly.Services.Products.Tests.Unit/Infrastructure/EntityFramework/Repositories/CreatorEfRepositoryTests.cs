@@ -72,7 +72,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             // Act
             await creatorRepository.AddAsync(creator);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id));
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.Name.Should().Be(creator.Name);
@@ -97,7 +97,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             creatorRepository.Update(creatorFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id));
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.Email.Should().Be(newCreatorEmail);

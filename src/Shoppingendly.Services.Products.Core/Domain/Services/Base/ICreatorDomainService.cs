@@ -10,6 +10,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services.Base
         Task<Maybe<Creator>> GetCreatorAsync(CreatorId creatorId);
         Task<Maybe<Creator>> GetCreatorByNameAsync(string name);
         Task<Maybe<Creator>> GetCreatorWithProductsAsync(string name);
+        
         Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, 
             string creatorName, string creatorEmail, Role creatorRole);
         

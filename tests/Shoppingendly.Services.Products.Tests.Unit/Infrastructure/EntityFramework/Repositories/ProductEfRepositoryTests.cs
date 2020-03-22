@@ -50,20 +50,49 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
         }
 
         [Fact]
-        public async void CheckIfGetProductByNameAsyncMethodReturnValidObject()
+        public async void CheckIfGetProductByIdWithIncludesAsyncMethodReturnValidObject()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            IProductRepository productRepository = new ProductEfRepository(dbContext);
+            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
+            product.AssignCategory(_category.Id);
+            await dbContext.Products.AddAsync(product);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            var testResult = await productRepository.GetByIdWithIncludesAsync(product.Id);
+
+            // Assert
+            testResult.Value.Name.Should().Be(product.Name);
+            testResult.Value.Producer.Should().Be(product.Producer);
+            testResult.Value.CreatorId.Should().Be(product.CreatorId);
+            testResult.Value.CreatedAt.Should().Be(product.CreatedAt);
+
+            var firstChild = testResult.Value.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            firstChild.FirstKey.Should().Be(product.Id);
+            firstChild.SecondKey.Should().Be(_category.Id);
+
+            dbContext.Dispose();
+        }
+
+        [Fact]
+        public async void CheckIfGetManyProductByNameAsyncMethodReturnValidObject()
         {
             // Arrange
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
 
             // Act
-            var testResult = await productRepository.GetByNameAsync(_product.Name);
+            var testResult = await productRepository.GetManyByNameAsync(_product.Name);
 
             // Assert
-            testResult.Value.Name.Should().Be(_product.Name);
-            testResult.Value.Producer.Should().Be(_product.Producer);
-            testResult.Value.CreatorId.Should().Be(_product.CreatorId);
-            testResult.Value.CreatedAt.Should().Be(_product.CreatedAt);
+            testResult.Value.Should().HaveCount(1);
+            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
+            firstItem.Name.Should().Be(_product.Name);
+            firstItem.Producer.Should().Be(_product.Producer);
+            firstItem.CreatorId.Should().Be(_product.CreatorId);
+            firstItem.CreatedAt.Should().Be(_product.CreatedAt);
 
             dbContext.Dispose();
         }
@@ -76,20 +105,24 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
             product.AssignCategory(_category.Id);
-
-            // Act
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
 
-            var testResult = await productRepository.GetByNameWithIncludesAsync(product.Name);
+            // Act
+            var testResult = await productRepository.GetManyByNameWithIncludesAsync(product.Name);
 
             // Assert
-            testResult.Value.Name.Should().Be(product.Name);
-            testResult.Value.Producer.Should().Be(product.Producer);
-            testResult.Value.CreatorId.Should().Be(product.CreatorId);
-            testResult.Value.CreatedAt.Should().Be(product.CreatedAt);
-            testResult.Value.ProductCategories.FirstOrDefault().FirstKey.Should().Be(product.Id);
-            testResult.Value.ProductCategories.FirstOrDefault().SecondKey.Should().Be(_category.Id);
+            testResult.Value.Should().HaveCount(1);
+
+            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
+            firstItem.Name.Should().Be(product.Name);
+            firstItem.Producer.Should().Be(product.Producer);
+            firstItem.CreatorId.Should().Be(product.CreatorId);
+            firstItem.CreatedAt.Should().Be(product.CreatedAt);
+
+            var firstChild = firstItem.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            firstChild.FirstKey.Should().Be(product.Id);
+            firstChild.SecondKey.Should().Be(_category.Id);
 
             dbContext.Dispose();
         }
@@ -101,11 +134,11 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.Id, "ExampleProductName", "ExampleProducer");
-
-            // Act
             await productRepository.AddAsync(product);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Products.FirstOrDefault(p => p.Id.Equals(product.Id));
+
+            // Act
+            var testResult = dbContext.Products.FirstOrDefault(p => p.Id.Equals(product.Id)) ?? It.IsAny<Product>();
 
             // Assert
             testResult.Name.Should().Be(product.Name);
@@ -130,7 +163,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             productRepository.Update(productFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Products.FirstOrDefault(p => p.Id.Equals(_product.Id));
+            var testResult = dbContext.Products.FirstOrDefault(p => p.Id.Equals(_product.Id)) ?? It.IsAny<Product>();
 
             // Assert
             testResult.Name.Should().Be(newProductName);
