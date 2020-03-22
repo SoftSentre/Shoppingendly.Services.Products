@@ -5,7 +5,7 @@ using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
-namespace Shoppingendly.Services.Products.Application.Mapper.Profiles
+namespace Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles
 {
     public class CreatorProfile : Profile
     {

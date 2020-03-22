@@ -2,11 +2,11 @@ using System.Linq;
 using AutoMapper;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Application.Mapper;
-using Shoppingendly.Services.Products.Application.Mapper.Base;
-using Shoppingendly.Services.Products.Application.Mapper.Profiles;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
+using Shoppingendly.Services.Products.Infrastructure.AutoMapper;
+using Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles;
 using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Application.Mappers

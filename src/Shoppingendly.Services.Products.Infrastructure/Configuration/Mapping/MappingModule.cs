@@ -4,7 +4,7 @@ using System.Reflection;
 using Autofac;
 using AutoMapper;
 using Shoppingendly.Services.Products.Application.Mapper;
-using Shoppingendly.Services.Products.Application.Mapper.Base;
+using Shoppingendly.Services.Products.Infrastructure.AutoMapper;
 using Module = Autofac.Module;
 
 namespace Shoppingendly.Services.Products.Infrastructure.Configuration.Mapping

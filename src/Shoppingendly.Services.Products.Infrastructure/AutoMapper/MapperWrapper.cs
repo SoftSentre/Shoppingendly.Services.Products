@@ -1,12 +1,12 @@
 using AutoMapper;
 using Shoppingendly.Services.Products.Application.DTO;
-using Shoppingendly.Services.Products.Application.Mapper.Base;
+using Shoppingendly.Services.Products.Application.Mapper;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Extensions;
 
-namespace Shoppingendly.Services.Products.Application.Mapper
+namespace Shoppingendly.Services.Products.Infrastructure.AutoMapper
 {
     public class MapperWrapper : IMapperWrapper
     {

@@ -19,12 +19,13 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
     public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
-        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly SqlSettings _sqlSettings;
-        private Maybe<IDbContextTransaction> _currentTransaction;
-
         public const string DefaultSchema = "products";
+        
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
+        private readonly SqlSettings _sqlSettings;
+        
+        private Maybe<IDbContextTransaction> _currentTransaction;
         public bool HasActiveTransaction => _currentTransaction.HasValue;
 
         public DbSet<Product> Products { get; set; }

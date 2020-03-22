@@ -3,7 +3,7 @@ using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
-namespace Shoppingendly.Services.Products.Application.Mapper.Base
+namespace Shoppingendly.Services.Products.Application.Mapper
 {
     public interface IMapperWrapper
     {
