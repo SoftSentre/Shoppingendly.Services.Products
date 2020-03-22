@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Results;
 
-namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Commands
+namespace Shoppingendly.Services.Products.Application.CQRS.Base.Commands
 {
     public interface ICommandHandler<in TCommand> where TCommand : class, ICommand
     {

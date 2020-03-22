@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Results;
 
-namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
+namespace Shoppingendly.Services.Products.Application.CQRS.Base.Queries
 {
     public interface IQueryHandler<in TQuery,TResult> 
         where TQuery : class, IQuery<TResult>

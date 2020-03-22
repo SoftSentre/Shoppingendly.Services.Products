@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Results
+namespace Shoppingendly.Services.Products.Application.CQRS.Base.Results
 {
     public interface IResult
     {

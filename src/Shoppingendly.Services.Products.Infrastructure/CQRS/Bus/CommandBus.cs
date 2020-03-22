@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Autofac;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Results;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
 
 namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 {

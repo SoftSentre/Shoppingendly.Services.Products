@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Results;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Queries;
+using Shoppingendly.Services.Products.Application.CQRS.Base.Results;
 
-namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
+namespace Shoppingendly.Services.Products.Application.CQRS.Base.Bus
 {
     public interface IQueryBus
     {

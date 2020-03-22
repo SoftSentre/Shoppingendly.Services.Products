@@ -1,4 +1,4 @@
-﻿namespace Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
+﻿namespace Shoppingendly.Services.Products.Application.CQRS.Base.Queries
 {
     public interface IQuery
     {
