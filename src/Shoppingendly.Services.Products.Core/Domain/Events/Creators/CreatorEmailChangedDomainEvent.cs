@@ -8,7 +8,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Creators
         public CreatorId CreatorId { get; }
         public string Email { get; }
 
-        public CreatorEmailChangedDomainEvent(CreatorId creatorId, string email)
+        internal CreatorEmailChangedDomainEvent(CreatorId creatorId, string email)
         {
             CreatorId = creatorId;
             Email = email;

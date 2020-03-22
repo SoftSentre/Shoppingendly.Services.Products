@@ -2,22 +2,30 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Extensions;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 
 namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
     public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
-        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
-        private Maybe<IDbContextTransaction> _currentTransaction;
-
         public const string DefaultSchema = "products";
+        
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
+        private readonly SqlSettings _sqlSettings;
+        
+        private Maybe<IDbContextTransaction> _currentTransaction;
         public bool HasActiveTransaction => _currentTransaction.HasValue;
 
         public DbSet<Product> Products { get; set; }
@@ -26,10 +34,37 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Role> CreatorRoles { get; set; }
 
-        public ProductServiceDbContext(DbContextOptions options, IDomainEventsDispatcher domainEventsDispatcher) :
-            base(options)
+        public ProductServiceDbContext(ILoggerFactory loggerFactory,
+            IDomainEventsDispatcher domainEventsDispatcher, SqlSettings sqlSettings,
+            DbContextOptions options) : base(options)
         {
-            _domainEventsDispatcher = domainEventsDispatcher.IfEmptyThenThrowAndReturnValue();
+            _domainEventsDispatcher = domainEventsDispatcher
+                .IfEmptyThenThrowAndReturnValue();
+
+            _sqlSettings = sqlSettings
+                .IfEmptyThenThrowAndReturnValue();
+
+            _loggerFactory = loggerFactory
+                .IfEmptyThenThrowAndReturnValue();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (optionsBuilder.IsConfigured)
+                return;
+
+            if (_sqlSettings.UseInMemory)
+            {
+                optionsBuilder.UseInMemoryDatabase(_sqlSettings.Database)
+                    .UseStronglyTypedIds()
+                    .UseLogging(_loggerFactory);
+
+                return;
+            }
+
+            optionsBuilder.UseSqlServer(_sqlSettings.ConnectionString)
+                .UseStronglyTypedIds()
+                .UseLogging(_loggerFactory);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -107,6 +142,11 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework
             var numberOfRows = await SaveChangesAsync();
 
             return numberOfRows > 0;
+        }
+
+        private void UseStronglyTypedIds(DbContextOptionsBuilder dbContextOptionsBuilder)
+        {
+            dbContextOptionsBuilder.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
         }
     }
 }

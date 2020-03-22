@@ -1,8 +1,8 @@
 namespace Shoppingendly.Services.Products.Core.Exceptions.Products
 {
-    public class ProductIsAlreadyAssignedToCategoryException : ShoppingendlyException
+    internal class ProductIsAlreadyAssignedToCategoryException : ShoppingendlyException
     {
-        public ProductIsAlreadyAssignedToCategoryException(string message) : base(message)
+        internal ProductIsAlreadyAssignedToCategoryException(string message) : base(message)
         {
         }
     }

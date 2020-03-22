@@ -9,13 +9,13 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Categories
         public string CategoryName { get; }
         public string CategoryDescription { get; }
 
-        public NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName)
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName)
         {
             CategoryId = categoryId;
             CategoryName = categoryName;
         }
         
-        public NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName, string categoryDescription)
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName, string categoryDescription)
         {
             CategoryId = categoryId;
             CategoryName = categoryName;

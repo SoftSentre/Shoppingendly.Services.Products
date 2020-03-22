@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Core.Extensions;
 using Xunit;
@@ -8,114 +7,77 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
 {
     public class CollectionExtensionsTests
     {
-        [Fact]
-        public void CheckIfIsEmptyMethodForEnumerableReturnFalseWhenCollectionContainElements()
+        [Theory]
+        [MemberData(nameof(CollectionExtensionsTestsDataGenerator.EmptyLists),
+            MemberType = typeof(CollectionExtensionsTestsDataGenerator))]
+        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenListIsEmpty(List<object> emptyOrNullList)
         {
-            // Arrange
-            var collection = Enumerable.Range(1, 5);
+            var testResult = emptyOrNullList.IsEmpty();
+            testResult.Should().BeTrue();
 
-            // Act
-            var testResult = collection.IsEmpty();
+            testResult = emptyOrNullList.IsNotEmpty();
+            testResult.Should().BeFalse();
+        }
 
-            // Assert
+        [Theory]
+        [MemberData(nameof(CollectionExtensionsTestsDataGenerator.EmptyEnumerable),
+            MemberType = typeof(CollectionExtensionsTestsDataGenerator))]
+        public void CheckIfIsEmptyMethodReturnValidValuesWhenEnumerableIsEmpty(
+            IEnumerable<object> emptyOrNullEnumerable)
+        {
+            var testResult = emptyOrNullEnumerable.IsEmpty();
+            testResult.Should().BeTrue();
+        }
+
+        [Theory]
+        [MemberData(nameof(CollectionExtensionsTestsDataGenerator.EmptyEnumerable),
+            MemberType = typeof(CollectionExtensionsTestsDataGenerator))]
+        public void CheckIfIsNotEmptyMethodReturnValidValuesWhenEnumerableIsEmpty(
+            IEnumerable<object> emptyOrNullEnumerable)
+        {
+            var testResult = emptyOrNullEnumerable.IsNotEmpty();
             testResult.Should().BeFalse();
         }
 
         [Fact]
-        public void CheckIfIsNotEmptyMethodForEnumerableReturnTrueWhenCollectionContainElements()
+        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenListIsNotEmpty()
         {
-            // Arrange
-            var collection = Enumerable.Range(1, 5);
+            var notEmptyList = new List<object> {new object()};
 
-            // Act
-            var testResult = collection.IsNotEmpty();
-
-            // Assert
-            testResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfIsEmptyMethodForListReturnFalseWhenCollectionContainElements()
-        {
-            // Arrange
-            var collection = new List<int> {1, 2, 3};
-
-            // Act
-            var testResult = collection.IsEmpty();
-
-            // Assert
+            var testResult = notEmptyList.IsEmpty();
             testResult.Should().BeFalse();
-        }
-        
-        [Fact]
-        public void CheckIfIsNotEmptyMethodForListReturnTrueWhenCollectionContainElements()
-        {
-            // Arrange
-            var collection = new List<int> {1, 2, 3};
 
-            // Act
-            var testResult = collection.IsNotEmpty();
-
-            // Assert
+            testResult = notEmptyList.IsNotEmpty();
             testResult.Should().BeTrue();
         }
 
         [Fact]
-        public void CheckIfIsEmptyMethodForEnumerableReturnTrueWhenCollectionIsEmpty()
+        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenEnumerableIsNotEmpty()
         {
-            // Arrange
-            var collection = Enumerable.Empty<int>();
+            IEnumerable<object> notEmptyEnumerable = new List<object> {new object()};
 
-            // Act
-            var testResult = collection.IsEmpty();
-
-            // Assert
-            testResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfIsNotEmptyMethodForEnumerableReturnFalseWhenCollectionIsEmpty()
-        {
-            // Arrange
-            var collection = Enumerable.Empty<int>();
-            IEnumerable<int> nullCollection = null;
-
-            // Act
-            var testResult = collection.IsNotEmpty();
-            var secondTestResult = nullCollection.IsNotEmpty();
-
-            // Assert
+            var testResult = notEmptyEnumerable.IsEmpty();
             testResult.Should().BeFalse();
-            secondTestResult.Should().BeFalse();
-        }
 
-        [Fact]
-        public void CheckIfIsEmptyMethodForListReturnTrueWhenCollectionIsEmpty()
-        {
-            // Arrange
-            var collection = new List<int>();
-
-            // Act
-            var testResult = collection.IsEmpty();
-
-            // Assert
+            testResult = notEmptyEnumerable.IsNotEmpty();
             testResult.Should().BeTrue();
         }
-        
-        [Fact]
-        public void CheckIfIsNotEmptyMethodForListReturnFalseWhenCollectionIsEmpty()
+
+        private class CollectionExtensionsTestsDataGenerator
         {
-            // Arrange
-            var collection = new List<int>();
-            List<int> nullCollection = null;
+            public static List<object[]> EmptyLists =>
+                new List<object[]>
+                {
+                    new object[] {new List<object>()},
+                    new object[] {null}
+                };
 
-            // Act
-            var testResult = collection.IsNotEmpty();
-            var secondTestResult = nullCollection.IsNotEmpty();
-
-            // Assert
-            testResult.Should().BeFalse();
-            secondTestResult.Should().BeFalse();
+            public static IEnumerable<object[]> EmptyEnumerable =>
+                new List<object[]>
+                {
+                    new object[] {new List<object>()},
+                    new object[] {null}
+                };
         }
     }
 }

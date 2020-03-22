@@ -1,23 +1,22 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.Events.Creators;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Infrastructure.DomainEvents;
 using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainEvents;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.DomainEvents
@@ -36,7 +35,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
 
             // Assert
             testEventsResult.Value.Should().NotBeNull();
-            var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault();
+            var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault() ??
+                                  It.IsAny<NewCreatorCreatedDomainEvent>();
+            
             testEventResult.Should().NotBeNull();
             testEventResult.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             testEventResult.CreatorId.Id.Should().Be(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A"));
@@ -51,15 +52,16 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             // Arrange
             var domainEventPublisher = new Mock<IDomainEventPublisher>();
             var categoryCreatedEvent = new NewCategoryCreatedDomainEvent(new CategoryId(), "Name");
-            var creatorCreatedEvent = new NewCreatorCreatedDomainEvent(new CreatorId(), "Name", "email@email.com", Role.Moderator);
+            var creatorCreatedEvent =
+                new NewCreatorCreatedDomainEvent(new CreatorId(), "Name", "email@email.com", Role.Moderator);
             var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object, await CreateDbContext());
-            
+
             var domainEvents = new List<IDomainEvent>
             {
                 categoryCreatedEvent,
                 creatorCreatedEvent
             };
-            
+
             // Act
             domainEventsAccessor.DispatchEvents(domainEvents);
 
@@ -67,14 +69,14 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             domainEventPublisher.Verify(dep => dep.PublishAsync<IDomainEvent>(categoryCreatedEvent), Times.Once);
             domainEventPublisher.Verify(dep => dep.PublishAsync<IDomainEvent>(creatorCreatedEvent), Times.Once);
         }
-        
+
         [Fact]
         public async void CheckIfDomainEventsListWillBeEmptyAfterClearDomainEventsMethodWillBeFired()
         {
             // Arrange
             var domainEventPublisher = new Mock<IDomainEventPublisher>();
             var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object, await CreateDbContext());
-            
+
             // Act
             domainEventsAccessor.ClearAllDomainEvents();
 
@@ -82,8 +84,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             var testResult = domainEventsAccessor.GetUncommittedEvents();
             testResult.Value.Should().BeEmpty();
         }
-        
-        private async Task<ProductServiceDbContext> CreateDbContext()
+
+        private static async Task<ProductServiceDbContext> CreateDbContext()
         {
             var dbName = Guid.NewGuid().ToString();
 
@@ -92,8 +94,11 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
+            var loggerFactory = new Mock<ILoggerFactory>();
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions, domainEventDispatcher);
+            var productServiceDbContext =
+                new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher, new SqlSettings(),
+                    dbContextOptions);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 
@@ -103,6 +108,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             await productServiceDbContext.SaveChangesAsync();
 
             return productServiceDbContext;
-        }    
+        }
     }
 }

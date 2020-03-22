@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -8,21 +9,24 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services.Base
 {
     public interface IProductDomainService
     {
-        Maybe<ProductCategory> GetAssignedCategory(Maybe<Product> product, CategoryId categoryId);
-        Maybe<IEnumerable<ProductCategory>> GetAssignedCategories(Maybe<Product> product);
+        Task<Maybe<Product>> GetProductAsync(ProductId productId);
+        Task<Maybe<Product>> GetProductWithCategoriesAsync(ProductId productId);
+        Task<Maybe<IEnumerable<Product>>> GetProductsByNameAsync(string name);
+        Task<Maybe<IEnumerable<Product>>> GetProductsByNameWithCategoriesAsync(string name);
+        Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId);
         
-        Maybe<Product> AddNewProduct(ProductId productId, CreatorId creatorId, string name,
+        Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer);
         
-        Maybe<Product> AddNewProduct(ProductId productId, CreatorId creatorId, string name,
+        Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer, IEnumerable<CategoryId> categoryIds);
 
-        bool AddOrChangeProductPicture(Maybe<Product> product, Picture picture);
-        void RemovePictureFromProduct(Maybe<Product> product);
-        bool ChangeProductName(Maybe<Product> product, string name);
-        bool ChangeProductProducer(Maybe<Product> product, string producer);
-        void AssignProductToCategory(Maybe<Product> product, CategoryId categoryId);
-        void DeallocateProductFromCategory(Maybe<Product> product, CategoryId categoryId);
-        void DeallocateProductFromAllCategories(Maybe<Product> product);
+        Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture picture);
+        Task RemovePictureFromProductAsync(ProductId productId);
+        Task<bool> ChangeProductNameAsync(ProductId productId, string name);
+        Task<bool> ChangeProductProducerAsync(ProductId productId, string producer);
+        Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId);
+        Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId);
+        Task DeallocateProductFromAllCategoriesAsync(ProductId productId);
     }
 }

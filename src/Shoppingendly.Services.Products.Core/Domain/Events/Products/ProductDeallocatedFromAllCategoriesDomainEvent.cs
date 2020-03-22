@@ -9,7 +9,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Products
         public ProductId ProductId { get; }
         public IEnumerable<CategoryId> CategoriesIds { get; }
 
-        public ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId, IEnumerable<CategoryId> categoriesIds)
+        internal ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId, IEnumerable<CategoryId> categoriesIds)
         {
             ProductId = productId;
             CategoriesIds = categoriesIds;

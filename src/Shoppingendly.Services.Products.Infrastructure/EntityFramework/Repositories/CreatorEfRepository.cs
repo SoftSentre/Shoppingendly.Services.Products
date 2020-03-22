@@ -28,6 +28,12 @@ namespace Shoppingendly.Services.Products.Infrastructure.EntityFramework.Reposit
             return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.Name == name);
         }
 
+        public async Task<Maybe<Creator>> GetWithIncludesAsync(string name)
+        {
+            return await _productServiceDbContext.Creators.Include(c => c.Products)
+                .FirstOrDefaultAsync(p => p.Name == name);
+        }
+
         public async Task AddAsync(Creator creator)
         {
             await _productServiceDbContext.AddAsync(creator);

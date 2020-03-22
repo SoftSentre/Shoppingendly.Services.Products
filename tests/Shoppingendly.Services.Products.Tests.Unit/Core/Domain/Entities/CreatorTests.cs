@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Creators;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -11,8 +12,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 {
     public class CreatorTests
     {
-        #region domain logic
-
         [Theory]
         [InlineData("John")]
         [InlineData("My name us too long, but it's in the range, right.")]
@@ -194,7 +193,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             Action action = () => creator.SetRole(creatorRole);
 
             //Assert
-            action.Should().NotThrow<InvalidCreatorRoleException>();
+            action.Should().NotThrow<Exception>();
         }
 
         [Fact]
@@ -212,10 +211,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             creator.UpdatedDate.Should().NotBe(default);
             creator.CreatedAt.Should().NotBe(default);
         }
-        
-        #endregion
-
-        #region domain events
 
         [Fact]
         public void CheckIfCreateNewCreatorByConstructorProduceDomainEventWithAppropriateTypeAndValues()
@@ -224,7 +219,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-            var newCreatorCreatedDomainEvent = creator.GetUncommitted().LastOrDefault() as NewCreatorCreatedDomainEvent;
+            var newCreatorCreatedDomainEvent = creator.GetUncommitted().LastOrDefault() as NewCreatorCreatedDomainEvent ?? It.IsAny<NewCreatorCreatedDomainEvent>();
             
             // Assert
             creator.DomainEvents.Should().NotBeEmpty();
@@ -244,7 +239,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             
             // Act
             creator.SetName("NewCreatorName");
-            var creatorNameChangedDomainEvent = creator.GetUncommitted().LastOrDefault() as CreatorNameChangedDomainEvent;
+            var creatorNameChangedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as CreatorNameChangedDomainEvent ??
+                It.IsAny<CreatorNameChangedDomainEvent>();
             
             // Assert
             creator.DomainEvents.Should().NotBeEmpty();
@@ -262,7 +259,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             
             // Act
             creator.SetEmail("NewCreatorEmail@Email.pl");
-            var creatorEmailChangedDomainEvent = creator.GetUncommitted().LastOrDefault() as CreatorEmailChangedDomainEvent;
+            var creatorEmailChangedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as CreatorEmailChangedDomainEvent ??
+                It.IsAny<CreatorEmailChangedDomainEvent>();
             
             // Assert
             creator.DomainEvents.Should().NotBeEmpty();
@@ -280,7 +279,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             
             // Act
             creator.SetRole(Role.User);
-            var creatorRoleChangedDomainEvent = creator.GetUncommitted().LastOrDefault() as CreatorRoleChangedDomainEvent;
+            var creatorRoleChangedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as CreatorRoleChangedDomainEvent ??
+                It.IsAny<CreatorRoleChangedDomainEvent>();
             
             // Assert
             creator.DomainEvents.Should().NotBeEmpty();
@@ -316,7 +317,5 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             domainEvents.Should().NotBeNull();
             domainEvents.LastOrDefault().Should().BeOfType<NewCreatorCreatedDomainEvent>();
         }
-
-        #endregion
     }
 }

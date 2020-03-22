@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moq;
+using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
@@ -13,6 +14,7 @@ using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Repositories
@@ -114,8 +116,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
 
             // Assert
             testResult.Value.Should().HaveCount(3);
-            testResult.Value.FirstOrDefault(c => c.Name == _category.Name)
-                .ProductCategories.Should().HaveCount(2);
+            var testResultItem = testResult.Value.FirstOrDefault(c => c.Name == _category.Name) ?? It.IsAny<Category>();
+            testResultItem.ProductCategories.Should().HaveCount(2);
 
             dbContext.Dispose();
         }
@@ -131,7 +133,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             // Act
             await categoryRepository.AddAsync(category);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(category.Id));
+            var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(category.Id)) ?? It.IsAny<Category>();
 
             // Assert
             testResult.Name.Should().Be(category.Name);
@@ -155,7 +157,8 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             categoryRepository.Update(categoryFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(_category.Id));
+            var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(_category.Id)) ??
+                             It.IsAny<Category>();
 
             // Assert
             testResult.Name.Should().Be(newCategoryName);
@@ -189,8 +192,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
+            var loggerFactory = new Mock<ILoggerFactory>();
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions, domainEventDispatcher);
+            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
+                new SqlSettings(), dbContextOptions);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 

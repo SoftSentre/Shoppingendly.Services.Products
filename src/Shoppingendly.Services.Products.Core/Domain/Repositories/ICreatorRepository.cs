@@ -9,6 +9,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Repositories
     {
         Task<Maybe<Creator>> GetByIdAsync(CreatorId creatorId);
         Task<Maybe<Creator>> GetByNameAsync(string name);
+        Task<Maybe<Creator>> GetWithIncludesAsync(string name);
         Task AddAsync(Creator creator);
         void Update(Creator creator);
         void Delete(Creator creator);

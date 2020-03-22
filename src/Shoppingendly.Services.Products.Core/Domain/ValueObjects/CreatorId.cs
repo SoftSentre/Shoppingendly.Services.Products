@@ -5,12 +5,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
 {
     public class CreatorId : Identity<Guid>
     {
-        public CreatorId()
+        internal CreatorId()
         {
             Id = Guid.NewGuid();
         }
 
-        public CreatorId(Guid value) : base(value)
+        internal CreatorId(Guid value) : base(value)
         {
         }
     }

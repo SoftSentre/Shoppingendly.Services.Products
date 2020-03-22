@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moq;
+using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -12,6 +13,7 @@ using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
+using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Repositories
@@ -70,7 +72,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             // Act
             await creatorRepository.AddAsync(creator);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id));
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.Name.Should().Be(creator.Name);
@@ -95,7 +97,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
             creatorRepository.Update(creatorFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id));
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.Email.Should().Be(newCreatorEmail);
@@ -129,8 +131,10 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramew
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
 
+            var loggerFactory = new Mock<ILoggerFactory>();
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(dbContextOptions, domainEventDispatcher);
+            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
+                new SqlSettings(), dbContextOptions);
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 
