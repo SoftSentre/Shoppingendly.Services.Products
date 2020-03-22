@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 
-namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base
+namespace Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents
 {
     public interface IDomainEventHandler<in TEvent> 
         where TEvent : class, IDomainEvent
