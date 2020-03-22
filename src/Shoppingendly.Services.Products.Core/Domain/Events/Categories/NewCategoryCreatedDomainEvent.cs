@@ -9,11 +9,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Categories
         public string CategoryName { get; }
         public string CategoryDescription { get; }
 
-        internal NewCategoryCreatedDomainEvent()
-        {
-            // only for blocking creation of new object in other assembly than this.
-        }
-        
         internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName)
         {
             CategoryId = categoryId;

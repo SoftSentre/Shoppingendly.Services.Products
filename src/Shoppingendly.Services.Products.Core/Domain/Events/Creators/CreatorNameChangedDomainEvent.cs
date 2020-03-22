@@ -8,11 +8,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Creators
         public CreatorId CreatorId { get; }
         public string Name { get; }
 
-        internal CreatorNameChangedDomainEvent()
-        {
-            // only for blocking creation of new object in other assembly than this.
-        }
-        
         internal CreatorNameChangedDomainEvent(CreatorId creatorId, string name)
         {
             CreatorId = creatorId;

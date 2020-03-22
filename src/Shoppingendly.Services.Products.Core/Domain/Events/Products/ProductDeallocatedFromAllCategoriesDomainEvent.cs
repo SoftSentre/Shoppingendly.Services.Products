@@ -8,11 +8,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Products
     {
         public ProductId ProductId { get; }
         public IEnumerable<CategoryId> CategoriesIds { get; }
-        
-        internal ProductDeallocatedFromAllCategoriesDomainEvent()
-        {
-            // only for blocking creation of new object in other assembly than this.
-        }
 
         internal ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId, IEnumerable<CategoryId> categoriesIds)
         {

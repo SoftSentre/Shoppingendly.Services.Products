@@ -7,11 +7,6 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Products
     {
         public ProductId ProductId { get; }
         public CategoryId CategoryId { get; }
-        
-        internal ProductAssignedToCategoryDomainEvent()
-        {
-            // only for blocking creation of new object in other assembly than this.
-        }
 
         internal ProductAssignedToCategoryDomainEvent(ProductId productId, CategoryId categoryId)
         {
