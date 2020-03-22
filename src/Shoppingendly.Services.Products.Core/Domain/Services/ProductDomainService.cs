@@ -1,117 +1,180 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services;
+using Shoppingendly.Services.Products.Core.Exceptions.Services.Products;
+using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Services
 {
     public class ProductDomainService : IProductDomainService
     {
-        public Maybe<ProductCategory> GetAssignedCategory(Maybe<Product> product, CategoryId categoryId)
-        {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var assignedCategory = validatedProduct.GetAssignedCategory(categoryId);
+        private readonly IProductRepository _productRepository;
 
-            return assignedCategory;
+        public ProductDomainService(IProductRepository productRepository)
+        {
+            _productRepository = productRepository
+                .IfEmptyThenThrowAndReturnValue();
         }
 
-        public Maybe<IEnumerable<ProductCategory>> GetAssignedCategories(Maybe<Product> product)
+        public async Task<Maybe<Product>> GetProductAsync(ProductId productId)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var assignedCategories = validatedProduct.GetAllAssignedCategories();
+            var product = await _productRepository.GetByIdAsync(productId);
+            return product;
+        }
+
+        public async Task<Maybe<Product>> GetProductWithCategoriesAsync(ProductId productId)
+        {
+            var product = await _productRepository.GetByIdWithIncludesAsync(productId);
+            return product;
+        }
+
+        public async Task<Maybe<IEnumerable<Product>>> GetProductsByNameAsync(string name)
+        {
+            var products = await _productRepository.GetManyByNameAsync(name);
+            return products;
+        }
+
+        public async Task<Maybe<IEnumerable<Product>>> GetProductsByNameWithCategoriesAsync(string name)
+        {
+            var product = await _productRepository.GetManyByNameWithIncludesAsync(name);
+            return product;
+        }
+
+        public async Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId)
+        {
+            var product = await _productRepository.GetByIdWithIncludesAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+
+            var assignedCategories = product.GetAllAssignedCategories();
 
             return assignedCategories;
         }
 
-        public Maybe<Product> AddNewProduct(ProductId productId, CreatorId creatorId, string name,
+        public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer)
         {
+            var product = await _productRepository.GetByIdAsync(productId);
+
+            if (product.HasValue)
+            {
+                throw new ProductAlreadyExistsException(
+                    $"Unable to add new product, because product with id: {productId} is already exists.");
+            }
+
             var newProduct = Product.Create(productId, creatorId, name, producer);
+            await _productRepository.AddAsync(newProduct);
 
             return newProduct;
         }
-        
-        public Maybe<Product> AddNewProduct(ProductId productId, CreatorId creatorId, string name,
+
+        public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer, IEnumerable<CategoryId> categoryIds)
         {
+            var product = await _productRepository.GetByIdAsync(productId);
+
+            if (product.HasValue)
+            {
+                throw new ProductAlreadyExistsException(
+                    $"Unable to add new product, because product with id: {productId} is already exists.");
+            }
+
             var newProduct = Product.Create(productId, creatorId, name, producer);
             var categoryIdsAsList = categoryIds.ToList();
 
             if (categoryIdsAsList.Any())
-                categoryIdsAsList.ForEach(ci => AssignProduct(newProduct, ci));
+                categoryIdsAsList.ForEach(ci => newProduct.AssignCategory(ci));
 
+            await _productRepository.AddAsync(newProduct);
             return newProduct;
         }
 
-        public bool AddOrChangeProductPicture(Maybe<Product> product, Picture picture)
+        public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture picture)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var isPictureChanged = validatedProduct.AddOrChangePicture(picture);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            var isPictureChanged = product.AddOrChangePicture(picture);
+
+            if (isPictureChanged)
+                _productRepository.Update(product);
 
             return isPictureChanged;
         }
 
-        public void RemovePictureFromProduct(Maybe<Product> product)
+        public async Task RemovePictureFromProductAsync(ProductId productId)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            validatedProduct.RemovePicture();
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            product.RemovePicture();
+            _productRepository.Update(product);
         }
 
-        public bool ChangeProductName(Maybe<Product> product, string name)
+        public async Task<bool> ChangeProductNameAsync(ProductId productId, string name)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var isNameChanged = validatedProduct.SetName(name);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            var isNameChanged = product.SetName(name);
+
+            if (isNameChanged)
+                _productRepository.Update(product);
 
             return isNameChanged;
         }
 
-        public bool ChangeProductProducer(Maybe<Product> product, string producer)
+        public async Task<bool> ChangeProductProducerAsync(ProductId productId, string producer)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var isProducerChanged = validatedProduct.SetProducer(producer);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+
+            var isProducerChanged = product.SetProducer(producer);
+
+            if (isProducerChanged)
+                _productRepository.Update(product);
 
             return isProducerChanged;
         }
 
-        public void AssignProductToCategory(Maybe<Product> product, CategoryId categoryId)
+        public async Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId)
         {
-            AssignProduct(product, categoryId);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                $"Unable to mutate product state, because product with id: {productId} is empty."));
+
+            product.AssignCategory(categoryId);
+            _productRepository.Update(product);
         }
 
-        public void DeallocateProductFromCategory(Maybe<Product> product, CategoryId categoryId)
+        public async Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
             
-            validatedProduct.DeallocateCategory(categoryId);
+            product.DeallocateCategory(categoryId);
+            _productRepository.Update(product);
         }
 
-        public void DeallocateProductFromAllCategories(Maybe<Product> product)
+        public async Task DeallocateProductFromAllCategoriesAsync(ProductId productId)
         {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
             
-            validatedProduct.DeallocateAllCategories();
-        }
-
-        private static void AssignProduct(Maybe<Product> product, CategoryId categoryId)
-        {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-
-            validatedProduct.AssignCategory(categoryId);
-        }
-
-        private static Product IfProductIsEmptyThenThrow(Maybe<Product> product)
-        {
-            if (product.HasNoValue)
-            {
-                throw new EmptyProductProvidedException(
-                    "Unable to mutate product state, because provided value is empty.");
-            }
-
-            return product.Value;
+            product.DeallocateAllCategories();
+            _productRepository.Update(product);
         }
     }
 }

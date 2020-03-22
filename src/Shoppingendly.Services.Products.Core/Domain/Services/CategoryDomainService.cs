@@ -1,52 +1,114 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services;
+using Shoppingendly.Services.Products.Core.Exceptions.Services.Categories;
+using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Services
 {
     public class CategoryDomainService : ICategoryDomainService
     {
-        public Maybe<Category> CreateNewCategory(CategoryId categoryId, string categoryName)
+        private readonly ICategoryRepository _categoryRepository;
+
+        public CategoryDomainService(ICategoryRepository categoryRepository)
         {
+            _categoryRepository = categoryRepository
+                .IfEmptyThenThrowAndReturnValue();
+        }
+
+        public async Task<Maybe<Category>> GetCategoryAsync(CategoryId categoryId)
+        {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            return category;
+        }
+
+        public async Task<Maybe<Category>> GetCategoryByNameAsync(string categoryName)
+        {
+            var category = await _categoryRepository.GetByNameAsync(categoryName);
+            return category;
+        }
+
+        public async Task<Maybe<Category>> GetCategoryWithProductsAsync(string categoryName)
+        {
+            var category = await _categoryRepository.GetByNameWithIncludesAsync(categoryName);
+            return category;
+        }
+
+        public async Task<Maybe<IEnumerable<Category>>> GetAllCategoriesAsync()
+        {
+            var category = await _categoryRepository.GetAllAsync();
+            return category;
+        }
+
+        public async Task<Maybe<IEnumerable<Category>>> GetAllCategoriesWithProductsAsync()
+        {
+            var category = await _categoryRepository.GetAllWithIncludesAsync();
+            return category;
+        }
+
+        public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName)
+        {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+
+            if (category.HasValue)
+            {
+                throw new CategoryAlreadyExistsException(
+                    $"Unable to add new category, because category with id: {categoryId} is already exists.");
+            }
+
             var newCategory = Category.Create(categoryId, categoryName);
+            await _categoryRepository.AddAsync(newCategory);
 
             return newCategory;
         }
 
-        public Maybe<Category> CreateNewCategory(CategoryId categoryId, string categoryName, string description)
+        public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
+            string description)
         {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+
+            if (category.HasValue)
+            {
+                throw new CategoryAlreadyExistsException(
+                    $"Unable to add new category, because category with id: {categoryId} is already exists.");
+            }
+
             var newCategory = Category.Create(categoryId, categoryName, description);
+            await _categoryRepository.AddAsync(newCategory);
 
             return newCategory;
         }
 
-        public bool SetCategoryName(Maybe<Category> category, string categoryName)
+        public async Task<bool> SetCategoryNameAsync(CategoryId categoryId, string categoryName)
         {
-            var validatedCategory = IfCategoryIsEmptyThenThrow(category);
-            var isNameChanged = validatedCategory.SetName(categoryName);
+            var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
+                new CategoryNotFoundException(
+                    $"Unable to mutate category state, because category with id: {categoryId} not found."));
             
+            var isNameChanged = category.SetName(categoryName);
+
+            if (isNameChanged)
+                _categoryRepository.Update(category);
+
             return isNameChanged;
         }
 
-        public bool SetCategoryDescription(Maybe<Category> category, string categoryDescription)
+        public async Task<bool> SetCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription)
         {
-            var validatedCategory = IfCategoryIsEmptyThenThrow(category);
-            var isDescriptionChanged = validatedCategory.SetDescription(categoryDescription);
+            var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
+                new CategoryNotFoundException(
+                    $"Unable to mutate category state, because category with id: {categoryId} not found."));
             
-            return isDescriptionChanged;
-        }
-        
-        private static Category IfCategoryIsEmptyThenThrow(Maybe<Category> category)
-        {
-            if (category.HasNoValue)
-            {
-                throw new EmptyCategoryProvidedException(
-                    "Unable to mutate category state, because provided value is empty.");
-            }
+            var isDescriptionChanged = category.SetDescription(categoryDescription);
 
-            return category.Value;
+            if (isDescriptionChanged)
+                _categoryRepository.Update(category);
+
+            return isDescriptionChanged;
         }
     }
 }

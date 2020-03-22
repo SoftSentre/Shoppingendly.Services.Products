@@ -55,13 +55,13 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger
             var enrichers = GetEnrichers(logger).ToList();
 
             // Assert
-            var enricherDictionary = new Dictionary<string, string>()
+            var enricherDictionary = new Dictionary<string, string>
             {
                 {GetPropertyEnricherName(enrichers, 0), GetPropertyEnricherValue(enrichers, 0)},
                 {GetPropertyEnricherName(enrichers, 1), GetPropertyEnricherValue(enrichers, 1)},
                 {GetPropertyEnricherName(enrichers, 2), GetPropertyEnricherValue(enrichers, 2)},
                 {GetPropertyEnricherName(enrichers, 3), GetPropertyEnricherValue(enrichers, 3)},
-                {GetPropertyEnricherName(enrichers, 4), GetPropertyEnricherValue(enrichers, 4)},
+                {GetPropertyEnricherName(enrichers, 4), GetPropertyEnricherValue(enrichers, 4)}
             };
 
             enrichers.Count.Should().Be(enricherDictionary.Count);
@@ -173,7 +173,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger
             var loggerConfiguration = new LoggerConfiguration();
             const string environment = "development";
 
-            var loggerSettings = new LoggerSettings()
+            var loggerSettings = new LoggerSettings
             {
                 FileSettings = new FileSettings
                 {
@@ -187,7 +187,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger
                     Enabled = true,
                     LoggingLevel = "Debug"
                 },
-                ElkSettings = new ElkSettings()
+                ElkSettings = new ElkSettings
                 {
                     Enabled = true,
                     BasicAuthEnabled = false,

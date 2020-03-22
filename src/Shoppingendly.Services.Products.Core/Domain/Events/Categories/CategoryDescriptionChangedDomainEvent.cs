@@ -7,8 +7,8 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Categories
     {
         public CategoryId CategoryId { get; }
         public string CategoryDescription { get; }
-        
-        public CategoryDescriptionChangedDomainEvent(CategoryId categoryId, string categoryDescription)
+
+        internal CategoryDescriptionChangedDomainEvent(CategoryId categoryId, string categoryDescription)
         {
             CategoryId = categoryId;
             CategoryDescription = categoryDescription;

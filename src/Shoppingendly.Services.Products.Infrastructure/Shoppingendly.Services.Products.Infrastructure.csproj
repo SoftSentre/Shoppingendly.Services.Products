@@ -3,10 +3,12 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <RootNamespace>Shoppingendly.Services.Products.Infrastructure</RootNamespace>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Autofac" Version="5.1.2" />
+        <PackageReference Include="AutoMapper" Version="9.0.0" />
         <PackageReference Include="FluentValidation" Version="8.6.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
@@ -21,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Shoppingendly.Services.Products.Application\Shoppingendly.Services.Products.Application.csproj" PrivateAssets="All" />
         <ProjectReference Include="..\Shoppingendly.Services.Products.Core\Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All" />
     </ItemGroup>
 

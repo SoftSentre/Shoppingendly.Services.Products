@@ -1,8 +1,8 @@
 namespace Shoppingendly.Services.Products.Core.Exceptions.Products
 {
-    public class PictureCanNotBeEmptyException : ShoppingendlyException
+    internal class PictureCanNotBeEmptyException : ShoppingendlyException
     {
-        public PictureCanNotBeEmptyException(string message) : base(message)
+        internal PictureCanNotBeEmptyException(string message) : base(message)
         {
         }
     }

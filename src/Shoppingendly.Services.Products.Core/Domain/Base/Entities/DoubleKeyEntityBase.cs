@@ -7,7 +7,6 @@
 
         protected DoubleKeyEntityBase()
         {
-            
         }
 
         protected DoubleKeyEntityBase(TFirstId firstKey, TSecondId secondKey)

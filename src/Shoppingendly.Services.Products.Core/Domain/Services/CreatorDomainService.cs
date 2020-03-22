@@ -1,47 +1,87 @@
+using System.Threading.Tasks;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
+using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using Shoppingendly.Services.Products.Core.Exceptions.Services;
+using Shoppingendly.Services.Products.Core.Exceptions.Services.Creators;
+using Shoppingendly.Services.Products.Core.Extensions;
 using Shoppingendly.Services.Products.Core.Types;
 
 namespace Shoppingendly.Services.Products.Core.Domain.Services
 {
     public class CreatorDomainService : ICreatorDomainService
     {
-        public Maybe<Creator> AddNewCreator(CreatorId creatorId, string creatorName, string creatorEmail, Role creatorRole)
-        {
-            var creator = Creator.Create(creatorId, creatorName, creatorEmail, creatorRole);
+        private readonly ICreatorRepository _creatorRepository;
 
+        public CreatorDomainService(ICreatorRepository creatorRepository)
+        {
+            _creatorRepository = creatorRepository
+                .IfEmptyThenThrowAndReturnValue();
+        }
+
+        public async Task<Maybe<Creator>> GetCreatorAsync(CreatorId creatorId)
+        {
+            var creator = await _creatorRepository.GetByIdAsync(creatorId);
             return creator;
         }
 
-        public void SetCreatorName(Maybe<Creator> creator, string creatorName)
+        public async Task<Maybe<Creator>> GetCreatorByNameAsync(string name)
         {
-            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
-            validatedCreator.SetName(creatorName);
+            var creator = await _creatorRepository.GetByNameAsync(name);
+            return creator;
         }
 
-        public void SetCreatorEmail(Maybe<Creator> creator, string creatorEmail)
+        public async Task<Maybe<Creator>> GetCreatorWithProductsAsync(string name)
         {
-            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
-            validatedCreator.SetEmail(creatorEmail);
+            var creator = await _creatorRepository.GetWithIncludesAsync(name);
+            return creator;
         }
 
-        public void SetCreatorRole(Maybe<Creator> creator, Role creatorRole)
+        public async Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, string creatorName,
+            string creatorEmail, Role creatorRole)
         {
-            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
-            validatedCreator.SetRole(creatorRole);
-        }
+            var creator = await _creatorRepository.GetByIdAsync(creatorId);
 
-        private static Creator IfCreatorIsEmptyThenThrow(Maybe<Creator> creator)
-        {
-            if (creator.HasNoValue)
+            if (creator.HasValue)
             {
-                throw new EmptyCreatorProvidedException(
-                    "Unable to mutate creator state, because provided value is empty.");
+                throw new CreatorAlreadyExistsException(
+                    $"Unable to add new creator, because creator with id: {creatorId} is already exists.");
             }
 
-            return creator.Value;
+            var newCreator = Creator.Create(creatorId, creatorName, creatorEmail, creatorRole);
+            await _creatorRepository.AddAsync(newCreator);
+
+            return newCreator;
+        }
+
+        public async Task SetCreatorNameAsync(CreatorId creatorId, string creatorName)
+        {
+            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
+                new CreatorNotFoundException(
+                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+            
+            creator.SetName(creatorName);
+            _creatorRepository.Update(creator);
+        }
+
+        public async Task SetCreatorEmailAsync(CreatorId creatorId, string creatorEmail)
+        {
+            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
+                new CreatorNotFoundException(
+                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+
+            creator.SetEmail(creatorEmail);
+            _creatorRepository.Update(creator);
+        }
+
+        public async Task SetCreatorRoleAsync(CreatorId creatorId, Role creatorRole)
+        {
+            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
+                new CreatorNotFoundException(
+                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+            
+            creator.SetRole(creatorRole);
+            _creatorRepository.Update(creator);
         }
     }
 }

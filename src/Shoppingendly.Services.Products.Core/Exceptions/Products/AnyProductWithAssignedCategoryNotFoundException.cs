@@ -1,8 +1,8 @@
 namespace Shoppingendly.Services.Products.Core.Exceptions.Products
 {
-    public class AnyProductWithAssignedCategoryNotFoundException : ShoppingendlyException
+    internal class AnyProductWithAssignedCategoryNotFoundException : ShoppingendlyException
     {
-        public AnyProductWithAssignedCategoryNotFoundException(string message) : base(message)
+        internal AnyProductWithAssignedCategoryNotFoundException(string message) : base(message)
         {
         }
     }

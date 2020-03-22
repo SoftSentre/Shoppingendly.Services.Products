@@ -1,8 +1,8 @@
 ﻿namespace Shoppingendly.Services.Products.Core.Exceptions.Products
 {
-    public class InvalidProductProducerException : ShoppingendlyException
+    internal class InvalidProductProducerException : ShoppingendlyException
     {
-        public InvalidProductProducerException(string message) : base(message)
+        internal InvalidProductProducerException(string message) : base(message)
         {
         }
     }

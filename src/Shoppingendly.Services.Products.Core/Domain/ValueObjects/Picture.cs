@@ -19,7 +19,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.ValueObjects
             // Required for EF
         }
 
-        public Picture(string name, string url)
+        internal Picture(string name, string url)
         {
             Name = ValidatePictureName(name);
             Url = ValidatePictureUrl(url);

@@ -1,9 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <LangVersion>8.0</LangVersion>
-    <RootNamespace>Shoppingendly.Services.Products.Core</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <RootNamespace>Shoppingendly.Services.Products.Core</RootNamespace>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>Shoppingendly.Services.Products.Tests.Unit</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using Shoppingendly.Services.Products.Core.Domain.Base.Entities;
@@ -18,7 +19,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         private HashSet<Product> _products = new HashSet<Product>();
-        
+
         public int RoleId { get; private set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
@@ -32,12 +33,12 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             set => _products = new HashSet<Product>(value);
         }
 
-        public Creator()
+        // Required for EF
+        private Creator()
         {
-            // Required for EF
         }
 
-        public Creator(CreatorId creatorId, string name, string email, Role role) : base(creatorId)
+        internal Creator(CreatorId creatorId, string name, string email, Role role) : base(creatorId)
         {
             Name = ValidateName(name);
             Email = ValidateEmail(email);
@@ -45,7 +46,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, email, role));
         }
 
-        public void SetName(string name)
+        internal void SetName(string name)
         {
             ValidateName(name);
 
@@ -54,7 +55,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorNameChangedDomainEvent(Id, name));
         }
 
-        public void SetEmail(string email)
+        internal void SetEmail(string email)
         {
             ValidateEmail(email);
 
@@ -63,7 +64,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorEmailChangedDomainEvent(Id, email));
         }
 
-        public void SetRole(Role role)
+        internal void SetRole(Role role)
         {
             ValidateRole(role);
 
@@ -72,7 +73,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, role));
         }
 
-        public static Creator Create(CreatorId creatorId, string name, string email, Role role)
+        internal static Creator Create(CreatorId creatorId, string name, string email, Role role)
         {
             return new Creator(creatorId, name, email, role);
         }
@@ -110,7 +111,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Entities
         private static Role ValidateRole(Role role)
         {
             if (role.Name.IsLongerThan(RoleNameMaxLength))
-                throw new InvalidCreatorRoleException(
+                throw new ArgumentException(
                     $"Creator role name can not be longer than {CreatorNameMinLength} characters.");
 
             return role;

@@ -1,8 +1,8 @@
 ﻿namespace Shoppingendly.Services.Products.Core.Exceptions.Creators
 {
-    public class InvalidCreatorNameException : ShoppingendlyException
+    internal class InvalidCreatorNameException : ShoppingendlyException
     {
-        public InvalidCreatorNameException(string message) : base(message)
+        internal InvalidCreatorNameException(string message) : base(message)
         {
         }
     }

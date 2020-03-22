@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
 {
-    public class PictureTests
+    public class PictureTests 
     {
         [Fact]
         public void CheckIfIsPossibleToCreateNotEmptyPictureWhenCorrectValuesAreProvided()
@@ -55,7 +55,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
         {
             // Arrange
             const string url = "ValidUrl";
-            
+
             // Act
             Action action = () => Picture.Create(string.Empty, url);
 
@@ -63,13 +63,13 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             action.Should().Throw<InvalidPictureNameException>()
                 .WithMessage("Picture name can not be empty.");
         }
-        
+
         [Fact]
         public void CheckIfNameIsTooLongThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
         {
             // Arrange
             const string url = "ValidUrl";
-            
+
             // Act
             Action action = () => Picture.Create(new string('*', 201), url);
 
@@ -77,13 +77,13 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             action.Should().Throw<InvalidPictureNameException>()
                 .WithMessage("Picture name can not be longer than 200 characters.");
         }
-        
+
         [Fact]
         public void CheckIfUrlIsEmptyThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
         {
             // Arrange
             const string name = "ValidName";
-            
+
             // Act
             Action action = () => Picture.Create(name, string.Empty);
 
@@ -91,13 +91,13 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             action.Should().Throw<InvalidPictureUrlException>()
                 .WithMessage("Picture url can not be empty.");
         }
-        
+
         [Fact]
         public void CheckIfUrlIsTooLongThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
         {
             // Arrange
             const string name = "ValidName";
-            
+
             // Act
             Action action = () => Picture.Create(name, new string('*', 501));
 
@@ -105,13 +105,13 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
             action.Should().Throw<InvalidPictureUrlException>()
                 .WithMessage("Picture url can not be longer than 500 characters.");
         }
-        
+
         [Fact]
         public void CheckIfUrlHaveWhitespacesThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
         {
             // Arrange
             const string name = "ValidName";
-            
+
             // Act
             Action action = () => Picture.Create(name, "Some   url");
 

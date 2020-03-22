@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using Shoppingendly.Services.Products.Core.Domain.Entities;
 using Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using Shoppingendly.Services.Products.Core.Domain.ValueObjects;
@@ -10,10 +11,8 @@ using Xunit;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 {
-    public class CategoryTests : CategoryDataGenerator
+    public class CategoryTests 
     {
-        #region domain logic
-
         [Fact]
         public void CheckIfSetNameMethodReturnFalseWhenParameterIsTheSameAsExistingValue()
         {
@@ -215,10 +214,6 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
                 .WithMessage("Category description can not be longer than 4000 characters.");
         }
 
-        #endregion
-
-        #region domain events
-
         [Fact]
         public void CheckIfCreateNewCategoryByConstructorWithoutDescriptionProduceDomainEventWithAppropriateTypeAndValues()
         {
@@ -226,7 +221,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             var category = new Category(new CategoryId(), "ExampleCategory");
-            var newCategoryCreatedDomainEvent = category.GetUncommitted().LastOrDefault() as NewCategoryCreatedDomainEvent;
+            var newCategoryCreatedDomainEvent =
+                category.GetUncommitted().LastOrDefault() as NewCategoryCreatedDomainEvent ??
+                It.IsAny<NewCategoryCreatedDomainEvent>();
             
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
@@ -244,7 +241,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
-            var newCategoryCreatedDomainEvent = category.GetUncommitted().LastOrDefault() as NewCategoryCreatedDomainEvent;
+            var newCategoryCreatedDomainEvent =
+                category.GetUncommitted().LastOrDefault() as NewCategoryCreatedDomainEvent ??
+                It.IsAny<NewCategoryCreatedDomainEvent>();
             
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
@@ -263,7 +262,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             category.SetName("NewCategoryName");
-            var categoryNameChangedDomainEvent = category.GetUncommitted().LastOrDefault() as CategoryNameChangedDomainEvent;
+            var categoryNameChangedDomainEvent =
+                category.GetUncommitted().LastOrDefault() as CategoryNameChangedDomainEvent ??
+                It.IsAny<CategoryNameChangedDomainEvent>();
             
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
@@ -281,7 +282,9 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
 
             // Act
             category.SetDescription("Other correct description");
-            var categoryDescriptionChanged = category.GetUncommitted().LastOrDefault() as CategoryDescriptionChangedDomainEvent;
+            var categoryDescriptionChanged =
+                category.GetUncommitted().LastOrDefault() as CategoryDescriptionChangedDomainEvent ??
+                It.IsAny<CategoryDescriptionChangedDomainEvent>();
 
             // Assert
             category.DomainEvents.Should().NotBeEmpty();
@@ -317,21 +320,15 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
             domainEvents.Should().NotBeNull();
             domainEvents.LastOrDefault().Should().BeOfType<NewCategoryCreatedDomainEvent>();
         }
-        
-        #endregion
-    }
 
-    #region data generators
-    
-    public class CategoryDataGenerator
-    {
-        public static IEnumerable<object[]> CorrectCategoryDescriptions =>
-            new List<object[]>
-            {
-                new object[] {"Description is correct"},
-                new object[] {new string('*', 3999)}
-            };
+        private class CategoryDataGenerator
+        {
+            public static IEnumerable<object[]> CorrectCategoryDescriptions =>
+                new List<object[]>
+                {
+                    new object[] {"Description is correct"},
+                    new object[] {new string('*', 3999)}
+                };
+        }
     }
-    
-    #endregion
 }

@@ -8,7 +8,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Events.Products
         public ProductId ProductId { get; }
         public string ProductProducer { get; }
 
-        public ProductProducerChangedDomainEvent(ProductId productId, string productProducer)
+        internal ProductProducerChangedDomainEvent(ProductId productId, string productProducer)
         {
             ProductId = productId;
             ProductProducer = productProducer;
