@@ -234,7 +234,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             function.Should().NotThrow();
             categoryRepository.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once);
         }
-        
+
         [Fact]
         public void CheckIfCreateNewCategoryWithDescriptionMethodThrowWhenCategoryAlreadyExists()
         {
@@ -309,7 +309,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<CategoryNotFoundException>()
-                .WithMessage("Unable to mutate category state, because provided is empty.");
+                .WithMessage($"Unable to mutate category state, because category with id: {_categoryId} not found.");
             categoryRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CategoryId>()), Times.Once);
             categoryRepository.Verify(cr => cr.Update(null), Times.Never);
         }
@@ -370,7 +370,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<CategoryNotFoundException>()
-                .WithMessage("Unable to mutate category state, because provided is empty.");
+                .WithMessage($"Unable to mutate category state, because category with id: {_categoryId} not found.");
             categoryRepository.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once);
             categoryRepository.Verify(cr => cr.Update(null), Times.Never);
         }

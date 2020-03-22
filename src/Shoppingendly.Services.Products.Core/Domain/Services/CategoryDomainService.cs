@@ -85,37 +85,30 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public async Task<bool> SetCategoryNameAsync(CategoryId categoryId, string categoryName)
         {
-            var category = await _categoryRepository.GetByIdAsync(categoryId);
-            var validatedCategory = IfCategoryIsEmptyThenThrow(category);
-            var isNameChanged = validatedCategory.SetName(categoryName);
+            var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
+                new CategoryNotFoundException(
+                    $"Unable to mutate category state, because category with id: {categoryId} not found."));
+            
+            var isNameChanged = category.SetName(categoryName);
 
             if (isNameChanged)
-                _categoryRepository.Update(validatedCategory);
+                _categoryRepository.Update(category);
 
             return isNameChanged;
         }
 
         public async Task<bool> SetCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription)
         {
-            var category = await _categoryRepository.GetByIdAsync(categoryId);
-            var validatedCategory = IfCategoryIsEmptyThenThrow(category);
-            var isDescriptionChanged = validatedCategory.SetDescription(categoryDescription);
+            var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
+                new CategoryNotFoundException(
+                    $"Unable to mutate category state, because category with id: {categoryId} not found."));
+            
+            var isDescriptionChanged = category.SetDescription(categoryDescription);
 
             if (isDescriptionChanged)
-                _categoryRepository.Update(validatedCategory);
+                _categoryRepository.Update(category);
 
             return isDescriptionChanged;
-        }
-
-        private static Category IfCategoryIsEmptyThenThrow(Maybe<Category> category)
-        {
-            if (category.HasNoValue)
-            {
-                throw new CategoryNotFoundException(
-                    "Unable to mutate category state, because provided is empty.");
-            }
-
-            return category.Value;
         }
     }
 }

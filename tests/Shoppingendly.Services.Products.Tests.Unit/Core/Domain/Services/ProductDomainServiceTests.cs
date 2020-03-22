@@ -125,7 +125,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+            productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(_productId))
                 .ReturnsAsync(_product);
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
@@ -135,7 +135,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             //Assert
             testResult.HasValue.Should().BeTrue();
             testResult.Value.Should().BeEmpty();
-            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(_productId), Times.Once);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
             product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
             product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
-            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
+            productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(_productId))
                 .ReturnsAsync(product);
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
@@ -156,7 +156,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
             //Assert
             testResult.HasValue.Should().BeTrue();
             testResult.Value.Should().HaveCount(2);
-            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(_productId), Times.Once);
         }
 
         [Fact]
@@ -164,17 +164,17 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
-                .ReturnsAsync(_product);
+            productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            Func<Task> func = async () => await productDomainService.GetAssignedCategoriesAsync(null);
+            Func<Task> func = async () => await productDomainService.GetAssignedCategoriesAsync(_productId);
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
-            productRepository.Verify(pr => pr.GetByIdAsync(null), Times.Once);
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+            productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(_productId), Times.Once);
         }
         
         [Fact]
@@ -356,7 +356,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
         
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -419,7 +419,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
         
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -485,7 +485,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -552,7 +552,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -620,7 +620,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -687,7 +687,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -753,7 +753,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage("Unable to mutate product state, because value is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }

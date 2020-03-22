@@ -202,11 +202,11 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorNameAsync(null, "OtherExampleCreatorName");
+                await creatorDomainService.SetCreatorNameAsync(_creatorId, "OtherExampleCreatorName");
 
             //Assert
             func.Should().Throw<CreatorNotFoundException>()
-                .WithMessage("Unable to mutate creator state, because value is empty.");
+                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
             creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
             creatorRepository.Verify(cr => cr.Update(null), Times.Never);
         }
@@ -264,11 +264,11 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorEmailAsync(null, "otherCreator@email.com");
+                await creatorDomainService.SetCreatorEmailAsync(_creatorId, "otherCreator@email.com");
 
             //Assert
             func.Should().Throw<CreatorNotFoundException>()
-                .WithMessage("Unable to mutate creator state, because value is empty.");
+                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
             creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
             creatorRepository.Verify(cr => cr.Update(null), Times.Never);
         }
@@ -324,11 +324,11 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorRoleAsync(null, Role.Admin);
+                await creatorDomainService.SetCreatorRoleAsync(_creatorId, Role.Admin);
 
             //Assert
             func.Should().Throw<CreatorNotFoundException>()
-                .WithMessage("Unable to mutate creator state, because value is empty.");
+                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
             creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
             creatorRepository.Verify(cr => cr.Update(null), Times.Never);
         }

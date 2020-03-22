@@ -56,37 +56,32 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public async Task SetCreatorNameAsync(CreatorId creatorId, string creatorName)
         {
-            var creator = await _creatorRepository.GetByIdAsync(creatorId);
-            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
-            validatedCreator.SetName(creatorName);
-            _creatorRepository.Update(validatedCreator);
+            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
+                new CreatorNotFoundException(
+                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+            
+            creator.SetName(creatorName);
+            _creatorRepository.Update(creator);
         }
 
         public async Task SetCreatorEmailAsync(CreatorId creatorId, string creatorEmail)
         {
-            var creator = await _creatorRepository.GetByIdAsync(creatorId);
-            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
-            validatedCreator.SetEmail(creatorEmail);
-            _creatorRepository.Update(validatedCreator);
+            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
+                new CreatorNotFoundException(
+                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+
+            creator.SetEmail(creatorEmail);
+            _creatorRepository.Update(creator);
         }
 
         public async Task SetCreatorRoleAsync(CreatorId creatorId, Role creatorRole)
         {
-            var creator = await _creatorRepository.GetByIdAsync(creatorId);
-            var validatedCreator = IfCreatorIsEmptyThenThrow(creator);
-            validatedCreator.SetRole(creatorRole);
-            _creatorRepository.Update(validatedCreator);
-        }
-
-        private static Creator IfCreatorIsEmptyThenThrow(Maybe<Creator> creator)
-        {
-            if (creator.HasNoValue)
-            {
-                throw new CreatorNotFoundException(
-                    "Unable to mutate creator state, because value is empty.");
-            }
-
-            return creator.Value;
+            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
+                new CreatorNotFoundException(
+                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+            
+            creator.SetRole(creatorRole);
+            _creatorRepository.Update(creator);
         }
     }
 }

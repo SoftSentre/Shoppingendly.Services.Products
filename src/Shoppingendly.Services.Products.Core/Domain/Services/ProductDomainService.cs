@@ -48,9 +48,11 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public async Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var assignedCategories = validatedProduct.GetAllAssignedCategories();
+            var product = await _productRepository.GetByIdWithIncludesAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+
+            var assignedCategories = product.GetAllAssignedCategories();
 
             return assignedCategories;
         }
@@ -87,7 +89,7 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
             var categoryIdsAsList = categoryIds.ToList();
 
             if (categoryIdsAsList.Any())
-                categoryIdsAsList.ForEach(ci => AssignProduct(newProduct, ci));
+                categoryIdsAsList.ForEach(ci => newProduct.AssignCategory(ci));
 
             await _productRepository.AddAsync(newProduct);
             return newProduct;
@@ -95,91 +97,84 @@ namespace Shoppingendly.Services.Products.Core.Domain.Services
 
         public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture picture)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var isPictureChanged = validatedProduct.AddOrChangePicture(picture);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            var isPictureChanged = product.AddOrChangePicture(picture);
 
             if (isPictureChanged)
-                _productRepository.Update(product.Value);
+                _productRepository.Update(product);
 
             return isPictureChanged;
         }
 
         public async Task RemovePictureFromProductAsync(ProductId productId)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-
-            validatedProduct.RemovePicture();
-            _productRepository.Update(product.Value);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            product.RemovePicture();
+            _productRepository.Update(product);
         }
 
         public async Task<bool> ChangeProductNameAsync(ProductId productId, string name)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var isNameChanged = validatedProduct.SetName(name);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            var isNameChanged = product.SetName(name);
 
             if (isNameChanged)
-                _productRepository.Update(product.Value);
+                _productRepository.Update(product);
 
             return isNameChanged;
         }
 
         public async Task<bool> ChangeProductProducerAsync(ProductId productId, string producer)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-            var isProducerChanged = validatedProduct.SetProducer(producer);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+
+            var isProducerChanged = product.SetProducer(producer);
 
             if (isProducerChanged)
-                _productRepository.Update(product.Value);
+                _productRepository.Update(product);
 
             return isProducerChanged;
         }
 
         public async Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                $"Unable to mutate product state, because product with id: {productId} is empty."));
 
-            AssignProduct(product, categoryId);
-            _productRepository.Update(product.Value);
+            product.AssignCategory(categoryId);
+            _productRepository.Update(product);
         }
 
         public async Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-
-            validatedProduct.DeallocateCategory(categoryId);
-            _productRepository.Update(product.Value);
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            product.DeallocateCategory(categoryId);
+            _productRepository.Update(product);
         }
 
         public async Task DeallocateProductFromAllCategoriesAsync(ProductId productId)
         {
-            var product = await _productRepository.GetByIdAsync(productId);
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-
-            validatedProduct.DeallocateAllCategories();
-            _productRepository.Update(product.Value);
-        }
-
-        private static void AssignProduct(Maybe<Product> product, CategoryId categoryId)
-        {
-            var validatedProduct = IfProductIsEmptyThenThrow(product);
-
-            validatedProduct.AssignCategory(categoryId);
-        }
-
-        private static Product IfProductIsEmptyThenThrow(Maybe<Product> product)
-        {
-            if (product.HasNoValue)
-            {
-                throw new ProductNotFoundException(
-                    "Unable to mutate product state, because value is empty.");
-            }
-
-            return product.Value;
+            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
+                new ProductNotFoundException(
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+            
+            product.DeallocateAllCategories();
+            _productRepository.Update(product);
         }
     }
 }
