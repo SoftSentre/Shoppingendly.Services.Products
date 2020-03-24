@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Core;
+using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions
 {
