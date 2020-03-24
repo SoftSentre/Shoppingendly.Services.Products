@@ -7,7 +7,7 @@ using Shoppingendly.Services.Products.Application.Mapper;
 using Shoppingendly.Services.Products.Infrastructure.AutoMapper;
 using Module = Autofac.Module;
 
-namespace Shoppingendly.Services.Products.Infrastructure.Configuration.Mapping
+namespace Shoppingendly.Services.Products.Infrastructure.Configuration.Mappings
 {
     public class MappingModule : Module
     {
