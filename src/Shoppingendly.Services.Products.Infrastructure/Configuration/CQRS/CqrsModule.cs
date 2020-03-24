@@ -1,10 +1,7 @@
 ﻿using Autofac;
 using Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
-using Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
-using Shoppingendly.Services.Products.Application.CQRS.Base.Queries;
 using Shoppingendly.Services.Products.Infrastructure.CQRS.Bus;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
+using Module = Autofac.Module;
 
 namespace Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS
 {
@@ -15,26 +12,10 @@ namespace Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS
             builder.RegisterType<CommandBus>()
                 .As<ICommandBus>()
                 .InstancePerDependency();
-            
+
             builder.RegisterType<QueryBus>()
                 .As<IQueryBus>()
                 .InstancePerDependency();
-
-            builder.RegisterGenericDecorator(
-                typeof(UnitOfWorkCommandHandlerDecorator<>), 
-                typeof(ICommandHandler<>));
-            
-            builder.RegisterGenericDecorator(
-                typeof(ValidationCommandHandlerDecorator<>), 
-                typeof(ICommandHandler<>));
-            
-            builder.RegisterGenericDecorator(
-                typeof(LoggingCommandHandlerDecorator<>), 
-                typeof(ICommandHandler<>));
-            
-            builder.RegisterGenericDecorator(
-                typeof(LoggingQueryHandlerDecorator<,>), 
-                typeof(IQueryHandler<,>));
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Autofac.Core;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 
 namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions
 {
@@ -15,7 +14,7 @@ namespace Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuratio
             containerBuilder.RegisterModule(module);
             var container = containerBuilder.Build();
             var componentRegistry = container.ComponentRegistry;
-
+            
             var typesRegistered =
                 componentRegistry.Registrations.SelectMany(x => x.Services)
                     .Cast<TypedService>()

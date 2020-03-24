@@ -4,8 +4,6 @@ using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
 using Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
-using Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions;
 using Xunit;
 

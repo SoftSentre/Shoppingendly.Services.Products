@@ -4,7 +4,6 @@ using System.Linq;
 using FluentAssertions;
 using Shoppingendly.Services.Products.Infrastructure.Configuration.DomainEvents;
 using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
-using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Decorators;
 using Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions;
 using Xunit;
 
