@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Shoppingendly.Services.Products.Application.Mapper;
 using Shoppingendly.Services.Products.Core.Domain.Repositories;
 using Shoppingendly.Services.Products.Infrastructure.Configuration.Data;
-using Shoppingendly.Services.Products.Infrastructure.Configuration.Mappings;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
 using Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions;

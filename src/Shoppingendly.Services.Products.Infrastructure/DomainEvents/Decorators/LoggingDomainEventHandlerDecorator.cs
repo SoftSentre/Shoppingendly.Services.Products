@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
 using Shoppingendly.Services.Products.Core.Exceptions;
 using Shoppingendly.Services.Products.Core.Extensions;
-using Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 
 namespace Shoppingendly.Services.Products.Infrastructure.DomainEvents.Decorators
 {
