@@ -11,11 +11,11 @@ namespace Shoppingendly.Services.Products.Infrastructure.Configuration.Domain
             builder.RegisterType<ProductDomainService>()
                 .As<IProductDomainService>()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<CategoryDomainService>()
                 .As<ICategoryDomainService>()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<CreatorDomainService>()
                 .As<ICreatorDomainService>()
                 .InstancePerLifetimeScope();
