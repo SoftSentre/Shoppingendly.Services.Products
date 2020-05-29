@@ -27,7 +27,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
         private readonly IUnitOfWork _unitOfWork;
 
         public UnitOfWorkCommandHandlerDecorator(
-            ICommandHandler<TCommand> decorated, 
+            ICommandHandler<TCommand> decorated,
             IUnitOfWork unitOfWork)
         {
             _decorated = decorated.IfEmptyThenThrowAndReturnValue();
@@ -37,11 +37,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
         public async Task<ICommandResult> SendAsync(TCommand command)
         {
             var transaction = await _unitOfWork.BeginTransactionAsync();
-            
+
             var result = await _decorated.SendAsync(command);
-            
+
             await _unitOfWork.CommitTransactionAsync(transaction);
-            
+
             return result;
         }
     }

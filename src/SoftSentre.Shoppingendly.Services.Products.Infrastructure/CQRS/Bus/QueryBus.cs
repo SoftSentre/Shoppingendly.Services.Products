@@ -41,8 +41,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
             dynamic queryHandler = scope.ResolveOptional(handlerType);
 
             if (queryHandler == null)
+            {
                 throw new SendingQueryFailedException(
                     $"Can not send query: {query.GetType().Name}.");
+            }
 
             return await queryHandler.QueryAsync((dynamic) query);
         }
@@ -55,8 +57,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
             var queryHandler = scope.ResolveOptional<IQueryHandler<TQuery, TResult>>();
 
             if (queryHandler == null)
+            {
                 throw new SendingQueryFailedException(
                     $"Can not send query: {query.GetType().Name}.");
+            }
 
             return await queryHandler.QueryAsync(query);
         }

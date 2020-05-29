@@ -102,11 +102,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
                 new CategoryNotFoundException(
                     $"Unable to mutate category state, because category with id: {categoryId} not found."));
-            
+
             var isNameChanged = category.SetName(categoryName);
 
             if (isNameChanged)
+            {
                 _categoryRepository.Update(category);
+            }
 
             return isNameChanged;
         }
@@ -116,11 +118,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
                 new CategoryNotFoundException(
                     $"Unable to mutate category state, because category with id: {categoryId} not found."));
-            
+
             var isDescriptionChanged = category.SetDescription(categoryDescription);
 
             if (isDescriptionChanged)
+            {
                 _categoryRepository.Update(category);
+            }
 
             return isDescriptionChanged;
         }

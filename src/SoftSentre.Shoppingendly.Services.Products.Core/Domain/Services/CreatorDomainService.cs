@@ -73,7 +73,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
                 new CreatorNotFoundException(
                     $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
-            
+
             creator.SetName(creatorName);
             _creatorRepository.Update(creator);
         }
@@ -93,7 +93,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
                 new CreatorNotFoundException(
                     $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
-            
+
             creator.SetRole(creatorRole);
             _creatorRepository.Update(creator);
         }

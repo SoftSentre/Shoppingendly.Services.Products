@@ -18,13 +18,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEven
 {
     public abstract class DomainEventBase : IDomainEvent
     {
-        public Guid Id { get; }
-        public DateTime OccuredAt { get; }
-
         protected DomainEventBase()
         {
             Id = Guid.NewGuid();
             OccuredAt = DateTime.UtcNow;
         }
+
+        public Guid Id { get; }
+        public DateTime OccuredAt { get; }
     }
 }

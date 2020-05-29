@@ -103,7 +103,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var categoryIdsAsList = categoryIds.ToList();
 
             if (categoryIdsAsList.Any())
+            {
                 categoryIdsAsList.ForEach(ci => newProduct.AssignCategory(ci));
+            }
 
             await _productRepository.AddAsync(newProduct);
             return newProduct;
@@ -114,11 +116,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(
                     $"Unable to mutate product state, because product with id: {productId} is empty."));
-            
+
             var isPictureChanged = product.AddOrChangePicture(picture);
 
             if (isPictureChanged)
+            {
                 _productRepository.Update(product);
+            }
 
             return isPictureChanged;
         }
@@ -128,7 +132,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(
                     $"Unable to mutate product state, because product with id: {productId} is empty."));
-            
+
             product.RemovePicture();
             _productRepository.Update(product);
         }
@@ -138,11 +142,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(
                     $"Unable to mutate product state, because product with id: {productId} is empty."));
-            
+
             var isNameChanged = product.SetName(name);
 
             if (isNameChanged)
+            {
                 _productRepository.Update(product);
+            }
 
             return isNameChanged;
         }
@@ -156,7 +162,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var isProducerChanged = product.SetProducer(producer);
 
             if (isProducerChanged)
+            {
                 _productRepository.Update(product);
+            }
 
             return isProducerChanged;
         }
@@ -165,7 +173,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(
-                $"Unable to mutate product state, because product with id: {productId} is empty."));
+                    $"Unable to mutate product state, because product with id: {productId} is empty."));
 
             product.AssignCategory(categoryId);
             _productRepository.Update(product);
@@ -176,7 +184,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(
                     $"Unable to mutate product state, because product with id: {productId} is empty."));
-            
+
             product.DeallocateCategory(categoryId);
             _productRepository.Update(product);
         }
@@ -186,7 +194,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(
                     $"Unable to mutate product state, because product with id: {productId} is empty."));
-            
+
             product.DeallocateAllCategories();
             _productRepository.Update(product);
         }

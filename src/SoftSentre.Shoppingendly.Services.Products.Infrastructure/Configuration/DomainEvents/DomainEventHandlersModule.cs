@@ -24,14 +24,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
     {
         protected override void Load(ContainerBuilder builder)
         {
-            var domainEventsAssembly =  typeof(IDomainEvent)
+            var domainEventsAssembly = typeof(IDomainEvent)
                 .GetTypeInfo()
                 .Assembly;
-            
+
             builder.RegisterAssemblyTypes(domainEventsAssembly)
                 .AsClosedTypesOf(typeof(IDomainEventHandler<>))
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterGenericDecorator(
                 typeof(LoggingDomainEventHandlerDecorator<>),
                 typeof(IDomainEventHandler<>));

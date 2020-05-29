@@ -30,15 +30,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
             _lifetimeScope = lifetimeScope.IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task PublishAsync<TEvent>(TEvent @event) 
+        public async Task PublishAsync<TEvent>(TEvent @event)
             where TEvent : class, IDomainEvent
         {
             var domainEventHandler = _lifetimeScope
                 .ResolveOptional<IDomainEventHandler<TEvent>>();
 
             if (domainEventHandler == null)
+            {
                 throw new PublishDomainEventFailed(
                     $"Unable to publish domain event {@event}.");
+            }
 
             await domainEventHandler.HandleAsync(@event);
         }

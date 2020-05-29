@@ -41,7 +41,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.C
                 typeof(IProductRepository),
                 typeof(IUnitOfWork),
                 typeof(ProductServiceDbContext),
-                typeof(SqlSettings),
+                typeof(SqlSettings)
             };
 
             var dataAccessModule = new DataAccessModule(loggerFactory.Object);

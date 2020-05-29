@@ -23,7 +23,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Extensions
         {
             return @object.GetType().GetGenericTypeName();
         }
-        
+
         private static string GetGenericTypeName(this Type type)
         {
             string typeName;

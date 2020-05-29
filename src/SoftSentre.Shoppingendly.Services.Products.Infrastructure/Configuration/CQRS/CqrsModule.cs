@@ -15,7 +15,6 @@
 using Autofac;
 using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus;
-using Module = Autofac.Module;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS
 {

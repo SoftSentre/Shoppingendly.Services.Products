@@ -30,12 +30,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             productsConfiguration.Property(p => p.Name)
                 .HasColumnName("ProductName")
                 .HasMaxLength(ProductNameMaxLength)
-                .IsRequired(IsProductNameRequired);
+                .IsRequired();
 
             productsConfiguration.Property(p => p.Producer)
                 .HasColumnName("ProductProducer")
                 .HasMaxLength(ProductProducerMaxLength)
-                .IsRequired(IsProductProducerRequired);
+                .IsRequired();
 
             productsConfiguration.Property(p => p.CreatorId)
                 .HasColumnName("ProductCreatorId")
@@ -49,7 +49,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .IsRequired();
 
             productsConfiguration.OwnsOne(
-                p => p.Picture, 
+                p => p.Picture,
                 pi =>
                 {
                     pi.Property(pp => pp.Name)
@@ -67,10 +67,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             productsConfiguration.HasMany(p => p.ProductCategories)
                 .WithOne(pc => pc.Product)
                 .HasForeignKey(pc => pc.FirstKey);
-            
+
             productsConfiguration.Metadata.FindNavigation(nameof(Product.ProductCategories))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
-            
+
             productsConfiguration.Ignore(c => c.DomainEvents);
         }
     }

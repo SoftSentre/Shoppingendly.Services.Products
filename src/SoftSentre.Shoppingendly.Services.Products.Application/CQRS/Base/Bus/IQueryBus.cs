@@ -21,8 +21,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus
     public interface IQueryBus
     {
         Task<IQueryResult<TResult>> QueryAsync<TResult>(IQuery<TResult> query);
-        
-        Task<IQueryResult<TResult>> QueryAsync<TQuery, TResult>(TQuery query) 
+
+        Task<IQueryResult<TResult>> QueryAsync<TQuery, TResult>(TQuery query)
             where TQuery : class, IQuery<TResult>;
     }
 }

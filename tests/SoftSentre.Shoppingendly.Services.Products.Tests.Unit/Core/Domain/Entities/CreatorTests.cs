@@ -41,22 +41,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             action.Should().NotThrow<InvalidCreatorNameException>();
         }
 
-        [Fact]
-        public void CheckIfSetCreatorNameMethodSetValuesWhenCorrectNameHasBeenProvided()
-        {
-            // Arrange
-            const string creatorName = "New creator";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            creator.SetName(creatorName);
-
-            // Assert
-            creator.Name.Should().Be(creatorName);
-            creator.UpdatedDate.Should().NotBe(default);
-            creator.CreatedAt.Should().NotBe(default);
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -71,6 +55,203 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             //Assert
             action.Should().Throw<InvalidCreatorNameException>()
                 .WithMessage("Creator name can not be empty.");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsNullOrEmpty(string email)
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Creator email can not be empty.");
+        }
+
+        [Theory]
+        [InlineData("john.email.com")]
+        [InlineData("john999@sss")]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailDoNotMatchEmailRegex(string email)
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Invalid email has been provided.");
+        }
+
+        [Fact]
+        public void CheckIfClearDomainEventsMethodWorkingProperly()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            creator.ClearDomainEvents();
+
+            // Assert
+            creator.DomainEvents.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CheckIfCreateNewCreatorByConstructorProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+
+            // Act
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var newCreatorCreatedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as NewCreatorCreatedDomainEvent ??
+                It.IsAny<NewCreatorCreatedDomainEvent>();
+
+            // Assert
+            creator.DomainEvents.Should().NotBeEmpty();
+            newCreatorCreatedDomainEvent.Should().BeOfType<NewCreatorCreatedDomainEvent>();
+            newCreatorCreatedDomainEvent.Should().NotBeNull();
+            newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.Id);
+            newCreatorCreatedDomainEvent.Name.Should().Be(creator.Name);
+            newCreatorCreatedDomainEvent.Email.Should().Be(creator.Email);
+            newCreatorCreatedDomainEvent.Role.Should().Be(creator.Role);
+        }
+
+        [Fact]
+        public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            var domainEvents = creator.GetUncommitted().ToList();
+
+            // Assert
+            domainEvents.Should().NotBeNull();
+            domainEvents.LastOrDefault().Should().BeOfType<NewCreatorCreatedDomainEvent>();
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorEmailDoNotThrowExceptionWhenCorrectEmailHasBeenProvided()
+        {
+            // Arrange
+            const string creatorEmail = "newCreator@email.com";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(creatorEmail);
+
+            // Assert
+            action.Should().NotThrow<InvalidCreatorEmailException>();
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorEmailMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            creator.SetEmail("NewCreatorEmail@Email.pl");
+            var creatorEmailChangedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as CreatorEmailChangedDomainEvent ??
+                It.IsAny<CreatorEmailChangedDomainEvent>();
+
+            // Assert
+            creator.DomainEvents.Should().NotBeEmpty();
+            creatorEmailChangedDomainEvent.Should().BeOfType<CreatorEmailChangedDomainEvent>();
+            creatorEmailChangedDomainEvent.Should().NotBeNull();
+            creatorEmailChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorEmailChangedDomainEvent.Email.Should().Be(creator.Email);
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorEmailMethodSetValuesWhenCorrectNameHasBeenProvided()
+        {
+            // Arrange
+            const string creatorEmail = "newCreator@email.com";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            creator.SetEmail(creatorEmail);
+
+            // Assert
+            creator.Email.Should().Be(creatorEmail);
+            creator.UpdatedDate.Should().NotBe(default);
+            creator.CreatedAt.Should().NotBe(default);
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooLong()
+        {
+            // Arrange
+            const string email =
+                "ITryToCheckIfIProvideEmailWithMaximumNumberOfCharactersThenSetEmailMethodThrownAppropriateExceptionAn";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Creator email can not be longer than 100 characters.");
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooShort()
+        {
+            // Arrange
+            const string email = "j@jc.de";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            Action action = () => creator.SetEmail(email);
+
+            // Assert
+            action.Should().Throw<InvalidCreatorEmailException>()
+                .WithMessage("Creator email can not be shorter than 8 characters.");
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorNameMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            creator.SetName("NewCreatorName");
+            var creatorNameChangedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as CreatorNameChangedDomainEvent ??
+                It.IsAny<CreatorNameChangedDomainEvent>();
+
+            // Assert
+            creator.DomainEvents.Should().NotBeEmpty();
+            creatorNameChangedDomainEvent.Should().BeOfType<CreatorNameChangedDomainEvent>();
+            creatorNameChangedDomainEvent.Should().NotBeNull();
+            creatorNameChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorNameChangedDomainEvent.Name.Should().Be(creator.Name);
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorNameMethodSetValuesWhenCorrectNameHasBeenProvided()
+        {
+            // Arrange
+            const string creatorName = "New creator";
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            creator.SetName(creatorName);
+
+            // Assert
+            creator.Name.Should().Be(creatorName);
+            creator.UpdatedDate.Should().NotBe(default);
+            creator.CreatedAt.Should().NotBe(default);
         }
 
         [Fact]
@@ -104,110 +285,37 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         }
 
         [Fact]
-        public void CheckIfSetCreatorEmailDoNotThrowExceptionWhenCorrectEmailHasBeenProvided()
-        {
-            // Arrange
-            const string creatorEmail = "newCreator@email.com";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(creatorEmail);
-
-            // Assert
-            action.Should().NotThrow<InvalidCreatorEmailException>();
-        }
-
-        [Fact]
-        public void CheckIfSetCreatorEmailMethodSetValuesWhenCorrectNameHasBeenProvided()
-        {
-            // Arrange
-            const string creatorEmail = "newCreator@email.com";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            creator.SetEmail(creatorEmail);
-
-            // Assert
-            creator.Email.Should().Be(creatorEmail);
-            creator.UpdatedDate.Should().NotBe(default);
-            creator.CreatedAt.Should().NotBe(default);
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsNullOrEmpty(string email)
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Creator email can not be empty.");
-        }
-        
-        [Theory]
-        [InlineData("john.email.com")]
-        [InlineData("john999@sss")]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailDoNotMatchEmailRegex(string email)
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Invalid email has been provided.");
-        }
-        
-        [Fact]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooShort()
-        {
-            // Arrange
-            const string email = "j@jc.de";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Creator email can not be shorter than 8 characters.");
-        }
-        
-        [Fact]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooLong()
-        {
-            // Arrange
-            const string email =
-                "ITryToCheckIfIProvideEmailWithMaximumNumberOfCharactersThenSetEmailMethodThrownAppropriateExceptionAn";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Creator email can not be longer than 100 characters.");
-        }
-
-        [Fact]
         public void CheckIfSetCreatorRoleDoNotThrowExceptionWhenCorrectRoleHasBeenProvided()
         {
             // Arrange
             var creatorRole = Role.Moderator;
             var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-            
+
             // Act
             Action action = () => creator.SetRole(creatorRole);
 
             //Assert
             action.Should().NotThrow<Exception>();
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorRoleMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+
+            // Act
+            creator.SetRole(Role.User);
+            var creatorRoleChangedDomainEvent =
+                creator.GetUncommitted().LastOrDefault() as CreatorRoleChangedDomainEvent ??
+                It.IsAny<CreatorRoleChangedDomainEvent>();
+
+            // Assert
+            creator.DomainEvents.Should().NotBeEmpty();
+            creatorRoleChangedDomainEvent.Should().BeOfType<CreatorRoleChangedDomainEvent>();
+            creatorRoleChangedDomainEvent.Should().NotBeNull();
+            creatorRoleChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorRoleChangedDomainEvent.Role.Should().Be(creator.Role);
         }
 
         [Fact]
@@ -224,112 +332,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             creator.Role.Should().Be(creatorRole);
             creator.UpdatedDate.Should().NotBe(default);
             creator.CreatedAt.Should().NotBe(default);
-        }
-
-        [Fact]
-        public void CheckIfCreateNewCreatorByConstructorProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-
-            // Act
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-            var newCreatorCreatedDomainEvent = creator.GetUncommitted().LastOrDefault() as NewCreatorCreatedDomainEvent ?? It.IsAny<NewCreatorCreatedDomainEvent>();
-            
-            // Assert
-            creator.DomainEvents.Should().NotBeEmpty();
-            newCreatorCreatedDomainEvent.Should().BeOfType<NewCreatorCreatedDomainEvent>();
-            newCreatorCreatedDomainEvent.Should().NotBeNull();
-            newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.Id);
-            newCreatorCreatedDomainEvent.Name.Should().Be(creator.Name);
-            newCreatorCreatedDomainEvent.Email.Should().Be(creator.Email);
-            newCreatorCreatedDomainEvent.Role.Should().Be(creator.Role);
-        }
-        
-        [Fact]
-        public void CheckIfSetCreatorNameMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-            
-            // Act
-            creator.SetName("NewCreatorName");
-            var creatorNameChangedDomainEvent =
-                creator.GetUncommitted().LastOrDefault() as CreatorNameChangedDomainEvent ??
-                It.IsAny<CreatorNameChangedDomainEvent>();
-            
-            // Assert
-            creator.DomainEvents.Should().NotBeEmpty();
-            creatorNameChangedDomainEvent.Should().BeOfType<CreatorNameChangedDomainEvent>();
-            creatorNameChangedDomainEvent.Should().NotBeNull();
-            creatorNameChangedDomainEvent.CreatorId.Should().Be(creator.Id);
-            creatorNameChangedDomainEvent.Name.Should().Be(creator.Name);
-        }
-        
-        [Fact]
-        public void CheckIfSetCreatorEmailMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-            
-            // Act
-            creator.SetEmail("NewCreatorEmail@Email.pl");
-            var creatorEmailChangedDomainEvent =
-                creator.GetUncommitted().LastOrDefault() as CreatorEmailChangedDomainEvent ??
-                It.IsAny<CreatorEmailChangedDomainEvent>();
-            
-            // Assert
-            creator.DomainEvents.Should().NotBeEmpty();
-            creatorEmailChangedDomainEvent.Should().BeOfType<CreatorEmailChangedDomainEvent>();
-            creatorEmailChangedDomainEvent.Should().NotBeNull();
-            creatorEmailChangedDomainEvent.CreatorId.Should().Be(creator.Id);
-            creatorEmailChangedDomainEvent.Email.Should().Be(creator.Email);
-        }
-        
-        [Fact]
-        public void CheckIfSetCreatorRoleMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-            
-            // Act
-            creator.SetRole(Role.User);
-            var creatorRoleChangedDomainEvent =
-                creator.GetUncommitted().LastOrDefault() as CreatorRoleChangedDomainEvent ??
-                It.IsAny<CreatorRoleChangedDomainEvent>();
-            
-            // Assert
-            creator.DomainEvents.Should().NotBeEmpty();
-            creatorRoleChangedDomainEvent.Should().BeOfType<CreatorRoleChangedDomainEvent>();
-            creatorRoleChangedDomainEvent.Should().NotBeNull();
-            creatorRoleChangedDomainEvent.CreatorId.Should().Be(creator.Id);
-            creatorRoleChangedDomainEvent.Role.Should().Be(creator.Role);
-        }
-        
-        [Fact]
-        public void CheckIfClearDomainEventsMethodWorkingProperly()
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            creator.ClearDomainEvents();
-
-            // Assert
-            creator.DomainEvents.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            var domainEvents = creator.GetUncommitted().ToList();
-            
-            // Assert
-            domainEvents.Should().NotBeNull();
-            domainEvents.LastOrDefault().Should().BeOfType<NewCreatorCreatedDomainEvent>();
         }
     }
 }

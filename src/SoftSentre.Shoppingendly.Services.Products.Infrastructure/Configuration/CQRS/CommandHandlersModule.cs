@@ -31,7 +31,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
             builder.RegisterAssemblyTypes(commandAssembly)
                 .AsClosedTypesOf(typeof(ICommandHandler<>))
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterGenericDecorator(
                 typeof(UnitOfWorkCommandHandlerDecorator<>),
                 typeof(ICommandHandler<>));

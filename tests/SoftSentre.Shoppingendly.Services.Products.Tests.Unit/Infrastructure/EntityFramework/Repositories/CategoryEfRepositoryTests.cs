@@ -39,40 +39,36 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             new Category(new CategoryId(new Guid("1F9FEDB4-0F85-4E47-A4C3-F4C25F0E9996")), "ExampleCategory",
                 "ExampleCategoryDescription");
 
-        [Fact]
-        public async void CheckIfGetCategoryByIdAsyncMethodReturnValidObject()
+        private async Task<ProductServiceDbContext> CreateDbContext()
         {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
+            var dbName = Guid.NewGuid().ToString();
 
-            // Act
-            var testResult = await categoryRepository.GetByIdAsync(_category.Id);
+            var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
+                .UseInMemoryDatabase(dbName)
+                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
+                .Options;
 
-            // Assert
-            testResult.Value.Name.Should().Be(_category.Name);
-            testResult.Value.Description.Should().Be(_category.Description);
-            testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
+            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
+                new SqlSettings(), dbContextOptions);
+            productServiceDbContext.Database.EnsureDeleted();
+            productServiceDbContext.Database.EnsureCreated();
 
-            dbContext.Dispose();
-        }
+            await productServiceDbContext.Categories.AddAsync(_category);
+            await productServiceDbContext.Products.AddRangeAsync(new Product(
+                    new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")),
+                    new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
+                    "ExampleProductName", "ExampleProducer"),
+                new Product(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")),
+                    new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
+                    "ExampleSomeProductName", "ExampleSomeProducer"));
+            await productServiceDbContext.ProductCategories.AddRangeAsync(
+                new ProductCategory(new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")), _category.Id),
+                new ProductCategory(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")), _category.Id));
+            await productServiceDbContext.SaveChangesAsync();
 
-        [Fact]
-        public async void CheckIfGetCategoryByNameAsyncMethodReturnValidObject()
-        {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
-
-            // Act
-            var testResult = await categoryRepository.GetByNameAsync(_category.Name);
-
-            // Assert
-            testResult.Value.Name.Should().Be(_category.Name);
-            testResult.Value.Description.Should().Be(_category.Description);
-            testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
-
-            dbContext.Dispose();
+            return productServiceDbContext;
         }
 
         [Fact]
@@ -90,6 +86,44 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.Description.Should().Be(_category.Description);
             testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
             testResult.Value.ProductCategories.Should().HaveCount(2);
+
+            dbContext.Dispose();
+        }
+
+        [Fact]
+        public async void CheckIfAddCategoryMethodSuccessfullyAddedItemToDatabase()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
+            var category = new Category(new CategoryId(), "OtherExampleCategory", "OtherExampleCategoryDescription");
+
+            // Act
+            await categoryRepository.AddAsync(category);
+            await dbContext.SaveChangesAsync();
+            var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(category.Id)) ?? It.IsAny<Category>();
+
+            // Assert
+            testResult.Name.Should().Be(category.Name);
+            testResult.Description.Should().Be(category.Description);
+            testResult.CreatedAt.Should().Be(category.CreatedAt);
+
+            dbContext.Dispose();
+        }
+
+        [Fact]
+        public async void CheckIfDeleteCategoryMethodSuccessfullyRemovedItemFromDatabase()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
+
+            // Act
+            categoryRepository.Delete(_category);
+            await dbContext.SaveChangesAsync();
+
+            // Assert
+            dbContext.Creators.Should().BeEmpty();
 
             dbContext.Dispose();
         }
@@ -137,22 +171,37 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         }
 
         [Fact]
-        public async void CheckIfAddCategoryMethodSuccessfullyAddedItemToDatabase()
+        public async void CheckIfGetCategoryByIdAsyncMethodReturnValidObject()
         {
             // Arrange
             var dbContext = await CreateDbContext();
             ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
-            var category = new Category(new CategoryId(), "OtherExampleCategory", "OtherExampleCategoryDescription");
 
             // Act
-            await categoryRepository.AddAsync(category);
-            await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(category.Id)) ?? It.IsAny<Category>();
+            var testResult = await categoryRepository.GetByIdAsync(_category.Id);
 
             // Assert
-            testResult.Name.Should().Be(category.Name);
-            testResult.Description.Should().Be(category.Description);
-            testResult.CreatedAt.Should().Be(category.CreatedAt);
+            testResult.Value.Name.Should().Be(_category.Name);
+            testResult.Value.Description.Should().Be(_category.Description);
+            testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
+
+            dbContext.Dispose();
+        }
+
+        [Fact]
+        public async void CheckIfGetCategoryByNameAsyncMethodReturnValidObject()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
+
+            // Act
+            var testResult = await categoryRepository.GetByNameAsync(_category.Name);
+
+            // Assert
+            testResult.Value.Name.Should().Be(_category.Name);
+            testResult.Value.Description.Should().Be(_category.Description);
+            testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
 
             dbContext.Dispose();
         }
@@ -178,55 +227,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Name.Should().Be(newCategoryName);
 
             dbContext.Dispose();
-        }
-
-        [Fact]
-        public async void CheckIfDeleteCategoryMethodSuccessfullyRemovedItemFromDatabase()
-        {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
-
-            // Act
-            categoryRepository.Delete(_category);
-            await dbContext.SaveChangesAsync();
-
-            // Assert
-            dbContext.Creators.Should().BeEmpty();
-
-            dbContext.Dispose();
-        }
-
-        private async Task<ProductServiceDbContext> CreateDbContext()
-        {
-            var dbName = Guid.NewGuid().ToString();
-
-            var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
-                .UseInMemoryDatabase(dbName)
-                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
-                .Options;
-
-            var loggerFactory = new Mock<ILoggerFactory>();
-            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
-                new SqlSettings(), dbContextOptions);
-            productServiceDbContext.Database.EnsureDeleted();
-            productServiceDbContext.Database.EnsureCreated();
-
-            await productServiceDbContext.Categories.AddAsync(_category);
-            await productServiceDbContext.Products.AddRangeAsync(new Product(
-                    new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")),
-                    new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-                    "ExampleProductName", "ExampleProducer"),
-                new Product(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")),
-                    new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-                    "ExampleSomeProductName", "ExampleSomeProducer"));
-            await productServiceDbContext.ProductCategories.AddRangeAsync(
-                new ProductCategory(new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")), _category.Id),
-                new ProductCategory(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")), _category.Id));
-            await productServiceDbContext.SaveChangesAsync();
-
-            return productServiceDbContext;
         }
     }
 }

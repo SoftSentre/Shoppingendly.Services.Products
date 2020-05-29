@@ -26,7 +26,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         {
         }
 
-        private static TTypedIdValue Create(Guid id) =>
-            Activator.CreateInstance(typeof(TTypedIdValue), id) as TTypedIdValue;
+        private static TTypedIdValue Create(Guid id)
+        {
+            return Activator.CreateInstance(typeof(TTypedIdValue), id) as TTypedIdValue;
+        }
     }
 }

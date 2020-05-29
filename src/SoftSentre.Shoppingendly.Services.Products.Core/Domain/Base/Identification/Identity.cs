@@ -21,20 +21,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Identifica
         protected Identity()
         {
         }
-        
+
         protected Identity(TId id)
         {
             Id = id;
         }
 
-        public TId Id { get; protected set; }
-
         public bool Equals(Identity<TId> id)
         {
-            if (ReferenceEquals(this, id)) return true;
-            if (ReferenceEquals(null, id)) return false;
+            if (ReferenceEquals(this, id))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(null, id))
+            {
+                return false;
+            }
+
             return Id.Equals(id.Id);
         }
+
+        public TId Id { get; protected set; }
 
         public override bool Equals(object anotherObject)
         {

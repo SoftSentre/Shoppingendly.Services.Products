@@ -19,13 +19,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Categori
 {
     public class CategoryDescriptionChangedDomainEvent : DomainEventBase
     {
-        public CategoryId CategoryId { get; }
-        public string CategoryDescription { get; }
-
         internal CategoryDescriptionChangedDomainEvent(CategoryId categoryId, string categoryDescription)
         {
             CategoryId = categoryId;
             CategoryDescription = categoryDescription;
         }
+
+        public CategoryId CategoryId { get; }
+        public string CategoryDescription { get; }
     }
 }

@@ -15,9 +15,9 @@
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Validation
 {
     /// <summary>
-    /// Central point in application with configuration for validation.
-    /// I'm decided to store the validation values in one place in application,
-    /// this approach provide more consistency for values used during the validations.
+    ///     Central point in application with configuration for validation.
+    ///     I'm decided to store the validation values in one place in application,
+    ///     this approach provide more consistency for values used during the validations.
     /// </summary>
     public static class GlobalValidationVariables
     {

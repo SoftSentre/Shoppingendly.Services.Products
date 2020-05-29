@@ -26,15 +26,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
     {
         private HashSet<ProductCategory> _productCategories = new HashSet<ProductCategory>();
 
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-
-        public HashSet<ProductCategory> ProductCategories
-        {
-            get => _productCategories;
-            set => _productCategories = new HashSet<ProductCategory>(value);
-        }
-
         // Required for EF
         private Category()
         {
@@ -53,12 +44,23 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new NewCategoryCreatedDomainEvent(categoryId, name, description));
         }
 
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+
+        public HashSet<ProductCategory> ProductCategories
+        {
+            get => _productCategories;
+            set => _productCategories = new HashSet<ProductCategory>(value);
+        }
+
         internal bool SetName(string name)
         {
             ValidateCategoryName(name);
 
             if (Name.EqualsCaseInvariant(name))
+            {
                 return false;
+            }
 
             Name = name;
             SetUpdatedDate();
@@ -71,7 +73,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
             ValidateCategoryDescription(description);
 
             if (Description.EqualsCaseInvariant(description))
+            {
                 return false;
+            }
 
             Description = description;
             SetUpdatedDate();
@@ -92,13 +96,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateCategoryName(string name)
         {
             if (IsCategoryNameRequired && name.IsEmpty())
+            {
                 throw new InvalidCategoryNameException("Category name can not be empty.");
+            }
+
             if (name.IsLongerThan(CategoryNameMaxLength))
+            {
                 throw new InvalidCategoryNameException(
                     $"Category name can not be longer than {CategoryNameMaxLength} characters.");
+            }
+
             if (name.IsShorterThan(CategoryNameMinLength))
+            {
                 throw new InvalidCategoryNameException(
                     $"Category name can not be shorter than {CategoryNameMinLength} characters.");
+            }
 
             return name;
         }
@@ -106,13 +118,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateCategoryDescription(string description)
         {
             if (IsCategoryDescriptionRequired && description.IsEmpty())
+            {
                 throw new InvalidCategoryDescriptionException("Category description can not be empty.");
+            }
+
             if (description.IsShorterThan(CategoryDescriptionMinLength))
+            {
                 throw new InvalidCategoryDescriptionException(
                     $"Category description can not be shorter than {CategoryDescriptionMinLength} characters.");
+            }
+
             if (description.IsLongerThan(CategoryDescriptionMaxLength))
+            {
                 throw new InvalidCategoryDescriptionException(
                     $"Category description can not be longer than {CategoryDescriptionMaxLength} characters.");
+            }
 
             return description;
         }

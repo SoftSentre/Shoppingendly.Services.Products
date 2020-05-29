@@ -19,7 +19,7 @@ using SoftSentre.Shoppingendly.Services.Products.Core.Types;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories
 {
-    public interface ICreatorRepository 
+    public interface ICreatorRepository
     {
         Task<Maybe<Creator>> GetByIdAsync(CreatorId creatorId);
         Task<Maybe<Creator>> GetByNameAsync(string name);

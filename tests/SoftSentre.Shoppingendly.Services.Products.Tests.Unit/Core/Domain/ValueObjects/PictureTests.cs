@@ -22,8 +22,32 @@ using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.ValueObjects
 {
-    public class PictureTests 
+    public class PictureTests
     {
+        [Theory]
+        [MemberData(nameof(PictureFieldsDataGenerator.IncorrectPictureFields),
+            MemberType = typeof(PictureFieldsDataGenerator))]
+        public void CheckIfWhenNotEmptyPictureAreCreatingThenCorrectValuesShouldBeProvided(string name, string url)
+        {
+            // Act
+            Action action = () => Picture.Create(name, url);
+
+            //Assert
+            action.Should().Throw<ShoppingendlyException>();
+        }
+
+        private class PictureFieldsDataGenerator
+        {
+            public static IEnumerable<object[]> IncorrectPictureFields =>
+                new List<object[]>
+                {
+                    new object[] {"Name is correct", new string('*', 501)},
+                    new object[] {new string('*', 201), "urlIsCorrect"},
+                    new object[] {new string('*', 199), "urlIs Correct"},
+                    new object[] {new string('*', 201), new string('*', 501)}
+                };
+        }
+
         [Fact]
         public void CheckIfIsPossibleToCreateNotEmptyPictureWhenCorrectValuesAreProvided()
         {
@@ -50,18 +74,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             picture.Name.Should().Be(null);
             picture.Url.Should().Be(null);
             picture.IsEmpty.Should().BeTrue();
-        }
-
-        [Theory]
-        [MemberData(nameof(PictureFieldsDataGenerator.IncorrectPictureFields),
-            MemberType = typeof(PictureFieldsDataGenerator))]
-        public void CheckIfWhenNotEmptyPictureAreCreatingThenCorrectValuesShouldBeProvided(string name, string url)
-        {
-            // Act
-            Action action = () => Picture.Create(name, url);
-
-            //Assert
-            action.Should().Throw<ShoppingendlyException>();
         }
 
         [Fact]
@@ -93,6 +105,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
         }
 
         [Fact]
+        public void CheckIfUrlHaveWhitespacesThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
+        {
+            // Arrange
+            const string name = "ValidName";
+
+            // Act
+            Action action = () => Picture.Create(name, "Some   url");
+
+            //Assert
+            action.Should().Throw<InvalidPictureUrlException>()
+                .WithMessage("Picture url can not have whitespaces.");
+        }
+
+        [Fact]
         public void CheckIfUrlIsEmptyThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
         {
             // Arrange
@@ -118,32 +144,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             //Assert
             action.Should().Throw<InvalidPictureUrlException>()
                 .WithMessage("Picture url can not be longer than 500 characters.");
-        }
-
-        [Fact]
-        public void CheckIfUrlHaveWhitespacesThenExceptionWasThrownAndAppropriateMessageHasBeenWritten()
-        {
-            // Arrange
-            const string name = "ValidName";
-
-            // Act
-            Action action = () => Picture.Create(name, "Some   url");
-
-            //Assert
-            action.Should().Throw<InvalidPictureUrlException>()
-                .WithMessage("Picture url can not have whitespaces.");
-        }
-
-        private class PictureFieldsDataGenerator
-        {
-            public static IEnumerable<object[]> IncorrectPictureFields =>
-                new List<object[]>
-                {
-                    new object[] {"Name is correct", new string('*', 501)},
-                    new object[] {new string('*', 201), "urlIsCorrect"},
-                    new object[] {new string('*', 199), "urlIs Correct"},
-                    new object[] {new string('*', 201), new string('*', 501)}
-                };
         }
     }
 }

@@ -25,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             // Arrange
             var exampleObject = new object();
-            
+
             // Act
             var testResult = exampleObject.GetGenericTypeName();
 

@@ -25,14 +25,30 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 {
     public class CreatorRolesConfigurationTests
     {
-        private readonly EntityTypeBuilder<Role> _entityTypeBuilder;
-
         public CreatorRolesConfigurationTests()
         {
             _entityTypeBuilder =
                 ConfigurationMetadataTestsExtensions
                     .GetCustomerEntityConfigurationMetadata<Role, CreatorRolesConfiguration>(
                         new CreatorRolesConfiguration());
+        }
+
+        private readonly EntityTypeBuilder<Role> _entityTypeBuilder;
+
+        [Fact]
+        public void CheckIfRoleIdHasIsConfiguredAsKeyAndIsRequired()
+        {
+            // Arrange
+            const string roleId = nameof(Role.Id);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(roleId);
+
+            // Act
+            var isRequired = !dbProperty.IsNullable;
+            var isKey = dbProperty.IsKey();
+
+            // Assert
+            isRequired.Should().BeTrue();
+            isKey.Should().BeTrue();
         }
 
         [Fact]
@@ -49,22 +65,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             maxLength.Should().Be(RoleNameMaxLength);
             isRequired.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfRoleIdHasIsConfiguredAsKeyAndIsRequired()
-        {
-            // Arrange
-            const string roleId = nameof(Role.Id);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(roleId);
-
-            // Act
-            var isRequired = !dbProperty.IsNullable;
-            var isKey = dbProperty.IsKey();
-
-            // Assert
-            isRequired.Should().BeTrue();
-            isKey.Should().BeTrue();
         }
     }
 }

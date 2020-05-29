@@ -23,11 +23,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects
     {
         private bool _isEmpty;
 
-        public string Name { get; private set; }
-        public string Url { get; private set; }
-
-        public bool IsEmpty => _isEmpty = Name.IsEmpty() || Url.IsEmpty();
-
         private Picture()
         {
             // Required for EF
@@ -39,12 +34,24 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects
             Url = ValidatePictureUrl(url);
         }
 
+        public string Name { get; }
+        public string Url { get; }
+
+        public bool IsEmpty => _isEmpty = Name.IsEmpty() || Url.IsEmpty();
+
+        public static Picture Empty => new Picture();
+
         private static string ValidatePictureName(string name)
         {
             if (name.IsEmpty())
+            {
                 throw new InvalidPictureNameException("Picture name can not be empty.");
+            }
+
             if (name.IsLongerThan(PictureNameMaxLength))
+            {
                 throw new InvalidPictureNameException("Picture name can not be longer than 200 characters.");
+            }
 
             return name;
         }
@@ -52,16 +59,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects
         private static string ValidatePictureUrl(string url)
         {
             if (url.IsEmpty())
+            {
                 throw new InvalidPictureUrlException("Picture url can not be empty.");
+            }
+
             if (url.Contains(' '))
+            {
                 throw new InvalidPictureUrlException("Picture url can not have whitespaces.");
+            }
+
             if (url.IsLongerThan(PictureUrlMaxLength))
+            {
                 throw new InvalidPictureUrlException("Picture url can not be longer than 500 characters.");
+            }
 
             return url;
         }
-        
-        public static Picture Empty => new Picture();
 
         public static Picture Create(string name, string url)
         {
@@ -78,7 +91,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects
             var hash = 13;
             hash = hash * 7 + Name.GetHashCode();
             hash = hash * 7 + Url.GetHashCode();
-            
+
             return hash;
         }
     }

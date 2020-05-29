@@ -21,10 +21,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
         public DomainEventCanNotBeEmptyException()
         {
         }
-        
+
         public DomainEventCanNotBeEmptyException(string message) : base(message)
         {
         }
     }
 }
-

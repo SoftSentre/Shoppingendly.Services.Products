@@ -25,7 +25,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Types
             get
             {
                 if (HasNoValue)
+                {
                     throw new InvalidOperationException();
+                }
 
                 return _value;
             }
@@ -41,23 +43,42 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Types
 
         public static Maybe<T> Empty => new Maybe<T>();
 
-        public static implicit operator Maybe<T>(T value) => new Maybe<T>(value);
+        public static implicit operator Maybe<T>(T value)
+        {
+            return new Maybe<T>(value);
+        }
 
-        public static bool operator ==(Maybe<T> maybe, T value) => !maybe.HasNoValue && maybe.Value.Equals(value);
+        public static bool operator ==(Maybe<T> maybe, T value)
+        {
+            return !maybe.HasNoValue && maybe.Value.Equals(value);
+        }
 
-        public static bool operator !=(Maybe<T> maybe, T value) => !(maybe == value);
+        public static bool operator !=(Maybe<T> maybe, T value)
+        {
+            return !(maybe == value);
+        }
 
-        public static bool operator ==(Maybe<T> first, Maybe<T> second) => first.Equals(second);
+        public static bool operator ==(Maybe<T> first, Maybe<T> second)
+        {
+            return first.Equals(second);
+        }
 
-        public static bool operator !=(Maybe<T> first, Maybe<T> second) => !(first == second);
+        public static bool operator !=(Maybe<T> first, Maybe<T> second)
+        {
+            return !(first == second);
+        }
 
         public override bool Equals(object obj)
         {
             if (obj is T)
+            {
                 obj = new Maybe<T>((T) obj);
+            }
 
             if (!(obj is Maybe<T>))
+            {
                 return false;
+            }
 
             var other = (Maybe<T>) obj;
 
@@ -67,16 +88,26 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Types
         public bool Equals(Maybe<T> other)
         {
             if (HasNoValue && other.HasNoValue)
+            {
                 return true;
+            }
 
             if (HasNoValue || other.HasNoValue)
+            {
                 return false;
+            }
 
             return _value.Equals(other._value);
         }
 
-        public override int GetHashCode() => HasNoValue ? 0 : _value.GetHashCode();
+        public override int GetHashCode()
+        {
+            return HasNoValue ? 0 : _value.GetHashCode();
+        }
 
-        public override string ToString() => HasNoValue ? "No value" : Value.ToString();
+        public override string ToString()
+        {
+            return HasNoValue ? "No value" : Value.ToString();
+        }
     }
 }

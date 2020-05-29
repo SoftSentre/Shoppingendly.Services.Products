@@ -24,8 +24,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 {
     public class ProductCategoriesConfigurationTests
     {
-        private readonly EntityTypeBuilder<ProductCategory> _entityTypeBuilder;
-
         public ProductCategoriesConfigurationTests()
         {
             _entityTypeBuilder =
@@ -34,12 +32,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                         new ProductCategoriesConfiguration());
         }
 
+        private readonly EntityTypeBuilder<ProductCategory> _entityTypeBuilder;
+
         [Fact]
-        public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
+        public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string productId = nameof(ProductCategory.FirstKey);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
+            const string categoryId = nameof(ProductCategory.SecondKey);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
 
             // Act
             var isRequired = !dbProperty.IsNullable;
@@ -51,11 +51,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         }
 
         [Fact]
-        public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
+        public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string categoryId = nameof(ProductCategory.SecondKey);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
+            const string productId = nameof(ProductCategory.FirstKey);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
 
             // Act
             var isRequired = !dbProperty.IsNullable;

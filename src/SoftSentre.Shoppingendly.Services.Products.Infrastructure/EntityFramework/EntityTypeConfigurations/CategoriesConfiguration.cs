@@ -36,7 +36,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .HasColumnName("CategoryDescription")
                 .HasMaxLength(CategoryDescriptionMaxLength)
                 .IsRequired(IsCategoryDescriptionRequired);
-            
+
             categoriesConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
 
@@ -47,11 +47,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             categoriesConfiguration.HasMany(c => c.ProductCategories)
                 .WithOne(pc => pc.Category)
                 .HasForeignKey(pc => pc.SecondKey);
-            
+
             categoriesConfiguration.Metadata.FindNavigation(nameof(Category.ProductCategories))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
-            
-            categoriesConfiguration.Ignore(c => c.DomainEvents); 
+
+            categoriesConfiguration.Ignore(c => c.DomainEvents);
         }
     }
 }

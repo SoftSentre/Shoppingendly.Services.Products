@@ -40,7 +40,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var loggerFactory = new Mock<ILoggerFactory>();
-            var dbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher, 
+            var dbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
                 new SqlSettings(), options);
             var conventionSet = ConventionSet.CreateConventionSet(dbContext);
             var modelBuilder = new ModelBuilder(conventionSet);

@@ -34,19 +34,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
 
         private HashSet<Product> _products = new HashSet<Product>();
 
-        public int RoleId { get; private set; }
-        public string Name { get; private set; }
-        public string Email { get; private set; }
-
-        // Navigation property
-        public Role Role { get; private set; }
-
-        public HashSet<Product> Products
-        {
-            get => _products;
-            set => _products = new HashSet<Product>(value);
-        }
-
         // Required for EF
         private Creator()
         {
@@ -58,6 +45,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
             Email = ValidateEmail(email);
             Role = ValidateRole(role);
             AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, email, role));
+        }
+
+        public int RoleId { get; private set; }
+        public string Name { get; private set; }
+        public string Email { get; private set; }
+
+        // Navigation property
+        public Role Role { get; private set; }
+
+        public HashSet<Product> Products
+        {
+            get => _products;
+            set => _products = new HashSet<Product>(value);
         }
 
         internal void SetName(string name)
@@ -95,13 +95,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateName(string name)
         {
             if (IsCreatorNameRequired && name.IsEmpty())
+            {
                 throw new InvalidCreatorNameException("Creator name can not be empty.");
+            }
+
             if (name.IsLongerThan(CreatorNameMaxLength))
+            {
                 throw new InvalidCreatorNameException(
                     $"Creator name can not be longer than {CreatorNameMaxLength} characters.");
+            }
+
             if (name.IsShorterThan(CreatorNameMinLength))
+            {
                 throw new InvalidCreatorNameException(
                     $"Creator name can not be shorter than {CreatorNameMinLength} characters.");
+            }
 
             return name;
         }
@@ -109,15 +117,26 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
         private static string ValidateEmail(string email)
         {
             if (IsCreatorEmailRequired && email.IsEmpty())
+            {
                 throw new InvalidCreatorEmailException("Creator email can not be empty.");
+            }
+
             if (email.IsShorterThan(CreatorEmailMinLength))
+            {
                 throw new InvalidCreatorEmailException(
                     $"Creator email can not be shorter than {CreatorEmailMinLength} characters.");
+            }
+
             if (email.IsLongerThan(CreatorEmailMaxLength))
+            {
                 throw new InvalidCreatorEmailException(
                     $"Creator email can not be longer than {CreatorEmailMaxLength} characters.");
+            }
+
             if (!EmailRegex.IsMatch(email))
+            {
                 throw new InvalidCreatorEmailException("Invalid email has been provided.");
+            }
 
             return email;
         }
@@ -125,8 +144,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
         private static Role ValidateRole(Role role)
         {
             if (role.Name.IsLongerThan(RoleNameMaxLength))
+            {
                 throw new ArgumentException(
                     $"Creator role name can not be longer than {CreatorNameMinLength} characters.");
+            }
 
             return role;
         }

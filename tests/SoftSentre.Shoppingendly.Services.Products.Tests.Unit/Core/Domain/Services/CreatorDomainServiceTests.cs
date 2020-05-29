@@ -30,13 +30,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 {
     public class CreatorDomainServiceTests
     {
-        private const string CreatorName = "ExampleCreatorName";
-        private const string CreatorEmail = "exampleCreator@email.com";
-
-        private readonly CreatorId _creatorId;
-        private readonly Role _creatorRole;
-        private readonly Creator _creator;
-
         public CreatorDomainServiceTests()
         {
             _creatorId = new CreatorId();
@@ -44,63 +37,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             _creator = Creator.Create(_creatorId, CreatorName, CreatorEmail, _creatorRole);
         }
 
-        [Fact]
-        public async Task CheckIfGetCreatorMethodReturnValidObject()
-        {
-            // Arrange
-            var creatorRepository = new Mock<ICreatorRepository>();
-            creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
-                .ReturnsAsync(_creator);
+        private const string CreatorName = "ExampleCreatorName";
+        private const string CreatorEmail = "exampleCreator@email.com";
 
-            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
-
-            // Act
-            var testResult = await creatorDomainService.GetCreatorAsync(_creatorId);
-
-            // Assert
-            testResult.Should().Be(_creator);
-            creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
-        }
-
-        [Fact]
-        public async Task CheckIfGetCreatorByNameMethodReturnValidObject()
-        {
-            // Arrange
-            var creatorRepository = new Mock<ICreatorRepository>();
-            creatorRepository.Setup(cr => cr.GetByNameAsync(CreatorName))
-                .ReturnsAsync(_creator);
-
-            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
-
-            // Act
-            var testResult = await creatorDomainService.GetCreatorByNameAsync(CreatorName);
-
-            // Assert
-            testResult.Should().Be(_creator);
-            creatorRepository.Verify(cr => cr.GetByNameAsync(CreatorName), Times.Once);
-        }
-
-        [Fact]
-        public async Task CheckIfGetCreatorWithProductsMethodReturnValidObject()
-        {
-            // Arrange
-            var creatorRepository = new Mock<ICreatorRepository>();
-            var creator = new Creator(new CreatorId(), CreatorName, CreatorEmail, Role.User);
-            creator.Products.Add(new Product(new ProductId(), creator.Id, Picture.Empty, "ExampleProductName",
-                "ExampleProducer"));
-
-            creatorRepository.Setup(cr => cr.GetWithIncludesAsync(CreatorName))
-                .ReturnsAsync(creator);
-
-            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
-
-            // Act
-            var testResult = await creatorDomainService.GetCreatorWithProductsAsync(CreatorName);
-
-            // Assert
-            testResult.Should().Be(creator);
-            creatorRepository.Verify(cr => cr.GetWithIncludesAsync(CreatorName), Times.Once);
-        }
+        private readonly CreatorId _creatorId;
+        private readonly Role _creatorRole;
+        private readonly Creator _creator;
 
 
         [Fact]
@@ -165,28 +107,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         }
 
         [Fact]
-        public void CheckIfChangeCreatorNameMethodSetValueWhenCorrectValueAreProvided()
-        {
-            // Arrange
-            const string newCreatorName = "OtherExampleCreatorName";
-            var creator = new Creator(new CreatorId(), "ExampleCreatorName", "creator@email.com", Role.User);
-            var creatorRepository = new Mock<ICreatorRepository>();
-            creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
-                .ReturnsAsync(creator);
-            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
-
-            // Act
-            Action action = async () => await creatorDomainService.SetCreatorNameAsync(_creatorId, newCreatorName);
-            action.Invoke();
-
-            //Assert
-            creator.Name.Should().Be("OtherExampleCreatorName");
-            creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
-            creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
-        }
-
-        [Fact]
-        public void CheckIfChangeCreatorNameMethodDoNotThrownAnyException()
+        public void CheckIfChangeCreatorEmailMethodDoNotThrownAnyException()
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
@@ -197,32 +118,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorNameAsync(_creatorId, "OtherExampleCreatorName");
+                await creatorDomainService.SetCreatorEmailAsync(_creatorId, "otherCreator@email.com");
 
             //Assert
             func.Should().NotThrow();
             creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
             creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
-        }
-
-        [Fact]
-        public void CheckIfSetCreatorNameMethodThrowExceptionWhenProductHasNoValue()
-        {
-            // Arrange
-            var creatorRepository = new Mock<ICreatorRepository>();
-            creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
-                .ReturnsAsync((Creator) null);
-            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
-
-            // Act
-            Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorNameAsync(_creatorId, "OtherExampleCreatorName");
-
-            //Assert
-            func.Should().Throw<CreatorNotFoundException>()
-                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
-            creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
-            creatorRepository.Verify(cr => cr.Update(null), Times.Never);
         }
 
 
@@ -248,7 +149,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         }
 
         [Fact]
-        public void CheckIfChangeCreatorEmailMethodDoNotThrownAnyException()
+        public void CheckIfChangeCreatorNameMethodDoNotThrownAnyException()
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
@@ -259,7 +160,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorEmailAsync(_creatorId, "otherCreator@email.com");
+                await creatorDomainService.SetCreatorNameAsync(_creatorId, "OtherExampleCreatorName");
 
             //Assert
             func.Should().NotThrow();
@@ -268,23 +169,44 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         }
 
         [Fact]
-        public void CheckIfSetCreatorEmailMethodThrowExceptionWhenProductHasNoValue()
+        public void CheckIfChangeCreatorNameMethodSetValueWhenCorrectValueAreProvided()
+        {
+            // Arrange
+            const string newCreatorName = "OtherExampleCreatorName";
+            var creator = new Creator(new CreatorId(), "ExampleCreatorName", "creator@email.com", Role.User);
+            var creatorRepository = new Mock<ICreatorRepository>();
+            creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
+                .ReturnsAsync(creator);
+            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
+
+            // Act
+            Action action = async () => await creatorDomainService.SetCreatorNameAsync(_creatorId, newCreatorName);
+            action.Invoke();
+
+            //Assert
+            creator.Name.Should().Be("OtherExampleCreatorName");
+            creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
+            creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfChangeCreatorRoleMethodDoNotThrownAnyException()
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
+            var creator = new Creator(new CreatorId(), "ExampleCreatorName", "creator@email.com", Role.User);
             creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
-                .ReturnsAsync((Creator) null);
+                .ReturnsAsync(creator);
             ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorEmailAsync(_creatorId, "otherCreator@email.com");
+                await creatorDomainService.SetCreatorRoleAsync(_creatorId, Role.Admin);
 
             //Assert
-            func.Should().Throw<CreatorNotFoundException>()
-                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
-            creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
-            creatorRepository.Verify(cr => cr.Update(null), Times.Never);
+            func.Should().NotThrow();
+            creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
+            creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
         }
 
         [Fact]
@@ -308,23 +230,101 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         }
 
         [Fact]
-        public void CheckIfChangeCreatorRoleMethodDoNotThrownAnyException()
+        public async Task CheckIfGetCreatorByNameMethodReturnValidObject()
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
-            var creator = new Creator(new CreatorId(), "ExampleCreatorName", "creator@email.com", Role.User);
+            creatorRepository.Setup(cr => cr.GetByNameAsync(CreatorName))
+                .ReturnsAsync(_creator);
+
+            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
+
+            // Act
+            var testResult = await creatorDomainService.GetCreatorByNameAsync(CreatorName);
+
+            // Assert
+            testResult.Should().Be(_creator);
+            creatorRepository.Verify(cr => cr.GetByNameAsync(CreatorName), Times.Once);
+        }
+
+        [Fact]
+        public async Task CheckIfGetCreatorMethodReturnValidObject()
+        {
+            // Arrange
+            var creatorRepository = new Mock<ICreatorRepository>();
             creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
+                .ReturnsAsync(_creator);
+
+            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
+
+            // Act
+            var testResult = await creatorDomainService.GetCreatorAsync(_creatorId);
+
+            // Assert
+            testResult.Should().Be(_creator);
+            creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
+        }
+
+        [Fact]
+        public async Task CheckIfGetCreatorWithProductsMethodReturnValidObject()
+        {
+            // Arrange
+            var creatorRepository = new Mock<ICreatorRepository>();
+            var creator = new Creator(new CreatorId(), CreatorName, CreatorEmail, Role.User);
+            creator.Products.Add(new Product(new ProductId(), creator.Id, Picture.Empty, "ExampleProductName",
+                "ExampleProducer"));
+
+            creatorRepository.Setup(cr => cr.GetWithIncludesAsync(CreatorName))
                 .ReturnsAsync(creator);
+
+            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
+
+            // Act
+            var testResult = await creatorDomainService.GetCreatorWithProductsAsync(CreatorName);
+
+            // Assert
+            testResult.Should().Be(creator);
+            creatorRepository.Verify(cr => cr.GetWithIncludesAsync(CreatorName), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorEmailMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            var creatorRepository = new Mock<ICreatorRepository>();
+            creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
+                .ReturnsAsync((Creator) null);
             ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorRoleAsync(_creatorId, Role.Admin);
+                await creatorDomainService.SetCreatorEmailAsync(_creatorId, "otherCreator@email.com");
 
             //Assert
-            func.Should().NotThrow();
-            creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
-            creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
+            func.Should().Throw<CreatorNotFoundException>()
+                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
+            creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
+            creatorRepository.Verify(cr => cr.Update(null), Times.Never);
+        }
+
+        [Fact]
+        public void CheckIfSetCreatorNameMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            var creatorRepository = new Mock<ICreatorRepository>();
+            creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
+                .ReturnsAsync((Creator) null);
+            ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
+
+            // Act
+            Func<Task> func = async () =>
+                await creatorDomainService.SetCreatorNameAsync(_creatorId, "OtherExampleCreatorName");
+
+            //Assert
+            func.Should().Throw<CreatorNotFoundException>()
+                .WithMessage($"Unable to mutate creator state, because creator with id: {_creatorId} not found.");
+            creatorRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
+            creatorRepository.Verify(cr => cr.Update(null), Times.Never);
         }
 
         [Fact]

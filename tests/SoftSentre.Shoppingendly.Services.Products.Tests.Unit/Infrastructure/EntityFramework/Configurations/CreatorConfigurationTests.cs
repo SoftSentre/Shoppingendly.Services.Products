@@ -25,14 +25,46 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 {
     public class CreatorConfigurationTests
     {
-        private readonly EntityTypeBuilder<Creator> _entityTypeBuilder;
-
         public CreatorConfigurationTests()
         {
             _entityTypeBuilder =
                 ConfigurationMetadataTestsExtensions
                     .GetCustomerEntityConfigurationMetadata<Creator, CreatorsConfiguration>(
                         new CreatorsConfiguration());
+        }
+
+        private readonly EntityTypeBuilder<Creator> _entityTypeBuilder;
+
+        [Fact]
+        public void CheckIfCreatorEmailHasConfiguredValidValues()
+        {
+            // Arrange
+            const string email = nameof(Creator.Email);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(email);
+
+            // Act
+            var maxLength = dbProperty.GetMaxLength();
+            var isRequired = !dbProperty.IsNullable;
+
+            // Assert
+            maxLength.Should().Be(CreatorEmailMaxLength);
+            isRequired.Should().Be(IsCreatorEmailRequired);
+        }
+
+        [Fact]
+        public void CheckIfCreatorIdHasIsConfiguredAsKeyAndIsRequired()
+        {
+            // Arrange
+            const string creatorId = nameof(Creator.Id);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(creatorId);
+
+            // Act
+            var isRequired = !dbProperty.IsNullable;
+            var isKey = dbProperty.IsKey();
+
+            // Assert
+            isRequired.Should().BeTrue();
+            isKey.Should().BeTrue();
         }
 
         [Fact]
@@ -52,22 +84,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         }
 
         [Fact]
-        public void CheckIfCreatorEmailHasConfiguredValidValues()
-        {
-            // Arrange
-            const string email = nameof(Creator.Email);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(email);
-
-            // Act
-            var maxLength = dbProperty.GetMaxLength();
-            var isRequired = !dbProperty.IsNullable;
-
-            // Assert
-            maxLength.Should().Be(CreatorEmailMaxLength);
-            isRequired.Should().Be(IsCreatorEmailRequired);
-        }
-
-        [Fact]
         public void CheckOtherValuesFromCreatorEntity()
         {
             // Arrange
@@ -83,22 +99,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             isUpdatedDateRequired.Should().BeFalse();
             isCreatedDateRequired.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfCreatorIdHasIsConfiguredAsKeyAndIsRequired()
-        {
-            // Arrange
-            const string creatorId = nameof(Creator.Id);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(creatorId);
-
-            // Act
-            var isRequired = !dbProperty.IsNullable;
-            var isKey = dbProperty.IsKey();
-
-            // Assert
-            isRequired.Should().BeTrue();
-            isKey.Should().BeTrue();
         }
     }
 }

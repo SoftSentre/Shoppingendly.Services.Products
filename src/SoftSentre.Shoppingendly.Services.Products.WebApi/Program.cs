@@ -27,8 +27,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -38,7 +39,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
                         var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
 
                         if (env.IsDevelopment())
+                        {
                             app.UseDeveloperExceptionPage();
+                        }
 
                         app.UseHttpsRedirection();
                         app.UseRouting();
@@ -46,5 +49,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
                         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
                     });
                 });
+        }
     }
 }

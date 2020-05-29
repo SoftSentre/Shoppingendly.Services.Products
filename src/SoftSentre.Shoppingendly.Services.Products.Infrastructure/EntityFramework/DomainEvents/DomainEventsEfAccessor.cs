@@ -57,13 +57,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             var domainEventsList = domainEvents.ToList();
 
             if (domainEventsList.IsEmpty())
+            {
                 return;
+            }
 
             foreach (var domainEvent in domainEventsList)
             {
                 if (domainEvent == null)
+                {
                     throw new DomainEventCanNotBeEmptyException(
                         "Domain event can not be null.");
+                }
 
                 tasks.Add(_domainEventPublisher.PublishAsync(domainEvent));
             }
@@ -76,7 +80,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             var entities = GetEntities();
 
             if (entities.HasNoValue || entities.Value.IsEmpty())
+            {
                 return;
+            }
 
             entities.Value.ForEach(entity => entity.Entity.ClearDomainEvents());
         }

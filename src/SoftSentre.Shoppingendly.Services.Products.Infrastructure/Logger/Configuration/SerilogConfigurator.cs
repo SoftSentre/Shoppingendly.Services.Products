@@ -26,7 +26,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
 {
     public class SerilogConfigurator : ISerilogConfigurator
     {
-        public LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
+        public LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration,
+            LoggerSettings loggerSettings,
             AppOptions appOptions, string environmentName)
         {
             loggerConfiguration
@@ -60,22 +61,32 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
         {
             var settings = fileSettings ?? new FileSettings();
 
-            if (!settings.Enabled) return;
+            if (!settings.Enabled)
+            {
+                return;
+            }
 
             var path = string.IsNullOrWhiteSpace(settings.Path) ? "logs/logs.txt" : settings.Path;
             var level = ParseLoggingLevel(settings.LoggingLevel);
 
             if (!Enum.TryParse<RollingInterval>(settings.Interval, true, out var interval))
+            {
                 interval = RollingInterval.Day;
+            }
 
             loggerConfiguration.WriteTo.File(path, level, rollingInterval: interval);
         }
 
-        private static void ConfigureConsoleLogger(ConsoleSettings consoleSettings, LoggerConfiguration loggerConfiguration)
+        private static void ConfigureConsoleLogger(ConsoleSettings consoleSettings,
+            LoggerConfiguration loggerConfiguration)
         {
             var settings = consoleSettings ?? new ConsoleSettings();
 
-            if (!settings.Enabled) return;
+            if (!settings.Enabled)
+            {
+                return;
+            }
+
             var level = ParseLoggingLevel(settings.LoggingLevel);
 
             loggerConfiguration.WriteTo.Console(level);
@@ -85,7 +96,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
         {
             var settings = elkSettings ?? new ElkSettings();
 
-            if (!settings.Enabled) return;
+            if (!settings.Enabled)
+            {
+                return;
+            }
+
             var level = ParseLoggingLevel(settings.LoggingLevel);
 
             loggerConfiguration.WriteTo.Elasticsearch(
@@ -109,7 +124,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
         {
             var settings = seqSettings ?? new SeqSettings();
 
-            if (!settings.Enabled) return;
+            if (!settings.Enabled)
+            {
+                return;
+            }
+
             var level = ParseLoggingLevel(settings.LoggingLevel);
 
             loggerConfiguration.WriteTo.Seq(settings.Url, level, apiKey: settings.ApiKey);
@@ -118,7 +137,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
         private static LogEventLevel ParseLoggingLevel(string loggingLevel)
         {
             if (!Enum.TryParse<LogEventLevel>(loggingLevel, true, out var level))
+            {
                 level = LogEventLevel.Information;
+            }
 
             return level;
         }

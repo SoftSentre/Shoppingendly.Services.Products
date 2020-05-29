@@ -20,15 +20,16 @@ using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Identification
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters
 {
-     /// <summary>
-    /// Based on https://andrewlock.net/strongly-typed-ids-in-ef-core-using-strongly-typed-entity-ids-to-avoid-primitive-obsession-part-4/
+    /// <summary>
+    ///     Based on
+    ///     https://andrewlock.net/strongly-typed-ids-in-ef-core-using-strongly-typed-entity-ids-to-avoid-primitive-obsession-part-4/
     /// </summary>
     public class StronglyTypedIdValueConverterSelector : ValueConverterSelector
     {
         private readonly ConcurrentDictionary<(Type ModelClrType, Type ProviderClrType), ValueConverterInfo> _converters
             = new ConcurrentDictionary<(Type ModelClrType, Type ProviderClrType), ValueConverterInfo>();
 
-        public StronglyTypedIdValueConverterSelector(ValueConverterSelectorDependencies dependencies) 
+        public StronglyTypedIdValueConverterSelector(ValueConverterSelectorDependencies dependencies)
             : base(dependencies)
         {
         }
@@ -54,9 +55,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                     yield return _converters.GetOrAdd((underlyingModelType, typeof(Guid)), _ =>
                     {
                         return new ValueConverterInfo(
-                            modelClrType: modelClrType,
-                            providerClrType: typeof(Guid),
-                            factory: valueConverterInfo => (ValueConverter)Activator.CreateInstance(converterType, valueConverterInfo.MappingHints));
+                            modelClrType,
+                            typeof(Guid),
+                            valueConverterInfo =>
+                                (ValueConverter) Activator.CreateInstance(converterType,
+                                    valueConverterInfo.MappingHints));
                     });
                 }
             }

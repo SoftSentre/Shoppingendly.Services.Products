@@ -20,13 +20,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Products
 {
     public class ProductDeallocatedFromAllCategoriesDomainEvent : DomainEventBase
     {
-        public ProductId ProductId { get; }
-        public IEnumerable<CategoryId> CategoriesIds { get; }
-
-        internal ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId, IEnumerable<CategoryId> categoriesIds)
+        internal ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId,
+            IEnumerable<CategoryId> categoriesIds)
         {
             ProductId = productId;
             CategoriesIds = categoriesIds;
         }
+
+        public ProductId ProductId { get; }
+        public IEnumerable<CategoryId> CategoriesIds { get; }
     }
 }

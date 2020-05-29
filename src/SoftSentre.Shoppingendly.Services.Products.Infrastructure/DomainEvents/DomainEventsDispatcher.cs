@@ -23,8 +23,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
 {
     public class DomainEventsDispatcher : IDomainEventsDispatcher
     {
-        private readonly ILogger<DomainEventsDispatcher> _logger;
         private readonly IDomainEventAccessor _domainEventAccessor;
+        private readonly ILogger<DomainEventsDispatcher> _logger;
 
         public DomainEventsDispatcher(
             ILogger<DomainEventsDispatcher> logger,

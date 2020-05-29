@@ -24,14 +24,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public void Configure(EntityTypeBuilder<Creator> creatorsConfiguration)
         {
             creatorsConfiguration.ToTable("Creators", ProductServiceDbContext.DefaultSchema);
-            
+
             creatorsConfiguration.HasKey(c => c.Id);
 
             creatorsConfiguration.Property(c => c.Name)
                 .HasColumnName("CreatorName")
                 .HasMaxLength(CreatorNameMaxLength)
-                .IsRequired(IsCreatorNameRequired);
-            
+                .IsRequired();
+
             creatorsConfiguration.Property(c => c.Email)
                 .HasColumnName("CreatorEmail")
                 .HasMaxLength(CreatorEmailMaxLength)
@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             creatorsConfiguration.Property(p => p.RoleId)
                 .HasColumnName("CreatorRoleId")
-                .IsRequired(IsCreatorEmailRequired);
+                .IsRequired();
 
             creatorsConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
@@ -51,12 +51,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             creatorsConfiguration.HasOne(c => c.Role)
                 .WithMany()
                 .HasForeignKey(c => c.RoleId);
-            
+
             creatorsConfiguration.HasMany(c => c.Products)
                 .WithOne(p => p.Creator)
                 .HasForeignKey(p => p.CreatorId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
             creatorsConfiguration.Metadata.FindNavigation(nameof(Creator.Products))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 

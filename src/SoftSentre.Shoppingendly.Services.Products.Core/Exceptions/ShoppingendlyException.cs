@@ -21,7 +21,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Exceptions
         protected ShoppingendlyException()
         {
         }
-        
+
         protected ShoppingendlyException(string message) : base(message)
         {
         }

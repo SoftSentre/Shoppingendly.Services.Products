@@ -47,7 +47,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
                 .ToList();
 
             if (!errors.Any())
+            {
                 return await _decorated.SendAsync(command);
+            }
 
             var errorBuilder = new StringBuilder();
             errorBuilder.AppendLine("Invalid command, reason: ");
@@ -61,4 +63,3 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
         }
     }
 }
-

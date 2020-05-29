@@ -32,26 +32,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.D
     public class DomainEventsDispatcherTests
     {
         [Fact]
-        public async void CheckIfDispatchMethodMatchedAppropriateMethodOnceWhenAnyDomainEventRaised()
-        {
-            // Arrange
-            var domainEventsAccessor = new Mock<IDomainEventAccessor>();
-            domainEventsAccessor.Setup(dea => dea.GetUncommittedEvents())
-                .Returns(new Maybe<IEnumerable<IDomainEvent>>());
-
-            var logger = new Mock<ILogger<DomainEventsDispatcher>>();
-            var domainEventsDispatcher = new DomainEventsDispatcher(logger.Object, domainEventsAccessor.Object);
-
-            // Act
-            await domainEventsDispatcher.DispatchAsync();
-
-            // Assert
-            domainEventsAccessor.Verify(dea => dea.GetUncommittedEvents(), Times.Once);
-            domainEventsAccessor.Verify(dea => dea.DispatchEvents(new List<IDomainEvent>()), Times.Never);
-            domainEventsAccessor.Verify(dea => dea.ClearAllDomainEvents(), Times.Never);
-        }
-
-        [Fact]
         public async void CheckIfDispatchMethodMatchedAppropriateMethodOnce()
         {
             // Arrange
@@ -78,6 +58,26 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.D
         }
 
         [Fact]
+        public async void CheckIfDispatchMethodMatchedAppropriateMethodOnceWhenAnyDomainEventRaised()
+        {
+            // Arrange
+            var domainEventsAccessor = new Mock<IDomainEventAccessor>();
+            domainEventsAccessor.Setup(dea => dea.GetUncommittedEvents())
+                .Returns(new Maybe<IEnumerable<IDomainEvent>>());
+
+            var logger = new Mock<ILogger<DomainEventsDispatcher>>();
+            var domainEventsDispatcher = new DomainEventsDispatcher(logger.Object, domainEventsAccessor.Object);
+
+            // Act
+            await domainEventsDispatcher.DispatchAsync();
+
+            // Assert
+            domainEventsAccessor.Verify(dea => dea.GetUncommittedEvents(), Times.Once);
+            domainEventsAccessor.Verify(dea => dea.DispatchEvents(new List<IDomainEvent>()), Times.Never);
+            domainEventsAccessor.Verify(dea => dea.ClearAllDomainEvents(), Times.Never);
+        }
+
+        [Fact]
         public void CheckIfDispatchMethodThrowingExceptionWhenProvidedEventIsNull()
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.D
             // Assert
             action.Should().Throw<DispatchedDomainEventsFailedException>()
                 .WithMessage(
-                    "Error occured when dispatching the domain events. Message: Exception of type 'Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions.DomainEventCanNotBeEmptyException' was thrown.")
+                    "Error occured when dispatching the domain events. Message: Exception of type 'SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions.DomainEventCanNotBeEmptyException' was thrown.")
                 .WithInnerExceptionExactly<DomainEventCanNotBeEmptyException>();
         }
     }

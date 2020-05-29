@@ -31,15 +31,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
             _lifetimeScope = lifetimeScope.IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<ICommandResult> SendAsync<TCommand>(TCommand command) 
+        public async Task<ICommandResult> SendAsync<TCommand>(TCommand command)
             where TCommand : class, ICommand
         {
             await using var scope = _lifetimeScope.BeginLifetimeScope();
             var commandHandler = scope.ResolveOptional<ICommandHandler<TCommand>>();
 
             if (commandHandler == null)
+            {
                 throw new CommandPublishedFailedException(
                     $"Unable to publish command: {command.GetType().Name}");
+            }
 
             return await commandHandler.SendAsync(command);
         }

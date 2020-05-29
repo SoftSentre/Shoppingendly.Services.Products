@@ -20,7 +20,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus
 {
     public interface ICommandBus
     {
-        Task<ICommandResult> SendAsync<TCommand>(TCommand command) 
+        Task<ICommandResult> SendAsync<TCommand>(TCommand command)
             where TCommand : class, ICommand;
     }
 }

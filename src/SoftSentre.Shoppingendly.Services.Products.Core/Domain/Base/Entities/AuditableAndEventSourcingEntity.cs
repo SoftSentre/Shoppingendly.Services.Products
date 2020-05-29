@@ -22,22 +22,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities
     {
         private List<IDomainEvent> _domainEvents;
 
+        // Required for EF
+        protected AuditableAndEventSourcingEntity()
+        {
+            CreatedAt = DateTime.UtcNow;
+        }
+
+        protected AuditableAndEventSourcingEntity(TId id) : base(id)
+        {
+            CreatedAt = DateTime.UtcNow;
+        }
+
         public DateTime? UpdatedDate { get; private set; }
         public DateTime CreatedAt { get; }
 
         public IEnumerable<IDomainEvent> DomainEvents
             => _domainEvents.AsReadOnly();
-
-        // Required for EF
-        protected AuditableAndEventSourcingEntity() 
-        {
-            CreatedAt = DateTime.UtcNow;
-        }
-        
-        protected AuditableAndEventSourcingEntity(TId id) : base(id)
-        {
-            CreatedAt = DateTime.UtcNow;
-        }
 
         public IEnumerable<IDomainEvent> GetUncommitted()
         {

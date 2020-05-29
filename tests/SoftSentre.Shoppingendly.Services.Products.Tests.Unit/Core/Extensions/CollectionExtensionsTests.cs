@@ -53,30 +53,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
             testResult.Should().BeFalse();
         }
 
-        [Fact]
-        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenListIsNotEmpty()
-        {
-            var notEmptyList = new List<object> {new object()};
-
-            var testResult = notEmptyList.IsEmpty();
-            testResult.Should().BeFalse();
-
-            testResult = notEmptyList.IsNotEmpty();
-            testResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenEnumerableIsNotEmpty()
-        {
-            IEnumerable<object> notEmptyEnumerable = new List<object> {new object()};
-
-            var testResult = notEmptyEnumerable.IsEmpty();
-            testResult.Should().BeFalse();
-
-            testResult = notEmptyEnumerable.IsNotEmpty();
-            testResult.Should().BeTrue();
-        }
-
         private class CollectionExtensionsTestsDataGenerator
         {
             public static List<object[]> EmptyLists =>
@@ -92,6 +68,30 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
                     new object[] {new List<object>()},
                     new object[] {null}
                 };
+        }
+
+        [Fact]
+        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenEnumerableIsNotEmpty()
+        {
+            IEnumerable<object> notEmptyEnumerable = new List<object> {new object()};
+
+            var testResult = notEmptyEnumerable.IsEmpty();
+            testResult.Should().BeFalse();
+
+            testResult = notEmptyEnumerable.IsNotEmpty();
+            testResult.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CheckIfIsEmptyOrIsNotEmptyMethodReturnValidValuesWhenListIsNotEmpty()
+        {
+            var notEmptyList = new List<object> {new object()};
+
+            var testResult = notEmptyList.IsEmpty();
+            testResult.Should().BeFalse();
+
+            testResult = notEmptyList.IsNotEmpty();
+            testResult.Should().BeTrue();
         }
     }
 }

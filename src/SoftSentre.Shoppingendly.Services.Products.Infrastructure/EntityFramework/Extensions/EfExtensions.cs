@@ -22,12 +22,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
     public static class EfExtensions
     {
         public static void UseLogging(this DbContextOptionsBuilder dbContextOptionsBuilder,
-            ILoggerFactory loggerFactory) =>
+            ILoggerFactory loggerFactory)
+        {
             dbContextOptionsBuilder.UseLoggerFactory(loggerFactory)
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging();
-        
+        }
+
         public static DbContextOptionsBuilder UseStronglyTypedIds(this DbContextOptionsBuilder dbContextOptionsBuilder)
-            => dbContextOptionsBuilder.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+        {
+            return dbContextOptionsBuilder
+                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+        }
     }
 }

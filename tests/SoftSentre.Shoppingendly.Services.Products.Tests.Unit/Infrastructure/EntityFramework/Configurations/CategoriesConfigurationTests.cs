@@ -25,14 +25,47 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 {
     public class CategoriesConfigurationTests
     {
-        private readonly EntityTypeBuilder<Category> _entityTypeBuilder;
-
         public CategoriesConfigurationTests()
         {
             _entityTypeBuilder =
                 ConfigurationMetadataTestsExtensions
                     .GetCustomerEntityConfigurationMetadata<Category, CategoriesConfiguration>(
                         new CategoriesConfiguration());
+        }
+
+        private readonly EntityTypeBuilder<Category> _entityTypeBuilder;
+
+        [Fact]
+        public void CheckIfCategoryDescriptionHasConfiguredValidValues()
+        {
+            // Arrange
+            const string description = nameof(Category.Description);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(description);
+
+            // Act
+            var maxLength = dbProperty.GetMaxLength();
+            var isRequired = !dbProperty.IsNullable;
+
+            // Assert
+            maxLength.Should().Be(CategoryDescriptionMaxLength);
+            isRequired.Should().Be(IsCategoryDescriptionRequired);
+        }
+
+        [Fact]
+        public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
+        {
+            // Arrange
+            const string categoryId = nameof(Category.Id);
+
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
+
+            // Act
+            var isRequired = !dbProperty.IsNullable;
+            var isKey = dbProperty.IsKey();
+
+            // Assert
+            isRequired.Should().BeTrue();
+            isKey.Should().BeTrue();
         }
 
         [Fact]
@@ -52,22 +85,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         }
 
         [Fact]
-        public void CheckIfCategoryDescriptionHasConfiguredValidValues()
-        {
-            // Arrange
-            const string description = nameof(Category.Description);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(description);
-
-            // Act
-            var maxLength = dbProperty.GetMaxLength();
-            var isRequired = !dbProperty.IsNullable;
-
-            // Assert
-            maxLength.Should().Be(CategoryDescriptionMaxLength);
-            isRequired.Should().Be(IsCategoryDescriptionRequired);
-        }
-
-        [Fact]
         public void CheckOtherValuesFromCategoryEntity()
         {
             // Arrange
@@ -84,23 +101,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             isUpdatedDateRequired.Should().BeFalse();
             isCreatedDateRequired.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
-        {
-            // Arrange
-            const string categoryId = nameof(Category.Id);
-
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
-
-            // Act
-            var isRequired = !dbProperty.IsNullable;
-            var isKey = dbProperty.IsKey();
-
-            // Assert
-            isRequired.Should().BeTrue();
-            isKey.Should().BeTrue();
         }
     }
 }

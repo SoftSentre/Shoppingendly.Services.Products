@@ -26,14 +26,30 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 {
     public class ProductsConfigurationTests
     {
-        private readonly EntityTypeBuilder<Product> _entityTypeBuilder;
-
         public ProductsConfigurationTests()
         {
             _entityTypeBuilder =
                 ConfigurationMetadataTestsExtensions
                     .GetCustomerEntityConfigurationMetadata<Product, ProductsConfiguration>(
                         new ProductsConfiguration());
+        }
+
+        private readonly EntityTypeBuilder<Product> _entityTypeBuilder;
+
+        [Fact]
+        public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
+        {
+            // Arrange
+            const string productId = nameof(Product.Id);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
+
+            // Act
+            var isRequired = !dbProperty.IsNullable;
+            var isKey = dbProperty.IsKey();
+
+            // Assert
+            isRequired.Should().BeTrue();
+            isKey.Should().BeTrue();
         }
 
         [Fact]
@@ -50,22 +66,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             maxLength.Should().Be(ProductNameMaxLength);
             isRequired.Should().Be(IsProductNameRequired);
-        }
-
-        [Fact]
-        public void CheckIfProductProducerHasConfiguredValidValues()
-        {
-            // Arrange
-            const string producer = nameof(Product.Producer);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(producer);
-
-            // Act
-            var maxLength = dbProperty.GetMaxLength();
-            var isRequired = !dbProperty.IsNullable;
-
-            // Assert
-            maxLength.Should().Be(ProductProducerMaxLength);
-            isRequired.Should().Be(IsProductProducerRequired);
         }
 
         [Fact]
@@ -105,6 +105,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         }
 
         [Fact]
+        public void CheckIfProductProducerHasConfiguredValidValues()
+        {
+            // Arrange
+            const string producer = nameof(Product.Producer);
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(producer);
+
+            // Act
+            var maxLength = dbProperty.GetMaxLength();
+            var isRequired = !dbProperty.IsNullable;
+
+            // Assert
+            maxLength.Should().Be(ProductProducerMaxLength);
+            isRequired.Should().Be(IsProductProducerRequired);
+        }
+
+        [Fact]
         public void CheckOtherValuesFromProductEntity()
         {
             // Arrange
@@ -124,22 +140,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             isCreatorIdRequired.Should().BeTrue();
             isUpdatedDateRequired.Should().BeFalse();
             isCreatedDateRequired.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
-        {
-            // Arrange
-            const string productId = nameof(Product.Id);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
-
-            // Act
-            var isRequired = !dbProperty.IsNullable;
-            var isKey = dbProperty.IsKey();
-
-            // Assert
-            isRequired.Should().BeTrue();
-            isKey.Should().BeTrue();
         }
     }
 }

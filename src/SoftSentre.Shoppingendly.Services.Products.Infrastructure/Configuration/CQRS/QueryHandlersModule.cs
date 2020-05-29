@@ -27,11 +27,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
             var queryAssembly = typeof(IQuery)
                 .GetTypeInfo()
                 .Assembly;
-            
+
             builder.RegisterAssemblyTypes(queryAssembly)
                 .AsClosedTypesOf(typeof(IQueryHandler<,>))
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterGenericDecorator(
                 typeof(LoggingQueryHandlerDecorator<,>),
                 typeof(IQueryHandler<,>));

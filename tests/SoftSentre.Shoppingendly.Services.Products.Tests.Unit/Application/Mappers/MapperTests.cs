@@ -27,8 +27,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 {
     public class MapperTests
     {
-        private readonly IMapperWrapper _mapperWrapper;
-
         public MapperTests()
         {
             var config = new MapperConfiguration(
@@ -44,6 +42,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             var testMapper = config.CreateMapper();
             _mapperWrapper = new MapperWrapper(testMapper);
         }
+
+        private readonly IMapperWrapper _mapperWrapper;
 
         [Fact]
         public void CheckIfItPossibleMapCategoryToBasicCategoryDto()
@@ -157,21 +157,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         }
 
         [Fact]
-        public void CheckIfItPossibleMapRoleToRoleDto()
-        {
-            // Arrange
-            var role = Role.Moderator;
-
-            // Act
-            var testResult = _mapperWrapper.MapRoleToRoleDto(role);
-
-            // Assert
-            testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(role.Id.ToString());
-            testResult.Role.Should().Be(role.Name);
-        }
-
-        [Fact]
         public void CheckIfItPossibleMapPictureToPictureDto()
         {
             // Arrange
@@ -183,25 +168,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Url.Should().Be(picture.Url);
-        }
-
-        [Fact]
-        public void CheckIfItPossibleMapProductToProductDto()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
-            var picture = Picture.Create("Name", "picture.jpg");
-            product.AddOrChangePicture(picture);
-
-            // Act
-            var testResult = _mapperWrapper.MapProductToProductDto(product);
-
-            // Assert
-            testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(product.Id.Id.ToString());
-            testResult.Name.Should().Be(product.Name);
-            testResult.Producer.Should().Be(product.Producer);
-            testResult.Icon.Url.Should().Be(product.Picture.Url);
         }
 
         [Fact]
@@ -231,6 +197,40 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             testResult.Picture.Url.Should().Be(product.Picture.Url);
             testResult.Categories.Should().Contain(c => c == category.Name);
             testResult.Categories.Should().Contain(c => c == secondCategory.Name);
+        }
+
+        [Fact]
+        public void CheckIfItPossibleMapProductToProductDto()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
+            var picture = Picture.Create("Name", "picture.jpg");
+            product.AddOrChangePicture(picture);
+
+            // Act
+            var testResult = _mapperWrapper.MapProductToProductDto(product);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(product.Id.Id.ToString());
+            testResult.Name.Should().Be(product.Name);
+            testResult.Producer.Should().Be(product.Producer);
+            testResult.Icon.Url.Should().Be(product.Picture.Url);
+        }
+
+        [Fact]
+        public void CheckIfItPossibleMapRoleToRoleDto()
+        {
+            // Arrange
+            var role = Role.Moderator;
+
+            // Act
+            var testResult = _mapperWrapper.MapRoleToRoleDto(role);
+
+            // Assert
+            testResult.Should().NotBeNull();
+            testResult.Id.Should().Be(role.Id.ToString());
+            testResult.Role.Should().Be(role.Name);
         }
     }
 }

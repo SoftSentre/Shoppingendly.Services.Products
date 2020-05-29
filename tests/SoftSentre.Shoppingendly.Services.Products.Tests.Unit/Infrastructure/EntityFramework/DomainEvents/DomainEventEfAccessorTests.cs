@@ -37,6 +37,46 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 {
     public class DomainEventEfAccessorTests
     {
+        private static async Task<ProductServiceDbContext> CreateDbContext()
+        {
+            var dbName = Guid.NewGuid().ToString();
+
+            var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
+                .UseInMemoryDatabase(dbName)
+                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
+                .Options;
+
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
+            var productServiceDbContext =
+                new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher, new SqlSettings(),
+                    dbContextOptions);
+            productServiceDbContext.Database.EnsureDeleted();
+            productServiceDbContext.Database.EnsureCreated();
+
+            var creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")),
+                "Creator", "creator@email.com", Role.Admin);
+            await productServiceDbContext.Creators.AddAsync(creator);
+            await productServiceDbContext.SaveChangesAsync();
+
+            return productServiceDbContext;
+        }
+
+        [Fact]
+        public async void CheckIfDomainEventsListWillBeEmptyAfterClearDomainEventsMethodWillBeFired()
+        {
+            // Arrange
+            var domainEventPublisher = new Mock<IDomainEventPublisher>();
+            var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object, await CreateDbContext());
+
+            // Act
+            domainEventsAccessor.ClearAllDomainEvents();
+
+            // Assert
+            var testResult = domainEventsAccessor.GetUncommittedEvents();
+            testResult.Value.Should().BeEmpty();
+        }
+
         [Fact]
         public async void CheckIfGetEntriesMethodReturnDomainEvents()
         {
@@ -51,7 +91,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testEventsResult.Value.Should().NotBeNull();
             var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault() ??
                                   It.IsAny<NewCreatorCreatedDomainEvent>();
-            
+
             testEventResult.Should().NotBeNull();
             testEventResult.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             testEventResult.CreatorId.Id.Should().Be(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A"));
@@ -82,46 +122,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             domainEventPublisher.Verify(dep => dep.PublishAsync<IDomainEvent>(categoryCreatedEvent), Times.Once);
             domainEventPublisher.Verify(dep => dep.PublishAsync<IDomainEvent>(creatorCreatedEvent), Times.Once);
-        }
-
-        [Fact]
-        public async void CheckIfDomainEventsListWillBeEmptyAfterClearDomainEventsMethodWillBeFired()
-        {
-            // Arrange
-            var domainEventPublisher = new Mock<IDomainEventPublisher>();
-            var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object, await CreateDbContext());
-
-            // Act
-            domainEventsAccessor.ClearAllDomainEvents();
-
-            // Assert
-            var testResult = domainEventsAccessor.GetUncommittedEvents();
-            testResult.Value.Should().BeEmpty();
-        }
-
-        private static async Task<ProductServiceDbContext> CreateDbContext()
-        {
-            var dbName = Guid.NewGuid().ToString();
-
-            var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
-                .UseInMemoryDatabase(dbName)
-                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
-                .Options;
-
-            var loggerFactory = new Mock<ILoggerFactory>();
-            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext =
-                new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher, new SqlSettings(),
-                    dbContextOptions);
-            productServiceDbContext.Database.EnsureDeleted();
-            productServiceDbContext.Database.EnsureCreated();
-
-            var creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")),
-                "Creator", "creator@email.com", Role.Admin);
-            await productServiceDbContext.Creators.AddAsync(creator);
-            await productServiceDbContext.SaveChangesAsync();
-
-            return productServiceDbContext;
         }
     }
 }

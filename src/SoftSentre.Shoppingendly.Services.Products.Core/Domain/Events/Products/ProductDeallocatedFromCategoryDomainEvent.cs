@@ -19,13 +19,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Products
 {
     public class ProductDeallocatedFromCategoryDomainEvent : DomainEventBase
     {
-        public ProductId ProductId { get; }
-        public CategoryId CategoryId { get; }
-
         internal ProductDeallocatedFromCategoryDomainEvent(ProductId productId, CategoryId categoryId)
         {
             ProductId = productId;
             CategoryId = categoryId;
         }
+
+        public ProductId ProductId { get; }
+        public CategoryId CategoryId { get; }
     }
 }

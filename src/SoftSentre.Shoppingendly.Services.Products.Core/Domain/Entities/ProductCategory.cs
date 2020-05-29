@@ -20,21 +20,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
 {
     public class ProductCategory : AuditableDoubleKeyEntity<ProductId, CategoryId>
     {
-        // Navigation property
-        public Product Product { get; set; }
-        
-        // Navigation property
-        public Category Category { get; set; }
-
         // Required for EF
         private ProductCategory()
         {
         }
 
-        internal ProductCategory(ProductId productId, CategoryId categoryId) 
+        internal ProductCategory(ProductId productId, CategoryId categoryId)
             : base(productId, categoryId)
         {
         }
+
+        // Navigation property
+        public Product Product { get; set; }
+
+        // Navigation property
+        public Category Category { get; set; }
 
         internal static ProductCategory Create(ProductId productId, CategoryId categoryId)
         {

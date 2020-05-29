@@ -16,7 +16,6 @@ using Autofac;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainEvents;
-using Module = Autofac.Module;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.DomainEvents
 {

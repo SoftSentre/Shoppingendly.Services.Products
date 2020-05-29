@@ -20,7 +20,7 @@ using SoftSentre.Shoppingendly.Services.Products.Core.Types;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories
 {
-    public interface IProductRepository 
+    public interface IProductRepository
     {
         Task<Maybe<Product>> GetByIdAsync(ProductId productId);
         Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId);

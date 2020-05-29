@@ -29,34 +29,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
 {
     public class ProductTests
     {
-        [Fact]
-        public void CheckIfSetNameMethodReturnTrueWhenInputIsDifferentThenExistingValue()
-        {
-            // Arrange
-            const string productName = "ExampleProductName";
-            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
-
-            // Act
-            var testResult = product.SetName(productName);
-
-            // Assert
-            testResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfSetNameMethodReturnFalseWhenInputIsTheSameThenExistingValue()
-        {
-            // Arrange
-            const string productName = "ExampleProductName";
-            var product = new Product(new ProductId(), new CreatorId(), productName, "ExampleProducer");
-
-            // Act
-            var testResult = product.SetName(productName);
-
-            // Assert
-            testResult.Should().BeFalse();
-        }
-
         [Theory]
         [InlineData("Prod")]
         [InlineData("IProvideMaximalNumberOfLetters")]
@@ -76,22 +48,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             testResult.Should().BeTrue();
         }
 
-        [Fact]
-        public void CheckIfSetProductNameMethodSetValuesWhenCorrectNameHasBeenProvided()
-        {
-            // Arrange
-            const string productName = "OtherProductName";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            product.SetName(productName);
-
-            // Assert
-            product.Name.Should().Be(productName);
-            product.UpdatedDate.Should().NotBe(default);
-            product.CreatedAt.Should().NotBe(default);
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -107,64 +63,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Assert
             func.Should().Throw<InvalidProductNameException>()
                 .WithMessage("Product name can not be empty.");
-        }
-
-        [Fact]
-        public void CheckIfSetProductNameMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
-        {
-            // Arrange
-            const string productName = "Hom";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            Func<bool> func = () => product.SetName(productName);
-
-            // Assert
-            func.Should().Throw<InvalidProductNameException>()
-                .WithMessage("Product name can not be shorter than 4 characters.");
-        }
-
-        [Fact]
-        public void CheckIfSetProductNameMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
-        {
-            // Arrange
-            const string productName = "IProvideMaximalNumberOfLettersAndFewMore";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            Func<bool> func = () => product.SetName(productName);
-
-            // Assert
-            func.Should().Throw<InvalidProductNameException>()
-                .WithMessage("Product name can not be longer than 30 characters.");
-        }
-
-        [Fact]
-        public void CheckIfSetProductProducerMethodReturnTrueWhenInputIsDifferentThenExistingValue()
-        {
-            // Arrange
-            const string productProducer = "ExampleProductProducer";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductProducer", "ExampleProducer");
-
-            // Act
-            var testResult = product.SetProducer(productProducer);
-
-            // Assert
-            testResult.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfSetProductProducerMethodReturnFalseWhenInputIsTheSameThenExistingValue()
-        {
-            // Arrange
-            const string productProducer = "ExampleProductProducer";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", productProducer);
-
-            // Act
-            var testResult = product.SetProducer(productProducer);
-
-            // Assert
-            testResult.Should().BeFalse();
         }
 
         [Theory]
@@ -186,22 +84,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             testResult.Should().BeTrue();
         }
 
-        [Fact]
-        public void CheckIfSetProductProducerMethodSetValuesWhenCorrectNameHasBeenProvided()
-        {
-            // Arrange
-            const string productProducer = "OtherProducerName";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            product.SetProducer(productProducer);
-
-            // Assert
-            product.Producer.Should().Be(productProducer);
-            product.UpdatedDate.Should().NotBe(default);
-            product.CreatedAt.Should().NotBe(default);
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -221,54 +103,54 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         }
 
         [Fact]
-        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
+        public void CheckIfAddOrChangePictureMethodAssignValidObjectWhenInputIsCorrectAndDoNotThrown()
         {
             // Arrange
-            const string producerName = "P";
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var picture = Picture.Create("ExamplePictureName", "ExamplePictureUrl");
 
             // Act
-            Func<bool> func = () => product.SetProducer(producerName);
+            Func<bool> function = () => product.AddOrChangePicture(picture);
+            var testResult = function.Invoke();
 
             // Assert
-            func.Should().Throw<InvalidProductProducerException>()
-                .WithMessage("Product producer can not be shorter than 2 characters.");
+            function.Should().NotThrow();
+            product.Picture.Should().Be(picture);
+            testResult.Should().BeTrue();
         }
 
         [Fact]
-        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
+        public void CheckIfAddOrChangePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            const string producerName =
-                "IProvideMaximalNumberOfLettersAndFewMoreBecauseProducerCanNotBeLongerThan50Characters";
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
 
             // Act
-            Func<bool> func = () => product.SetProducer(producerName);
+            product.AddOrChangePicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
+            var productNameChangedDomainEvent =
+                product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent ??
+                It.IsAny<PictureAddedOrChangedDomainEvent>();
 
             // Assert
-            func.Should().Throw<InvalidProductProducerException>()
-                .WithMessage("Product producer can not be longer than 50 characters.");
+            product.DomainEvents.Should().NotBeEmpty();
+            productNameChangedDomainEvent.Should().BeOfType<PictureAddedOrChangedDomainEvent>();
+            productNameChangedDomainEvent.Should().NotBeNull();
+            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent.Picture.Should().Be(product.Picture);
         }
 
         [Fact]
-        public void CheckIfGetAssignCategoryMethodReturnValidObjectWhenCorrectValueWasProvided()
+        public void CheckIfAddOrChangePictureThrowAppropriateExceptionWhenPictureIsEmpty()
         {
             // Arrange
-            var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            var expectedValue = new ProductCategory(product.Id, categoryId);
-            product.ProductCategories.Add(expectedValue);
+            var picture = Picture.Empty;
 
             // Act
-            Func<Maybe<ProductCategory>> func = () => product.GetAssignedCategory(categoryId);
-            var assignedCategory = func.Invoke();
+            Func<bool> function = () => product.AddOrChangePicture(picture);
 
             // Assert
-            func.Should().NotThrow();
-            assignedCategory.Should().NotBeNull();
-            assignedCategory.Value.FirstKey.Should().Be(product.Id);
-            assignedCategory.Value.SecondKey.Should().Be(categoryId);
+            function.Should().Throw<PictureCanNotBeEmptyException>().WithMessage("Picture can not be empty.");
         }
 
         [Fact]
@@ -292,6 +174,27 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         }
 
         [Fact]
+        public void CheckIfAssignCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            product.AssignCategory(categoryId);
+            var productAssignedToCategory =
+                product.GetUncommitted().LastOrDefault() as ProductAssignedToCategoryDomainEvent ??
+                It.IsAny<ProductAssignedToCategoryDomainEvent>();
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productAssignedToCategory.Should().BeOfType<ProductAssignedToCategoryDomainEvent>();
+            productAssignedToCategory.Should().NotBeNull();
+            productAssignedToCategory.ProductId.Should().Be(product.Id);
+            productAssignedToCategory.CategoryId.Should().Be(categoryId);
+        }
+
+        [Fact]
         public void CheckIfAssignCategoryMethodThrowExceptionWhenProductIsAlreadyAssignedToCategory()
         {
             // Arrange
@@ -309,6 +212,62 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         }
 
         [Fact]
+        public void CheckIfClearDomainEventsMethodWorkingProperly()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            product.ClearDomainEvents();
+
+            // Assert
+            product.DomainEvents.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void CheckIfCreateNewProductProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+
+            // Act
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var newCategoryCreatedDomainEvent =
+                product.GetUncommitted().LastOrDefault() as NewProductCreatedDomainEvent ??
+                It.IsAny<NewProductCreatedDomainEvent>();
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            newCategoryCreatedDomainEvent.Should().BeOfType<NewProductCreatedDomainEvent>();
+            newCategoryCreatedDomainEvent.Should().NotBeNull();
+            newCategoryCreatedDomainEvent.ProductId.Should().Be(product.Id);
+            newCategoryCreatedDomainEvent.CreatorId.Should().Be(product.CreatorId);
+            newCategoryCreatedDomainEvent.ProductName.Should().Be(product.Name);
+            newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.Producer);
+        }
+
+        [Fact]
+        public void CheckIfDeallocateAllCategoriesMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(new CategoryId());
+            product.AssignCategory(new CategoryId());
+
+            // Act
+            product.DeallocateAllCategories();
+            var productDeallocatedFromAllCategories =
+                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromAllCategoriesDomainEvent ??
+                It.IsAny<ProductDeallocatedFromAllCategoriesDomainEvent>();
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productDeallocatedFromAllCategories.Should().BeOfType<ProductDeallocatedFromAllCategoriesDomainEvent>();
+            productDeallocatedFromAllCategories.Should().NotBeNull();
+            productDeallocatedFromAllCategories.ProductId.Should().Be(product.Id);
+            productDeallocatedFromAllCategories.CategoriesIds.Should().HaveCount(2);
+        }
+
+        [Fact]
         public void CheckIfDeallocateCategoryMethodDoNotThrowExceptionAndRemoveCorrectItemToList()
         {
             // Arrange
@@ -323,6 +282,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             action.Should().NotThrow();
             product.ProductCategories.Should().BeEmpty();
             product.UpdatedDate.Should().NotBe(default);
+        }
+
+        [Fact]
+        public void CheckIfDeallocateCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
+        {
+            // Arrange
+            var categoryId = new CategoryId();
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            product.AssignCategory(categoryId);
+
+            // Act
+            product.DeallocateCategory(categoryId);
+            var productDeallocatedFromCategory =
+                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromCategoryDomainEvent ??
+                It.IsAny<ProductDeallocatedFromCategoryDomainEvent>();
+
+            // Assert
+            product.DomainEvents.Should().NotBeEmpty();
+            productDeallocatedFromCategory.Should().BeOfType<ProductDeallocatedFromCategoryDomainEvent>();
+            productDeallocatedFromCategory.Should().NotBeNull();
+            productDeallocatedFromCategory.ProductId.Should().Be(product.Id);
+            productDeallocatedFromCategory.CategoryId.Should().Be(categoryId);
         }
 
         [Fact]
@@ -391,34 +372,37 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         }
 
         [Fact]
-        public void CheckIfAddOrChangePictureMethodAssignValidObjectWhenInputIsCorrectAndDoNotThrown()
+        public void CheckIfGetAssignCategoryMethodReturnValidObjectWhenCorrectValueWasProvided()
         {
             // Arrange
+            var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            var picture = Picture.Create("ExamplePictureName", "ExamplePictureUrl");
+            var expectedValue = new ProductCategory(product.Id, categoryId);
+            product.ProductCategories.Add(expectedValue);
 
             // Act
-            Func<bool> function = () => product.AddOrChangePicture(picture);
-            var testResult = function.Invoke();
+            Func<Maybe<ProductCategory>> func = () => product.GetAssignedCategory(categoryId);
+            var assignedCategory = func.Invoke();
 
             // Assert
-            function.Should().NotThrow();
-            product.Picture.Should().Be(picture);
-            testResult.Should().BeTrue();
+            func.Should().NotThrow();
+            assignedCategory.Should().NotBeNull();
+            assignedCategory.Value.FirstKey.Should().Be(product.Id);
+            assignedCategory.Value.SecondKey.Should().Be(categoryId);
         }
 
         [Fact]
-        public void CheckIfAddOrChangePictureThrowAppropriateExceptionWhenPictureIsEmpty()
+        public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            var picture = Picture.Empty;
 
             // Act
-            Func<bool> function = () => product.AddOrChangePicture(picture);
+            var domainEvents = product.GetUncommitted().ToList();
 
             // Assert
-            function.Should().Throw<PictureCanNotBeEmptyException>().WithMessage("Picture can not be empty.");
+            domainEvents.Should().NotBeNull();
+            domainEvents.LastOrDefault().Should().BeOfType<NewProductCreatedDomainEvent>();
         }
 
         [Fact]
@@ -453,44 +437,23 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         }
 
         [Fact]
-        public void CheckIfCreateNewProductProduceDomainEventWithAppropriateTypeAndValues()
+        public void CheckIfRemovePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
+            var product = new Product(new ProductId(), new CreatorId(),
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
 
             // Act
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            var newCategoryCreatedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as NewProductCreatedDomainEvent ??
-                It.IsAny<NewProductCreatedDomainEvent>();
-
-            // Assert
-            product.DomainEvents.Should().NotBeEmpty();
-            newCategoryCreatedDomainEvent.Should().BeOfType<NewProductCreatedDomainEvent>();
-            newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent.ProductId.Should().Be(product.Id);
-            newCategoryCreatedDomainEvent.CreatorId.Should().Be(product.CreatorId);
-            newCategoryCreatedDomainEvent.ProductName.Should().Be(product.Name);
-            newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.Producer);
-        }
-
-        [Fact]
-        public void CheckIfSetProductNameMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            product.SetName("NewProductName");
+            product.RemovePicture();
             var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as ProductNameChangedDomainEvent ??
-                It.IsAny<ProductNameChangedDomainEvent>();
+                product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent ??
+                It.IsAny<PictureRemovedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
-            productNameChangedDomainEvent.Should().BeOfType<ProductNameChangedDomainEvent>();
+            productNameChangedDomainEvent.Should().BeOfType<PictureRemovedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
             productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent.ProductName.Should().Be(product.Name);
         }
 
         [Fact]
@@ -514,135 +477,172 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         }
 
         [Fact]
-        public void CheckIfAssignCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
+        public void CheckIfSetNameMethodReturnFalseWhenInputIsTheSameThenExistingValue()
         {
             // Arrange
-            var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            const string productName = "ExampleProductName";
+            var product = new Product(new ProductId(), new CreatorId(), productName, "ExampleProducer");
 
             // Act
-            product.AssignCategory(categoryId);
-            var productAssignedToCategory =
-                product.GetUncommitted().LastOrDefault() as ProductAssignedToCategoryDomainEvent ??
-                It.IsAny<ProductAssignedToCategoryDomainEvent>();
+            var testResult = product.SetName(productName);
 
             // Assert
-            product.DomainEvents.Should().NotBeEmpty();
-            productAssignedToCategory.Should().BeOfType<ProductAssignedToCategoryDomainEvent>();
-            productAssignedToCategory.Should().NotBeNull();
-            productAssignedToCategory.ProductId.Should().Be(product.Id);
-            productAssignedToCategory.CategoryId.Should().Be(categoryId);
+            testResult.Should().BeFalse();
         }
 
         [Fact]
-        public void CheckIfDeallocateCategoryMethodProduceDomainEventWithAppropriateTypeAndValues()
+        public void CheckIfSetNameMethodReturnTrueWhenInputIsDifferentThenExistingValue()
         {
             // Arrange
-            var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            product.AssignCategory(categoryId);
+            const string productName = "ExampleProductName";
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
 
             // Act
-            product.DeallocateCategory(categoryId);
-            var productDeallocatedFromCategory =
-                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromCategoryDomainEvent ??
-                It.IsAny<ProductDeallocatedFromCategoryDomainEvent>();
+            var testResult = product.SetName(productName);
 
             // Assert
-            product.DomainEvents.Should().NotBeEmpty();
-            productDeallocatedFromCategory.Should().BeOfType<ProductDeallocatedFromCategoryDomainEvent>();
-            productDeallocatedFromCategory.Should().NotBeNull();
-            productDeallocatedFromCategory.ProductId.Should().Be(product.Id);
-            productDeallocatedFromCategory.CategoryId.Should().Be(categoryId);
+            testResult.Should().BeTrue();
         }
 
         [Fact]
-        public void CheckIfDeallocateAllCategoriesMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-            product.AssignCategory(new CategoryId());
-            product.AssignCategory(new CategoryId());
-
-            // Act
-            product.DeallocateAllCategories();
-            var productDeallocatedFromAllCategories =
-                product.GetUncommitted().LastOrDefault() as ProductDeallocatedFromAllCategoriesDomainEvent ??
-                It.IsAny<ProductDeallocatedFromAllCategoriesDomainEvent>();
-
-            // Assert
-            product.DomainEvents.Should().NotBeEmpty();
-            productDeallocatedFromAllCategories.Should().BeOfType<ProductDeallocatedFromAllCategoriesDomainEvent>();
-            productDeallocatedFromAllCategories.Should().NotBeNull();
-            productDeallocatedFromAllCategories.ProductId.Should().Be(product.Id);
-            productDeallocatedFromAllCategories.CategoriesIds.Should().HaveCount(2);
-        }
-
-        [Fact]
-        public void CheckIfAddOrChangePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
+        public void CheckIfSetProductNameMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
 
             // Act
-            product.AddOrChangePicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
+            product.SetName("NewProductName");
             var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent ??
-                It.IsAny<PictureAddedOrChangedDomainEvent>();
+                product.GetUncommitted().LastOrDefault() as ProductNameChangedDomainEvent ??
+                It.IsAny<ProductNameChangedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
-            productNameChangedDomainEvent.Should().BeOfType<PictureAddedOrChangedDomainEvent>();
+            productNameChangedDomainEvent.Should().BeOfType<ProductNameChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
             productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent.Picture.Should().Be(product.Picture);
+            productNameChangedDomainEvent.ProductName.Should().Be(product.Name);
         }
 
         [Fact]
-        public void CheckIfRemovePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
+        public void CheckIfSetProductNameMethodSetValuesWhenCorrectNameHasBeenProvided()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            product.RemovePicture();
-            var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent ??
-                It.IsAny<PictureRemovedDomainEvent>();
-
-            // Assert
-            product.DomainEvents.Should().NotBeEmpty();
-            productNameChangedDomainEvent.Should().BeOfType<PictureRemovedDomainEvent>();
-            productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-        }
-
-        [Fact]
-        public void CheckIfClearDomainEventsMethodWorkingProperly()
-        {
-            // Arrange
+            const string productName = "OtherProductName";
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
 
             // Act
-            product.ClearDomainEvents();
+            product.SetName(productName);
 
             // Assert
-            product.DomainEvents.Should().BeEmpty();
+            product.Name.Should().Be(productName);
+            product.UpdatedDate.Should().NotBe(default);
+            product.CreatedAt.Should().NotBe(default);
         }
 
         [Fact]
-        public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
+        public void CheckIfSetProductNameMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
         {
             // Arrange
+            const string productName = "IProvideMaximalNumberOfLettersAndFewMore";
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
 
             // Act
-            var domainEvents = product.GetUncommitted().ToList();
+            Func<bool> func = () => product.SetName(productName);
 
             // Assert
-            domainEvents.Should().NotBeNull();
-            domainEvents.LastOrDefault().Should().BeOfType<NewProductCreatedDomainEvent>();
+            func.Should().Throw<InvalidProductNameException>()
+                .WithMessage("Product name can not be longer than 30 characters.");
+        }
+
+        [Fact]
+        public void CheckIfSetProductNameMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
+        {
+            // Arrange
+            const string productName = "Hom";
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Func<bool> func = () => product.SetName(productName);
+
+            // Assert
+            func.Should().Throw<InvalidProductNameException>()
+                .WithMessage("Product name can not be shorter than 4 characters.");
+        }
+
+        [Fact]
+        public void CheckIfSetProductProducerMethodReturnFalseWhenInputIsTheSameThenExistingValue()
+        {
+            // Arrange
+            const string productProducer = "ExampleProductProducer";
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", productProducer);
+
+            // Act
+            var testResult = product.SetProducer(productProducer);
+
+            // Assert
+            testResult.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CheckIfSetProductProducerMethodReturnTrueWhenInputIsDifferentThenExistingValue()
+        {
+            // Arrange
+            const string productProducer = "ExampleProductProducer";
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductProducer", "ExampleProducer");
+
+            // Act
+            var testResult = product.SetProducer(productProducer);
+
+            // Assert
+            testResult.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CheckIfSetProductProducerMethodSetValuesWhenCorrectNameHasBeenProvided()
+        {
+            // Arrange
+            const string productProducer = "OtherProducerName";
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            product.SetProducer(productProducer);
+
+            // Assert
+            product.Producer.Should().Be(productProducer);
+            product.UpdatedDate.Should().NotBe(default);
+            product.CreatedAt.Should().NotBe(default);
+        }
+
+        [Fact]
+        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
+        {
+            // Arrange
+            const string producerName =
+                "IProvideMaximalNumberOfLettersAndFewMoreBecauseProducerCanNotBeLongerThan50Characters";
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Func<bool> func = () => product.SetProducer(producerName);
+
+            // Assert
+            func.Should().Throw<InvalidProductProducerException>()
+                .WithMessage("Product producer can not be longer than 50 characters.");
+        }
+
+        [Fact]
+        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
+        {
+            // Arrange
+            const string producerName = "P";
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+
+            // Act
+            Func<bool> func = () => product.SetProducer(producerName);
+
+            // Assert
+            func.Should().Throw<InvalidProductProducerException>()
+                .WithMessage("Product producer can not be shorter than 2 characters.");
         }
     }
 }

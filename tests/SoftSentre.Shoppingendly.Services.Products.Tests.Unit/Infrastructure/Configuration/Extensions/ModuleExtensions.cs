@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.C
             containerBuilder.RegisterModule(module);
             var container = containerBuilder.Build();
             var componentRegistry = container.ComponentRegistry;
-            
+
             var typesRegistered =
                 componentRegistry.Registrations.SelectMany(x => x.Services)
                     .Cast<TypedService>()

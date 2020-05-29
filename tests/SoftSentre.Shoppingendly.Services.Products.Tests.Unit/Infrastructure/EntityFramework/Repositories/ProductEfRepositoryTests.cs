@@ -44,101 +44,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         private readonly Product _product = new Product(new ProductId(),
             new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")), "ExampleProductName", "ExampleProducer");
 
-        [Fact]
-        public async void CheckIfGetProductByIdAsyncMethodReturnValidObject()
+        private async Task<ProductServiceDbContext> CreateDbContext()
         {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            IProductRepository productRepository = new ProductEfRepository(dbContext);
+            var dbName = Guid.NewGuid().ToString();
 
-            // Act
-            var testResult = await productRepository.GetByIdAsync(_product.Id);
+            var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
+                .UseInMemoryDatabase(dbName)
+                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
+                .Options;
 
-            // Assert
-            testResult.Value.Name.Should().Be(_product.Name);
-            testResult.Value.Producer.Should().Be(_product.Producer);
-            testResult.Value.CreatorId.Should().Be(_product.CreatorId);
-            testResult.Value.CreatedAt.Should().Be(_product.CreatedAt);
+            var loggerFactory = new Mock<ILoggerFactory>();
+            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
+            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
+                new SqlSettings(), dbContextOptions);
+            productServiceDbContext.Database.EnsureDeleted();
+            productServiceDbContext.Database.EnsureCreated();
 
-            dbContext.Dispose();
-        }
+            await productServiceDbContext.Creators.AddAsync(_creator);
+            await productServiceDbContext.Categories.AddAsync(_category);
+            await productServiceDbContext.Products.AddAsync(_product);
+            await productServiceDbContext.SaveAsync();
 
-        [Fact]
-        public async void CheckIfGetProductByIdWithIncludesAsyncMethodReturnValidObject()
-        {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            IProductRepository productRepository = new ProductEfRepository(dbContext);
-            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
-            product.AssignCategory(_category.Id);
-            await dbContext.Products.AddAsync(product);
-            await dbContext.SaveChangesAsync();
-
-            // Act
-            var testResult = await productRepository.GetByIdWithIncludesAsync(product.Id);
-
-            // Assert
-            testResult.Value.Name.Should().Be(product.Name);
-            testResult.Value.Producer.Should().Be(product.Producer);
-            testResult.Value.CreatorId.Should().Be(product.CreatorId);
-            testResult.Value.CreatedAt.Should().Be(product.CreatedAt);
-
-            var firstChild = testResult.Value.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
-            firstChild.FirstKey.Should().Be(product.Id);
-            firstChild.SecondKey.Should().Be(_category.Id);
-
-            dbContext.Dispose();
-        }
-
-        [Fact]
-        public async void CheckIfGetManyProductByNameAsyncMethodReturnValidObject()
-        {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            IProductRepository productRepository = new ProductEfRepository(dbContext);
-
-            // Act
-            var testResult = await productRepository.GetManyByNameAsync(_product.Name);
-
-            // Assert
-            testResult.Value.Should().HaveCount(1);
-            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
-            firstItem.Name.Should().Be(_product.Name);
-            firstItem.Producer.Should().Be(_product.Producer);
-            firstItem.CreatorId.Should().Be(_product.CreatorId);
-            firstItem.CreatedAt.Should().Be(_product.CreatedAt);
-
-            dbContext.Dispose();
-        }
-
-        [Fact]
-        public async void CheckIfGetProductByNameWithIncludesAsyncMethodReturnValidObject()
-        {
-            // Arrange
-            var dbContext = await CreateDbContext();
-            IProductRepository productRepository = new ProductEfRepository(dbContext);
-            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
-            product.AssignCategory(_category.Id);
-            await dbContext.Products.AddAsync(product);
-            await dbContext.SaveChangesAsync();
-
-            // Act
-            var testResult = await productRepository.GetManyByNameWithIncludesAsync(product.Name);
-
-            // Assert
-            testResult.Value.Should().HaveCount(1);
-
-            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
-            firstItem.Name.Should().Be(product.Name);
-            firstItem.Producer.Should().Be(product.Producer);
-            firstItem.CreatorId.Should().Be(product.CreatorId);
-            firstItem.CreatedAt.Should().Be(product.CreatedAt);
-
-            var firstChild = firstItem.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
-            firstChild.FirstKey.Should().Be(product.Id);
-            firstChild.SecondKey.Should().Be(_category.Id);
-
-            dbContext.Dispose();
+            return productServiceDbContext;
         }
 
         [Fact]
@@ -202,28 +129,101 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             dbContext.Dispose();
         }
 
-        private async Task<ProductServiceDbContext> CreateDbContext()
+        [Fact]
+        public async void CheckIfGetManyProductByNameAsyncMethodReturnValidObject()
         {
-            var dbName = Guid.NewGuid().ToString();
+            // Arrange
+            var dbContext = await CreateDbContext();
+            IProductRepository productRepository = new ProductEfRepository(dbContext);
 
-            var dbContextOptions = new DbContextOptionsBuilder<ProductServiceDbContext>()
-                .UseInMemoryDatabase(dbName)
-                .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
-                .Options;
+            // Act
+            var testResult = await productRepository.GetManyByNameAsync(_product.Name);
 
-            var loggerFactory = new Mock<ILoggerFactory>();
-            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
-                new SqlSettings(), dbContextOptions);
-            productServiceDbContext.Database.EnsureDeleted();
-            productServiceDbContext.Database.EnsureCreated();
+            // Assert
+            testResult.Value.Should().HaveCount(1);
+            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
+            firstItem.Name.Should().Be(_product.Name);
+            firstItem.Producer.Should().Be(_product.Producer);
+            firstItem.CreatorId.Should().Be(_product.CreatorId);
+            firstItem.CreatedAt.Should().Be(_product.CreatedAt);
 
-            await productServiceDbContext.Creators.AddAsync(_creator);
-            await productServiceDbContext.Categories.AddAsync(_category);
-            await productServiceDbContext.Products.AddAsync(_product);
-            await productServiceDbContext.SaveAsync();
+            dbContext.Dispose();
+        }
 
-            return productServiceDbContext;
+        [Fact]
+        public async void CheckIfGetProductByIdAsyncMethodReturnValidObject()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            IProductRepository productRepository = new ProductEfRepository(dbContext);
+
+            // Act
+            var testResult = await productRepository.GetByIdAsync(_product.Id);
+
+            // Assert
+            testResult.Value.Name.Should().Be(_product.Name);
+            testResult.Value.Producer.Should().Be(_product.Producer);
+            testResult.Value.CreatorId.Should().Be(_product.CreatorId);
+            testResult.Value.CreatedAt.Should().Be(_product.CreatedAt);
+
+            dbContext.Dispose();
+        }
+
+        [Fact]
+        public async void CheckIfGetProductByIdWithIncludesAsyncMethodReturnValidObject()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            IProductRepository productRepository = new ProductEfRepository(dbContext);
+            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
+            product.AssignCategory(_category.Id);
+            await dbContext.Products.AddAsync(product);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            var testResult = await productRepository.GetByIdWithIncludesAsync(product.Id);
+
+            // Assert
+            testResult.Value.Name.Should().Be(product.Name);
+            testResult.Value.Producer.Should().Be(product.Producer);
+            testResult.Value.CreatorId.Should().Be(product.CreatorId);
+            testResult.Value.CreatedAt.Should().Be(product.CreatedAt);
+
+            var firstChild = testResult.Value.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            firstChild.FirstKey.Should().Be(product.Id);
+            firstChild.SecondKey.Should().Be(_category.Id);
+
+            dbContext.Dispose();
+        }
+
+        [Fact]
+        public async void CheckIfGetProductByNameWithIncludesAsyncMethodReturnValidObject()
+        {
+            // Arrange
+            var dbContext = await CreateDbContext();
+            IProductRepository productRepository = new ProductEfRepository(dbContext);
+            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
+            product.AssignCategory(_category.Id);
+            await dbContext.Products.AddAsync(product);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            var testResult = await productRepository.GetManyByNameWithIncludesAsync(product.Name);
+
+            // Assert
+            testResult.Value.Should().HaveCount(1);
+
+            var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
+            firstItem.Name.Should().Be(product.Name);
+            firstItem.Producer.Should().Be(product.Producer);
+            firstItem.CreatorId.Should().Be(product.CreatorId);
+            firstItem.CreatedAt.Should().Be(product.CreatedAt);
+
+            var firstChild = firstItem.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            firstChild.FirstKey.Should().Be(product.Id);
+            firstChild.SecondKey.Should().Be(_category.Id);
+
+            dbContext.Dispose();
         }
     }
 }

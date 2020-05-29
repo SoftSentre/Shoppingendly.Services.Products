@@ -19,11 +19,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Products
 {
     public class PictureRemovedDomainEvent : DomainEventBase
     {
-        public ProductId ProductId { get; }
-
         internal PictureRemovedDomainEvent(ProductId productId)
         {
             ProductId = productId;
         }
+
+        public ProductId ProductId { get; }
     }
 }

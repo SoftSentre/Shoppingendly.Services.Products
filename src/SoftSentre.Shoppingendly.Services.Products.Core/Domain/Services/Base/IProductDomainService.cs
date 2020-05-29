@@ -28,10 +28,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services.Base
         Task<Maybe<IEnumerable<Product>>> GetProductsByNameAsync(string name);
         Task<Maybe<IEnumerable<Product>>> GetProductsByNameWithCategoriesAsync(string name);
         Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId);
-        
+
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer);
-        
+
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             string producer, IEnumerable<CategoryId> categoryIds);
 

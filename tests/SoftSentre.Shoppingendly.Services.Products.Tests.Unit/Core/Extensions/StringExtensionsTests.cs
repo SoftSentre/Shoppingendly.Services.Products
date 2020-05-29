@@ -43,23 +43,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         {
             // act
             var testResult = StringExtensionMethods.CreateStringWithSpecificNumberOfCharacters(numberOfCharacters);
-            
+
             // assert
             testResult.Should().NotBeEmpty();
             testResult.Should().HaveLength(numberOfCharacters);
-        }
-
-        [Fact]
-        public void CheckIfIsEmptyMethodReturnFalseIfValueIsNotNullOrNotEmpty()
-        {
-            // Arrange
-            const string stringValue = "ExampleString";
-
-            // Act
-            var isEmpty = stringValue.IsEmpty();
-
-            //Assert
-            isEmpty.Should().BeFalse();
         }
 
         [Theory]
@@ -77,45 +64,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
             isEmpty.Should().BeFalse();
         }
 
-        [Fact]
-        public void CheckIfIsNotEmptyMethodReturnTrueIfValueIsNotNullOrNotEmpty()
-        {
-            // Arrange
-            const string stringValue = "ExampleString";
-
-            // Act
-            var isEmpty = stringValue.IsNotEmpty();
-
-            //Assert
-            isEmpty.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfTrimToUpperMethodEliminateWhiteSpacesAndChangeTheWordToUpper()
-        {
-            // Arrange
-            const string stringValue = "   ExampleString  ";
-
-            // Act
-            var trimmedAndUpperString = stringValue.TrimToUpper();
-
-            //Assert
-            trimmedAndUpperString.Should().Be("EXAMPLESTRING");
-        }
-
-        [Fact]
-        public void CheckIfTrimToLowerMethodEliminateWhiteSpacesAndChangeTheWordToLower()
-        {
-            // Arrange
-            const string stringValue = "   ExampleString  ";
-
-            // Act
-            var trimmedAndLoweredString = stringValue.TrimToLower();
-
-            //Assert
-            trimmedAndLoweredString.Should().Be("examplestring");
-        }
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -129,71 +77,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
 
             // Assert
             orEmpty.Should().Be(string.Empty);
-        }
-
-        [Fact]
-        public void CheckIfOrEmptyMethodReturnValueAlwaysWhenInputIsNotNullOrNotEmpty()
-        {
-            // Arrange 
-            const string stringValue = "ExampleString";
-
-            // Act
-            var orEmpty = stringValue.OrEmpty();
-
-            // Assert
-            orEmpty.Should().Be(stringValue);
-        }
-
-        [Fact]
-        public void CheckIfIsLongerThanMethodReturnTrueWhenValueIsLongerThanInput()
-        {
-            // Arrange 
-            const string stringValue = "ExampleString";
-
-            // Act
-            var isLonger = stringValue.IsLongerThan(12);
-
-            // Assert
-            isLonger.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfIsLongerThanMethodReturnFalseWhenValueIsShorterThanInput()
-        {
-            // Arrange 
-            const string stringValue = "ExampleString";
-
-            // Act
-            var isLonger = stringValue.IsLongerThan(15);
-
-            // Assert
-            isLonger.Should().BeFalse();
-        }
-
-        [Fact]
-        public void CheckIfIsShorterThanMethodReturnTrueWhenValueIsShorterThanInput()
-        {
-            // Arrange 
-            const string stringValue = "ExampleString";
-
-            // Act
-            var isLonger = stringValue.IsShorterThan(15);
-
-            // Assert
-            isLonger.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfIsShorterThanMethodReturnFalseWhenValueIsLongerThanInput()
-        {
-            // Arrange 
-            const string stringValue = "ExampleString";
-
-            // Act
-            var isLonger = stringValue.IsShorterThan(12);
-
-            // Assert
-            isLonger.Should().BeFalse();
         }
 
         [Theory]
@@ -216,6 +99,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         }
 
         [Fact]
+        public void CheckIfAggregateLinesMethodReturnCorrectStringWhenInputIsValid()
+        {
+            // Arrange 
+            var inputValue = new[] {"Convert", "This", "String", "To", "Underscore"};
+
+            // Act
+            var aggregatedLines = inputValue.AggregateLines();
+
+            // Assert
+            aggregatedLines.Should().Be("Convert\nThis\nString\nTo\nUnderscore");
+        }
+
+        [Fact]
         public void CheckIfEqualsCaseInvariantReturnTrueWhenInputValuesAreTheSame()
         {
             // Arrange 
@@ -230,6 +126,123 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         }
 
         [Fact]
+        public void CheckIfIsEmptyMethodReturnFalseIfValueIsNotNullOrNotEmpty()
+        {
+            // Arrange
+            const string stringValue = "ExampleString";
+
+            // Act
+            var isEmpty = stringValue.IsEmpty();
+
+            //Assert
+            isEmpty.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CheckIfIsLongerThanMethodReturnFalseWhenValueIsShorterThanInput()
+        {
+            // Arrange 
+            const string stringValue = "ExampleString";
+
+            // Act
+            var isLonger = stringValue.IsLongerThan(15);
+
+            // Assert
+            isLonger.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CheckIfIsLongerThanMethodReturnTrueWhenValueIsLongerThanInput()
+        {
+            // Arrange 
+            const string stringValue = "ExampleString";
+
+            // Act
+            var isLonger = stringValue.IsLongerThan(12);
+
+            // Assert
+            isLonger.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CheckIfIsNotEmptyMethodReturnTrueIfValueIsNotNullOrNotEmpty()
+        {
+            // Arrange
+            const string stringValue = "ExampleString";
+
+            // Act
+            var isEmpty = stringValue.IsNotEmpty();
+
+            //Assert
+            isEmpty.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CheckIfIsShorterThanMethodReturnFalseWhenValueIsLongerThanInput()
+        {
+            // Arrange 
+            const string stringValue = "ExampleString";
+
+            // Act
+            var isLonger = stringValue.IsShorterThan(12);
+
+            // Assert
+            isLonger.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CheckIfIsShorterThanMethodReturnTrueWhenValueIsShorterThanInput()
+        {
+            // Arrange 
+            const string stringValue = "ExampleString";
+
+            // Act
+            var isLonger = stringValue.IsShorterThan(15);
+
+            // Assert
+            isLonger.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CheckIfOrEmptyMethodReturnValueAlwaysWhenInputIsNotNullOrNotEmpty()
+        {
+            // Arrange 
+            const string stringValue = "ExampleString";
+
+            // Act
+            var orEmpty = stringValue.OrEmpty();
+
+            // Assert
+            orEmpty.Should().Be(stringValue);
+        }
+
+        [Fact]
+        public void CheckIfTrimToLowerMethodEliminateWhiteSpacesAndChangeTheWordToLower()
+        {
+            // Arrange
+            const string stringValue = "   ExampleString  ";
+
+            // Act
+            var trimmedAndLoweredString = stringValue.TrimToLower();
+
+            //Assert
+            trimmedAndLoweredString.Should().Be("examplestring");
+        }
+
+        [Fact]
+        public void CheckIfTrimToUpperMethodEliminateWhiteSpacesAndChangeTheWordToUpper()
+        {
+            // Arrange
+            const string stringValue = "   ExampleString  ";
+
+            // Act
+            var trimmedAndUpperString = stringValue.TrimToUpper();
+
+            //Assert
+            trimmedAndUpperString.Should().Be("EXAMPLESTRING");
+        }
+
+        [Fact]
         public void CheckIfUnderscoreMethodReturnCorrectStringValue()
         {
             // Arrange 
@@ -240,19 +253,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
 
             // Assert
             underscoredString.Should().Be("Convert_This_String_To_Underscore");
-        }
-
-        [Fact]
-        public void CheckIfAggregateLinesMethodReturnCorrectStringWhenInputIsValid()
-        {
-            // Arrange 
-            var inputValue = new[] {"Convert", "This", "String", "To", "Underscore"};
-
-            // Act
-            var aggregatedLines = inputValue.AggregateLines();
-
-            // Assert
-            aggregatedLines.Should().Be("Convert\nThis\nString\nTo\nUnderscore");
         }
     }
 }

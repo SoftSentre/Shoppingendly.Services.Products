@@ -19,13 +19,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Extensions
 {
     public static class StringExtensionMethods
     {
-        public static bool IsEmpty(this string target) => string.IsNullOrWhiteSpace(target);
+        public static bool IsEmpty(this string target)
+        {
+            return string.IsNullOrWhiteSpace(target);
+        }
 
-        public static bool IsNotEmpty(this string target) => !target.IsEmpty();
+        public static bool IsNotEmpty(this string target)
+        {
+            return !target.IsEmpty();
+        }
 
-        public static string CreateStringWithSpecificNumberOfCharacters(int length) 
-            => new string('*', length);
-        
+        public static string CreateStringWithSpecificNumberOfCharacters(int length)
+        {
+            return new string('*', length);
+        }
+
         public static string TrimToUpper(this string value)
         {
             return value.OrEmpty().Trim().ToUpperInvariant();
@@ -42,17 +50,26 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Extensions
         }
 
         public static bool IsLongerThan(this string value, int numberOfCharacters)
-            => value.Length > numberOfCharacters;
+        {
+            return value.Length > numberOfCharacters;
+        }
 
         public static bool IsShorterThan(this string value, int numberOfCharacters)
-            => value.Length < numberOfCharacters;
+        {
+            return value.Length < numberOfCharacters;
+        }
 
         public static bool EqualsCaseInvariant(this string value, string valueToCompare)
         {
             if (value.IsEmpty())
+            {
                 return valueToCompare.IsEmpty();
+            }
+
             if (valueToCompare.IsEmpty())
+            {
                 return false;
+            }
 
             var fixedValue = value.TrimToUpper();
             var fixedValueToCompare = valueToCompare.TrimToUpper();
@@ -61,9 +78,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Extensions
         }
 
         public static string Underscore(this string value)
-            => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()));
+        {
+            return string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()));
+        }
 
         public static string AggregateLines(this IEnumerable<string> values)
-            => values.Aggregate((x, y) => $"{x.Trim()}\n{y.Trim()}");
+        {
+            return values.Aggregate((x, y) => $"{x.Trim()}\n{y.Trim()}");
+        }
     }
 }

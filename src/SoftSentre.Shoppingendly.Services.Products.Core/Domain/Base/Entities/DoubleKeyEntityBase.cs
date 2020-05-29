@@ -16,9 +16,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities
 {
     public class DoubleKeyEntityBase<TFirstId, TSecondId> : IDoubleKeyEntity<TFirstId, TSecondId>
     {
-        public TFirstId FirstKey { get; }
-        public TSecondId SecondKey { get; }
-
         protected DoubleKeyEntityBase()
         {
         }
@@ -28,5 +25,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities
             FirstKey = firstKey;
             SecondKey = secondKey;
         }
+
+        public TFirstId FirstKey { get; }
+        public TSecondId SecondKey { get; }
     }
 }
