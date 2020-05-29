@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Authors>SoftSentre Contributors</Authors>
+    <Company>SoftSentre</Company>
+    <Product>Shoppingendly</Product>
+    <AssemblyName>SoftSentre.Shoppingendly.Services.Products.Tests.Unit</AssemblyName>
+    <RootNamespace>SoftSentre.Shoppingendly.Services.Products.Tests.Unit</RootNamespace>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RepositoryUrl>https://github.com/SoftSentre/Shoppingendly.Services.Products</RepositoryUrl>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
+    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="coverlet.collector" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Application\SoftSentre.Shoppingendly.Services.Products.Application.csproj" />
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Core\SoftSentre.Shoppingendly.Services.Products.Core.csproj" />
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Infrastructure\SoftSentre.Shoppingendly.Services.Products.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.WebApi\SoftSentre.Shoppingendly.Services.Products.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

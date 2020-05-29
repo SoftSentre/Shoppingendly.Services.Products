@@ -6,14 +6,14 @@ var configuration = Argument("configuration", "Release");
 Task("dotnet-restore")
     .Does(() => 
     {
-        DotNetCoreRestore("../Shoppingendly.Services.Products.sln");
+        DotNetCoreRestore("../SoftSentre.Shoppingendly.Services.Products.sln");
     });
 
 Task("dotnet-build")
     .IsDependentOn("dotnet-restore")	
     .Does(() => 
     {
-        DotNetCoreBuild("../Shoppingendly.Services.Products.sln", new DotNetCoreBuildSettings 
+        DotNetCoreBuild("../SoftSentre.Shoppingendly.Services.Products.sln", new DotNetCoreBuildSettings 
         {
             Configuration = configuration,
             MSBuildSettings = new DotNetCoreMSBuildSettings
@@ -32,7 +32,7 @@ Task("run-xunit-tests")
             Configuration = configuration
         };
     
-        DotNetCoreTest("../tests/Shoppingendly.Services.Products.Tests.Unit/Shoppingendly.Services.Products.Tests.Unit.csproj", settings);
+        DotNetCoreTest("../tests/SoftSentre.Shoppingendly.Services.Products.Tests.Unit/SoftSentre.Shoppingendly.Services.Products.Tests.Unit.csproj", settings);
     });	
 
 Task("Default")
