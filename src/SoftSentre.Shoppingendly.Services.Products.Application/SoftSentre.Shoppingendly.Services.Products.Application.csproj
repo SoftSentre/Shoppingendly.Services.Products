@@ -15,7 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Core\SoftSentre.Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All" />
+    <PackageReference Include="FluentValidation" Version="8.6.2"/>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.2"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Core\SoftSentre.Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
