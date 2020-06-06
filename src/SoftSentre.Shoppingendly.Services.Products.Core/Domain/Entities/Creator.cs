@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Creators;

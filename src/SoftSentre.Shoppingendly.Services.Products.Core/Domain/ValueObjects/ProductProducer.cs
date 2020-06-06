@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Products;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects
 {

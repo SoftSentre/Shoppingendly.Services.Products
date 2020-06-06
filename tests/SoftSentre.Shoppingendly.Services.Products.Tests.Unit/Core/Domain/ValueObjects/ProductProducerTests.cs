@@ -14,7 +14,6 @@
 
 using System;
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Products;
 using Xunit;
