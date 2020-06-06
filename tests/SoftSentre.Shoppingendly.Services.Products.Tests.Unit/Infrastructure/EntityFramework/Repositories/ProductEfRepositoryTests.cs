@@ -36,7 +36,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
     public class ProductEfRepositoryTests
     {
         private readonly Creator _creator = new Creator(new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-            "Creator", "creator@email.com", Role.Admin);
+            "Creator", Role.Admin);
 
         private readonly Category _category =
             new Category(new CategoryId(new Guid("1F9FEDB4-0F85-4E47-A4C3-F4C25F0E9996")), "ExampleCategory");

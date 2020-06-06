@@ -104,7 +104,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         public void CheckIfItPossibleMapCreatorToBasicCreatorDto()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             var testResult = _mapperWrapper.MapCreatorToBasicCreatorDto(creator);
@@ -119,7 +119,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         public void CheckIfItPossibleMapCreatorToCreatorDto()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             var testResult = _mapperWrapper.MapCreatorToCreatorDto(creator);
@@ -136,7 +136,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         public void CheckIfItPossibleMapCreatorToCreatorWithProductsDto()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
             var picture = new Picture("Example", "picture.jpg");
             product.AddOrChangePicture(picture);

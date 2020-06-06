@@ -35,7 +35,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
     public class CreatorEfRepositoryTests
     {
         private readonly Creator _creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")),
-            "Creator", "creator@email.com", Role.Admin);
+            "Creator", Role.Admin);
 
         private async Task<ProductServiceDbContext> CreateDbContext()
         {
@@ -65,7 +65,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             ICreatorRepository creatorRepository = new CreatorEfRepository(dbContext);
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             await creatorRepository.AddAsync(creator);
@@ -74,7 +74,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Assert
             testResult.Name.Should().Be(creator.Name);
-            testResult.Email.Should().Be(creator.Email);
             testResult.Role.Should().Be(creator.Role);
             testResult.CreatedAt.Should().Be(creator.CreatedAt);
 
@@ -110,7 +109,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Arrange
             testResult.Value.Name.Should().Be(_creator.Name);
-            testResult.Value.Email.Should().Be(_creator.Email);
             testResult.Value.Role.Should().Be(_creator.Role);
             testResult.Value.CreatedAt.Should().Be(_creator.CreatedAt);
 
@@ -129,7 +127,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Arrange
             testResult.Value.Name.Should().Be(_creator.Name);
-            testResult.Value.Email.Should().Be(_creator.Email);
             testResult.Value.Role.Should().Be(_creator.Role);
             testResult.Value.CreatedAt.Should().Be(_creator.CreatedAt);
 
@@ -142,18 +139,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             ICreatorRepository creatorRepository = new CreatorEfRepository(dbContext);
-            const string newCreatorEmail = "creator@email.com";
+            const string name = "creatorName";
 
             // Act
             var creatorFromDatabase = await dbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(_creator.Id));
-            creatorFromDatabase.SetEmail(newCreatorEmail);
+            creatorFromDatabase.SetName(name);
             creatorRepository.Update(creatorFromDatabase);
             await dbContext.SaveChangesAsync();
 
             var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
-            testResult.Email.Should().Be(newCreatorEmail);
+            testResult.Name.Should().Be(name);
 
             dbContext.Dispose();
         }
