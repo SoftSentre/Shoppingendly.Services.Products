@@ -14,7 +14,7 @@
 
 using System;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Identification;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters
 {

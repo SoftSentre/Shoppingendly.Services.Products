@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Application\SoftSentre.Shoppingendly.Services.Products.Application.csproj" />
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Core\SoftSentre.Shoppingendly.Services.Products.Core.csproj" />
+    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Domain\SoftSentre.Shoppingendly.Services.Products.Domain.csproj" />
     <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Infrastructure\SoftSentre.Shoppingendly.Services.Products.Infrastructure.csproj" />
   </ItemGroup>
 

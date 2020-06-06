@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base
 {

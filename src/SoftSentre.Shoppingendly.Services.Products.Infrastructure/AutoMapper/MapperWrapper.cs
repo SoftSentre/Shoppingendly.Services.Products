@@ -15,10 +15,10 @@
 using AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.Application.Mapper;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper
 {

@@ -14,7 +14,7 @@
 
 using Autofac;
 using Microsoft.Extensions.Configuration;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Logging

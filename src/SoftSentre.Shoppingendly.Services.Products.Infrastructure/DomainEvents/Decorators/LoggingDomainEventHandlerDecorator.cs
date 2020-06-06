@@ -15,9 +15,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Decorators
 {

@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using Autofac;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services.Base;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Domain
 {

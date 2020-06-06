@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Extensions
