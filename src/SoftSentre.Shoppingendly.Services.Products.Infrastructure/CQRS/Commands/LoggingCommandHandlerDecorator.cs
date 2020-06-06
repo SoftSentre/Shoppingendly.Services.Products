@@ -43,8 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
 
             try
             {
-                _logger.LogInformation("Processing command: {CommandName} ({@Command})", command.GetGenericTypeName(),
-                    command);
+                _logger.LogInformation($"Processing command: {command.GetGenericTypeName()} ({command})");
                 result = await _decorated.SendAsync(command);
                 _logger.LogInformation("Command successfully processed.");
             }

@@ -39,8 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
         {
             try
             {
-                _logger.LogInformation("Processing domain event: {EventName} ({@Event})", @event.GetType().FullName,
-                    @event);
+                _logger.LogInformation($"Processing domain event: {@event.GetType().FullName} ({@event})");
                 await _decorated.HandleAsync(@event);
                 _logger.LogInformation("Domain event successfully processed.");
             }

@@ -35,13 +35,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public ProductDomainServiceTests()
         {
             _productId = new ProductId();
+            _productProducer = ProductProducer.CreateProductProducer("ExampleProducer");
             _picture = Picture.Create("PictureName", "PictureUrl");
-            _product = Product.Create(_productId, new CreatorId(), ProductName, ProductProducer);
+            _product = Product.Create(_productId, new CreatorId(), ProductName, _productProducer);
         }
 
         private const string ProductName = "ExampleProductName";
-        private const string ProductProducer = "ExampleProducer";
-
+        
+        private readonly ProductProducer _productProducer;
         private readonly ProductId _productId;
         private readonly Picture _picture;
         private readonly Product _product;
@@ -90,7 +91,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(_productId, new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(_productId, new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId));
             productRepository.Setup(pr => pr.AddAsync(product));
 
@@ -192,7 +193,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -214,7 +215,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -258,7 +259,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             var categoryId = new CategoryId();
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -282,7 +283,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             var categoryId = new CategoryId();
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -326,7 +327,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             const string newProductName = "OtherExampleProductName";
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -348,7 +349,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             const string newProductName = "OtherExampleProductName";
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -390,9 +391,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public void CheckIfChangeProductProducerMethodDoNotThrownAnyException()
         {
             // Arrange
-            const string newProductProducer = "OtherExampleProductProducer";
+            var newProductProducer = ProductProducer.CreateProductProducer("OtherExampleProductProducer");
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -413,9 +414,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public async Task CheckIfChangeProductProducerMethodReturnTrueAndSetValueWhenCorrectValueAreProvided()
         {
             // Arrange
-            const string newProductProducer = "OtherExampleProductProducer";
+            var newProductProducer = ProductProducer.CreateProductProducer("OtherExampleProductProducer");
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -435,7 +436,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public void CheckIfChangeProductProducerMethodThrowExceptionWhenProductHasNoValue()
         {
             // Arrange
-            const string newProductProducer = "OtherExampleProductProducer";
+            var newProductProducer = ProductProducer.CreateProductProducer("OtherExampleProductProducer");
             var productRepository = new Mock<IProductRepository>();
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(new Maybe<Product>());
@@ -458,7 +459,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
             product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
@@ -480,7 +481,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
             product.ProductCategories.Add(new ProductCategory(_productId, new CategoryId()));
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
@@ -504,7 +505,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             var categoryId = new CategoryId();
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.ProductCategories.Add(new ProductCategory(_productId, categoryId));
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
@@ -526,7 +527,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             var categoryId = new CategoryId();
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.ProductCategories.Add(new ProductCategory(_productId, categoryId));
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
@@ -609,7 +610,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", _productProducer);
             product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
             product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
             productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(_productId))
@@ -648,7 +649,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductName);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
             var productList = new List<Product> {product};
@@ -715,7 +716,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), ProductName, ProductName);
+            var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
             productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(product.Id))
@@ -756,7 +757,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), _picture, ProductName, ProductProducer);
+            var product = new Product(new ProductId(), new CreatorId(), _picture, ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 

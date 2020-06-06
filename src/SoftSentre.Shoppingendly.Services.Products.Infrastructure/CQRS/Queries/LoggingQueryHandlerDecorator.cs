@@ -42,7 +42,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
 
             try
             {
-                _logger.LogInformation("Processing query: {QueryName} ({@Query})", query.GetGenericTypeName(), query);
+                _logger.LogInformation($"Processing command: {query.GetGenericTypeName()} ({query})");
                 result = await _decorated.QueryAsync(query);
                 _logger.LogInformation("Query successfully processed.");
             }

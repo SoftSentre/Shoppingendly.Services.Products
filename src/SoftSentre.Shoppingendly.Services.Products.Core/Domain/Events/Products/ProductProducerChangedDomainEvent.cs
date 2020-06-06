@@ -19,13 +19,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Products
 {
     public class ProductProducerChangedDomainEvent : DomainEventBase
     {
-        internal ProductProducerChangedDomainEvent(ProductId productId, string productProducer)
+        internal ProductProducerChangedDomainEvent(ProductId productId, ProductProducer productProducer)
         {
             ProductId = productId;
             ProductProducer = productProducer;
         }
 
         public ProductId ProductId { get; }
-        public string ProductProducer { get; }
+        public ProductProducer ProductProducer { get; }
     }
 }

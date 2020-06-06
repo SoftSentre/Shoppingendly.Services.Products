@@ -54,8 +54,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             productServiceDbContext.Database.EnsureDeleted();
             productServiceDbContext.Database.EnsureCreated();
 
-            var creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")),
-                "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")), "Creator",
+                Role.Admin);
             await productServiceDbContext.Creators.AddAsync(creator);
             await productServiceDbContext.SaveChangesAsync();
 
@@ -96,7 +96,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testEventResult.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             testEventResult.CreatorId.Id.Should().Be(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A"));
             testEventResult.Name.Should().Be("Creator");
-            testEventResult.Email.Should().Be("creator@email.com");
             testEventResult.Role.Should().Be(Role.Admin);
         }
 
@@ -107,7 +106,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var domainEventPublisher = new Mock<IDomainEventPublisher>();
             var categoryCreatedEvent = new NewCategoryCreatedDomainEvent(new CategoryId(), "Name");
             var creatorCreatedEvent =
-                new NewCreatorCreatedDomainEvent(new CreatorId(), "Name", "email@email.com", Role.Moderator);
+                new NewCreatorCreatedDomainEvent(new CreatorId(), "Name", Role.Moderator);
             var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object, await CreateDbContext());
 
             var domainEvents = new List<IDomainEvent>

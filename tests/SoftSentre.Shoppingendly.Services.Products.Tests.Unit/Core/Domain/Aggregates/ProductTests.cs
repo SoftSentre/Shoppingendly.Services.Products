@@ -37,7 +37,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var productName = name;
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Func<bool> func = () => product.SetName(productName);
@@ -55,7 +56,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var productName = name;
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Func<bool> func = () => product.SetName(productName);
@@ -72,8 +74,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             string name)
         {
             // Arrange
-            var productProducer = name;
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var productProducer = ProductProducer.CreateProductProducer(name);
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Func<bool> func = () => product.SetProducer(productProducer);
@@ -83,30 +86,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             func.Should().NotThrow();
             testResult.Should().BeTrue();
         }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(null)]
-        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenEmptyNameHasBeenProvided(
-            string name)
+        
+        [Fact]
+        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenEmptyNameHasBeenProvided()
         {
             // Arrange
-            var productProducer = name;
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Func<bool> func = () => product.SetProducer(productProducer);
+            Func<bool> func = () => product.SetProducer(null);
 
             // Assert
             func.Should().Throw<InvalidProductProducerException>()
-                .WithMessage("Product producer can not be empty.");
+                .WithMessage("Product producer can not be null.");
         }
 
         [Fact]
         public void CheckIfAddOrChangePictureMethodAssignValidObjectWhenInputIsCorrectAndDoNotThrown()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             var picture = Picture.Create("ExamplePictureName", "ExamplePictureUrl");
 
             // Act
@@ -123,7 +124,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfAddOrChangePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.AddOrChangePicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
@@ -143,7 +145,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfAddOrChangePictureThrowAppropriateExceptionWhenPictureIsEmpty()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             var picture = Picture.Empty;
 
             // Act
@@ -158,7 +161,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             var expectedValue = new ProductCategory(product.Id, categoryId);
 
             // Act
@@ -178,7 +182,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.AssignCategory(categoryId);
@@ -199,7 +204,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             var newProductCategory = new ProductCategory(product.Id, categoryId);
             product.ProductCategories.Add(newProductCategory);
 
@@ -215,7 +221,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfClearDomainEventsMethodWorkingProperly()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.ClearDomainEvents();
@@ -230,7 +237,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Arrange
 
             // Act
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             var newCategoryCreatedDomainEvent =
                 product.GetUncommitted().LastOrDefault() as NewProductCreatedDomainEvent ??
                 It.IsAny<NewProductCreatedDomainEvent>();
@@ -249,7 +257,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfDeallocateAllCategoriesMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
 
@@ -272,7 +281,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(categoryId);
 
             // Act
@@ -289,7 +299,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(categoryId);
 
             // Act
@@ -311,7 +322,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Action action = () => product.DeallocateCategory(categoryId);
@@ -325,7 +337,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfDeallocateFromAllCategoriesMethodDoNotThrowExceptionAndRemoveAllItemsFromList()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
             var assignedCategoriesCount = product.ProductCategories.Count;
@@ -344,7 +357,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfDeallocateFromAllCategoriesMethodThrowExceptionWhenCategoryIsNotFound()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Action action = () => product.DeallocateAllCategories();
@@ -358,7 +372,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfGetAllAssignedCategoriesMethodReturnValuesAndDoNotThrown()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
 
@@ -376,7 +391,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var categoryId = new CategoryId();
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             var expectedValue = new ProductCategory(product.Id, categoryId);
             product.ProductCategories.Add(expectedValue);
 
@@ -395,7 +411,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             var domainEvents = product.GetUncommitted().ToList();
@@ -409,7 +426,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfIsPossibleToRemovePictureIfItIsEmpty()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Action action = () => product.RemovePicture();
@@ -424,7 +442,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Action action = () => product.RemovePicture();
@@ -441,7 +460,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName", "ExampleProducer");
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.RemovePicture();
@@ -460,10 +480,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfSetCategoryDescriptionMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.SetProducer("Other producer");
+            product.SetProducer(ProductProducer.CreateProductProducer("Other producer"));
             var productProducerChanged =
                 product.GetUncommitted().LastOrDefault() as ProductProducerChangedDomainEvent ??
                 It.IsAny<ProductProducerChangedDomainEvent>();
@@ -481,7 +502,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             const string productName = "ExampleProductName";
-            var product = new Product(new ProductId(), new CreatorId(), productName, "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), productName,
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             var testResult = product.SetName(productName);
@@ -495,7 +517,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             const string productName = "ExampleProductName";
-            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             var testResult = product.SetName(productName);
@@ -508,7 +531,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfSetProductNameMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.SetName("NewProductName");
@@ -529,7 +553,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             const string productName = "OtherProductName";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.SetName(productName);
@@ -545,7 +570,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             const string productName = "IProvideMaximalNumberOfLettersAndFewMore";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Func<bool> func = () => product.SetName(productName);
@@ -560,7 +586,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             const string productName = "Hom";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             Func<bool> func = () => product.SetName(productName);
@@ -574,7 +601,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfSetProductProducerMethodReturnFalseWhenInputIsTheSameThenExistingValue()
         {
             // Arrange
-            const string productProducer = "ExampleProductProducer";
+            var productProducer = ProductProducer.CreateProductProducer("ExampleProductProducer");
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", productProducer);
 
             // Act
@@ -588,8 +615,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfSetProductProducerMethodReturnTrueWhenInputIsDifferentThenExistingValue()
         {
             // Arrange
-            const string productProducer = "ExampleProductProducer";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductProducer", "ExampleProducer");
+            var productProducer = ProductProducer.CreateProductProducer("ExampleProductProducer");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductProducer",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             var testResult = product.SetProducer(productProducer);
@@ -602,8 +630,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         public void CheckIfSetProductProducerMethodSetValuesWhenCorrectNameHasBeenProvided()
         {
             // Arrange
-            const string productProducer = "OtherProducerName";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
+            var productProducer = ProductProducer.CreateProductProducer("OtherProducerName");
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
             product.SetProducer(productProducer);
@@ -612,37 +641,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.Producer.Should().Be(productProducer);
             product.UpdatedDate.Should().NotBe(default);
             product.CreatedAt.Should().NotBe(default);
-        }
-
-        [Fact]
-        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooLongNameHasBeenProvided()
-        {
-            // Arrange
-            const string producerName =
-                "IProvideMaximalNumberOfLettersAndFewMoreBecauseProducerCanNotBeLongerThan50Characters";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            Func<bool> func = () => product.SetProducer(producerName);
-
-            // Assert
-            func.Should().Throw<InvalidProductProducerException>()
-                .WithMessage("Product producer can not be longer than 50 characters.");
-        }
-
-        [Fact]
-        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
-        {
-            // Arrange
-            const string producerName = "P";
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", "ExampleProducer");
-
-            // Act
-            Func<bool> func = () => product.SetProducer(producerName);
-
-            // Assert
-            func.Should().Throw<InvalidProductProducerException>()
-                .WithMessage("Product producer can not be shorter than 2 characters.");
         }
     }
 }

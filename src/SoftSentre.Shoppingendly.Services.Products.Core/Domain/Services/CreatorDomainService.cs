@@ -51,8 +51,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             return creator;
         }
 
-        public async Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, string creatorName,
-            string creatorEmail, Role creatorRole)
+        public async Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, string creatorName, Role creatorRole)
         {
             var creator = await _creatorRepository.GetByIdAsync(creatorId);
 
@@ -62,7 +61,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
                     $"Unable to add new creator, because creator with id: {creatorId} is already exists.");
             }
 
-            var newCreator = Creator.Create(creatorId, creatorName, creatorEmail, creatorRole);
+            var newCreator = Creator.Create(creatorId, creatorName, creatorRole);
             await _creatorRepository.AddAsync(newCreator);
 
             return newCreator;
@@ -75,16 +74,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
                     $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
 
             creator.SetName(creatorName);
-            _creatorRepository.Update(creator);
-        }
-
-        public async Task SetCreatorEmailAsync(CreatorId creatorId, string creatorEmail)
-        {
-            var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
-                new CreatorNotFoundException(
-                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
-
-            creator.SetEmail(creatorEmail);
             _creatorRepository.Update(creator);
         }
 

@@ -27,11 +27,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
 {
     public class Creator : AuditableAndEventSourcingEntity<CreatorId>
     {
-        private static readonly Regex EmailRegex = new Regex(
-            @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-            @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
         private HashSet<Product> _products = new HashSet<Product>();
 
         // Required for EF
@@ -39,17 +34,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
         {
         }
 
-        internal Creator(CreatorId creatorId, string name, string email, Role role) : base(creatorId)
+        internal Creator(CreatorId creatorId, string name, Role role) : base(creatorId)
         {
             Name = ValidateName(name);
-            Email = ValidateEmail(email);
             Role = ValidateRole(role);
-            AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, email, role));
+            AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, role));
         }
 
         public int RoleId { get; private set; }
         public string Name { get; private set; }
-        public string Email { get; private set; }
 
         // Navigation property
         public Role Role { get; private set; }
@@ -68,16 +61,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
             SetUpdatedDate();
             AddDomainEvent(new CreatorNameChangedDomainEvent(Id, name));
         }
-
-        internal void SetEmail(string email)
-        {
-            ValidateEmail(email);
-
-            Email = email;
-            SetUpdatedDate();
-            AddDomainEvent(new CreatorEmailChangedDomainEvent(Id, email));
-        }
-
+        
         internal void SetRole(Role role)
         {
             ValidateRole(role);
@@ -87,9 +71,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
             AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, role));
         }
 
-        internal static Creator Create(CreatorId creatorId, string name, string email, Role role)
+        internal static Creator Create(CreatorId creatorId, string name, Role role)
         {
-            return new Creator(creatorId, name, email, role);
+            return new Creator(creatorId, name, role);
         }
 
         private static string ValidateName(string name)
@@ -114,32 +98,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
             return name;
         }
 
-        private static string ValidateEmail(string email)
-        {
-            if (IsCreatorEmailRequired && email.IsEmpty())
-            {
-                throw new InvalidCreatorEmailException("Creator email can not be empty.");
-            }
-
-            if (email.IsShorterThan(CreatorEmailMinLength))
-            {
-                throw new InvalidCreatorEmailException(
-                    $"Creator email can not be shorter than {CreatorEmailMinLength} characters.");
-            }
-
-            if (email.IsLongerThan(CreatorEmailMaxLength))
-            {
-                throw new InvalidCreatorEmailException(
-                    $"Creator email can not be longer than {CreatorEmailMaxLength} characters.");
-            }
-
-            if (!EmailRegex.IsMatch(email))
-            {
-                throw new InvalidCreatorEmailException("Invalid email has been provided.");
-            }
-
-            return email;
-        }
 
         private static Role ValidateRole(Role role)
         {
