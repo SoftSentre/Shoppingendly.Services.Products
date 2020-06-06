@@ -32,11 +32,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .HasMaxLength(CreatorNameMaxLength)
                 .IsRequired();
 
-            creatorsConfiguration.Property(c => c.Email)
-                .HasColumnName("CreatorEmail")
-                .HasMaxLength(CreatorEmailMaxLength)
-                .IsRequired();
-
             creatorsConfiguration.Property(p => p.RoleId)
                 .HasColumnName("CreatorRoleId")
                 .IsRequired();

@@ -35,28 +35,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates
         {
         }
 
-        internal Product(ProductId id, CreatorId creatorId, string name, string producer) : base(id)
+        internal Product(ProductId id, CreatorId creatorId, string name, ProductProducer producer) : base(id)
         {
             CreatorId = creatorId;
             Picture = Picture.Empty;
             Name = ValidateName(name);
-            Producer = ValidateProducer(producer);
+            Producer = producer;
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, Picture.Empty));
         }
 
-        internal Product(ProductId id, CreatorId creatorId, Picture picture, string name, string producer) : base(id)
+        internal Product(ProductId id, CreatorId creatorId, Picture picture, string name, ProductProducer producer) : base(id)
         {
             CreatorId = creatorId;
             Picture = picture;
             Name = ValidateName(name);
-            Producer = ValidateProducer(producer);
+            Producer = producer;
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, picture));
         }
 
         public CreatorId CreatorId { get; }
         public Picture Picture { get; private set; }
         public string Name { get; private set; }
-        public string Producer { get; private set; }
+        public ProductProducer Producer { get; private set; }
 
         // Navigation property
         public Creator Creator { get; set; }
@@ -82,14 +82,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates
             return true;
         }
 
-        internal bool SetProducer(string producer)
+        internal bool SetProducer(ProductProducer producer)
         {
-            ValidateProducer(producer);
-
-            if (Producer.EqualsCaseInvariant(producer))
-            {
+            if (producer == null)
+                throw new InvalidProductProducerException("Product producer can not be null.");
+            
+            if (Producer.Name.EqualsCaseInvariant(producer.Name))
                 return false;
-            }
 
             Producer = producer;
             SetUpdatedDate();
@@ -182,7 +181,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates
             return GetProductCategory(categoryId);
         }
 
-        internal static Product Create(ProductId id, CreatorId creatorId, string name, string producer)
+        internal static Product Create(ProductId id, CreatorId creatorId, string name, ProductProducer producer)
         {
             return new Product(id, creatorId, name, producer);
         }
@@ -207,28 +206,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates
             }
 
             return name;
-        }
-
-        private static string ValidateProducer(string producer)
-        {
-            if (IsProductProducerRequired && producer.IsEmpty())
-            {
-                throw new InvalidProductProducerException("Product producer can not be empty.");
-            }
-
-            if (producer.IsLongerThan(ProductProducerMaxLength))
-            {
-                throw new InvalidProductProducerException(
-                    $"Product producer can not be longer than {ProductProducerMaxLength} characters.");
-            }
-
-            if (producer.IsShorterThan(ProductProducerMinLength))
-            {
-                throw new InvalidProductProducerException(
-                    $"Product producer can not be shorter than {ProductProducerMinLength} characters.");
-            }
-
-            return producer;
         }
 
         private static Picture ValidatePicture(Maybe<Picture> picture)

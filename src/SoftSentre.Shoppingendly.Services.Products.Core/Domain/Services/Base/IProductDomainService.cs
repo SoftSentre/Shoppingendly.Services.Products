@@ -30,15 +30,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services.Base
         Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId);
 
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
-            string producer);
+            ProductProducer producer);
 
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
-            string producer, IEnumerable<CategoryId> categoryIds);
+            ProductProducer producer, IEnumerable<CategoryId> categoryIds);
 
         Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture picture);
         Task RemovePictureFromProductAsync(ProductId productId);
         Task<bool> ChangeProductNameAsync(ProductId productId, string name);
-        Task<bool> ChangeProductProducerAsync(ProductId productId, string producer);
+        Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer producer);
         Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromAllCategoriesAsync(ProductId productId);

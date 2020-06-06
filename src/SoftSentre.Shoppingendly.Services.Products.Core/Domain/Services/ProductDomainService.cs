@@ -72,7 +72,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
         }
 
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
-            string producer)
+            ProductProducer producer)
         {
             var product = await _productRepository.GetByIdAsync(productId);
 
@@ -89,7 +89,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
         }
 
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
-            string producer, IEnumerable<CategoryId> categoryIds)
+            ProductProducer producer, IEnumerable<CategoryId> categoryIds)
         {
             var product = await _productRepository.GetByIdAsync(productId);
 
@@ -153,7 +153,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
             return isNameChanged;
         }
 
-        public async Task<bool> ChangeProductProducerAsync(ProductId productId, string producer)
+        public async Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer producer)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(

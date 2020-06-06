@@ -33,9 +33,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Core.Validation
         public const int CreatorNameMinLength = 3;
         public const int CreatorNameMaxLength = 50;
         public const bool IsCreatorNameRequired = true;
-        public const int CreatorEmailMinLength = 8;
-        public const int CreatorEmailMaxLength = 100;
-        public const bool IsCreatorEmailRequired = true;
 
         // Category
         public const int CategoryNameMinLength = 4;

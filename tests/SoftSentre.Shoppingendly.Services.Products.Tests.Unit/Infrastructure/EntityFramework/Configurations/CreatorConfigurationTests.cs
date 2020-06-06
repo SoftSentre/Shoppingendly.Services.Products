@@ -36,22 +36,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         private readonly EntityTypeBuilder<Creator> _entityTypeBuilder;
 
         [Fact]
-        public void CheckIfCreatorEmailHasConfiguredValidValues()
-        {
-            // Arrange
-            const string email = nameof(Creator.Email);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(email);
-
-            // Act
-            var maxLength = dbProperty.GetMaxLength();
-            var isRequired = !dbProperty.IsNullable;
-
-            // Assert
-            maxLength.Should().Be(CreatorEmailMaxLength);
-            isRequired.Should().Be(IsCreatorEmailRequired);
-        }
-
-        [Fact]
         public void CheckIfCreatorIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange

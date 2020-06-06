@@ -32,7 +32,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorNameDoNotThrowExceptionWhenCorrectNameHasBeenProvided(string creatorName)
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             Action action = () => creator.SetName(creatorName);
@@ -47,7 +47,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorNameThrowExceptionWhenNameIsEmptyOrNull(string creatorName)
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             Action action = () => creator.SetName(creatorName);
@@ -57,43 +57,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
                 .WithMessage("Creator name can not be empty.");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsNullOrEmpty(string email)
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Creator email can not be empty.");
-        }
-
-        [Theory]
-        [InlineData("john.email.com")]
-        [InlineData("john999@sss")]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailDoNotMatchEmailRegex(string email)
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Invalid email has been provided.");
-        }
-
         [Fact]
         public void CheckIfClearDomainEventsMethodWorkingProperly()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             creator.ClearDomainEvents();
@@ -108,7 +76,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             // Arrange
 
             // Act
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
             var newCreatorCreatedDomainEvent =
                 creator.GetUncommitted().LastOrDefault() as NewCreatorCreatedDomainEvent ??
                 It.IsAny<NewCreatorCreatedDomainEvent>();
@@ -119,7 +87,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             newCreatorCreatedDomainEvent.Should().NotBeNull();
             newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.Id);
             newCreatorCreatedDomainEvent.Name.Should().Be(creator.Name);
-            newCreatorCreatedDomainEvent.Email.Should().Be(creator.Email);
             newCreatorCreatedDomainEvent.Role.Should().Be(creator.Role);
         }
 
@@ -127,7 +94,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             var domainEvents = creator.GetUncommitted().ToList();
@@ -136,93 +103,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             domainEvents.Should().NotBeNull();
             domainEvents.LastOrDefault().Should().BeOfType<NewCreatorCreatedDomainEvent>();
         }
-
-        [Fact]
-        public void CheckIfSetCreatorEmailDoNotThrowExceptionWhenCorrectEmailHasBeenProvided()
-        {
-            // Arrange
-            const string creatorEmail = "newCreator@email.com";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(creatorEmail);
-
-            // Assert
-            action.Should().NotThrow<InvalidCreatorEmailException>();
-        }
-
-        [Fact]
-        public void CheckIfSetCreatorEmailMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            creator.SetEmail("NewCreatorEmail@Email.pl");
-            var creatorEmailChangedDomainEvent =
-                creator.GetUncommitted().LastOrDefault() as CreatorEmailChangedDomainEvent ??
-                It.IsAny<CreatorEmailChangedDomainEvent>();
-
-            // Assert
-            creator.DomainEvents.Should().NotBeEmpty();
-            creatorEmailChangedDomainEvent.Should().BeOfType<CreatorEmailChangedDomainEvent>();
-            creatorEmailChangedDomainEvent.Should().NotBeNull();
-            creatorEmailChangedDomainEvent.CreatorId.Should().Be(creator.Id);
-            creatorEmailChangedDomainEvent.Email.Should().Be(creator.Email);
-        }
-
-        [Fact]
-        public void CheckIfSetCreatorEmailMethodSetValuesWhenCorrectNameHasBeenProvided()
-        {
-            // Arrange
-            const string creatorEmail = "newCreator@email.com";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            creator.SetEmail(creatorEmail);
-
-            // Assert
-            creator.Email.Should().Be(creatorEmail);
-            creator.UpdatedDate.Should().NotBe(default);
-            creator.CreatedAt.Should().NotBe(default);
-        }
-
-        [Fact]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooLong()
-        {
-            // Arrange
-            const string email =
-                "ITryToCheckIfIProvideEmailWithMaximumNumberOfCharactersThenSetEmailMethodThrownAppropriateExceptionAn";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Creator email can not be longer than 100 characters.");
-        }
-
-        [Fact]
-        public void CheckIfSetCreatorEmailThrowExceptionWhenEmailIsTooShort()
-        {
-            // Arrange
-            const string email = "j@jc.de";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
-
-            // Act
-            Action action = () => creator.SetEmail(email);
-
-            // Assert
-            action.Should().Throw<InvalidCreatorEmailException>()
-                .WithMessage("Creator email can not be shorter than 8 characters.");
-        }
+        
 
         [Fact]
         public void CheckIfSetCreatorNameMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             creator.SetName("NewCreatorName");
@@ -243,7 +130,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             const string creatorName = "New creator";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             creator.SetName(creatorName);
@@ -259,7 +146,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             const string creatorName = "Creator name should not be longer than 50 characters.";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             Action action = () => creator.SetName(creatorName);
@@ -274,7 +161,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             const string creatorName = "Jo";
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             Action action = () => creator.SetName(creatorName);
@@ -289,7 +176,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             var creatorRole = Role.Moderator;
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             Action action = () => creator.SetRole(creatorRole);
@@ -302,7 +189,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorRoleMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             creator.SetRole(Role.User);
@@ -323,7 +210,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             var creatorRole = Role.Moderator;
-            var creator = new Creator(new CreatorId(), "Creator", "creator@email.com", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
 
             // Act
             creator.SetRole(creatorRole);
