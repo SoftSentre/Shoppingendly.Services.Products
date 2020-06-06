@@ -42,7 +42,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             new Category(new CategoryId(new Guid("1F9FEDB4-0F85-4E47-A4C3-F4C25F0E9996")), "ExampleCategory");
 
         private readonly Product _product = new Product(new ProductId(),
-            new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")), "ExampleProductName", "ExampleProducer");
+            new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")), "ExampleProductName",
+            ProductProducer.CreateProductProducer("ExampleProducer"));
 
         private async Task<ProductServiceDbContext> CreateDbContext()
         {
@@ -57,9 +58,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
                 new SqlSettings(), dbContextOptions);
-            productServiceDbContext.Database.EnsureDeleted();
-            productServiceDbContext.Database.EnsureCreated();
-
+            
+            await productServiceDbContext.Database.EnsureDeletedAsync();
+            await productServiceDbContext.Database.EnsureCreatedAsync();
             await productServiceDbContext.Creators.AddAsync(_creator);
             await productServiceDbContext.Categories.AddAsync(_category);
             await productServiceDbContext.Products.AddAsync(_product);
@@ -74,7 +75,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
-            var product = new Product(new ProductId(), _creator.Id, "ExampleProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), _creator.Id, "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             await productRepository.AddAsync(product);
             await dbContext.SaveChangesAsync();
 
@@ -87,7 +89,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.CreatorId.Should().Be(product.CreatorId);
             testResult.CreatedAt.Should().Be(product.CreatedAt);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -109,7 +111,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             testResult.Name.Should().Be(newProductName);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -126,7 +128,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             dbContext.Products.Should().BeEmpty();
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -147,7 +149,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             firstItem.CreatorId.Should().Be(_product.CreatorId);
             firstItem.CreatedAt.Should().Be(_product.CreatedAt);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -166,7 +168,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.CreatorId.Should().Be(_product.CreatorId);
             testResult.Value.CreatedAt.Should().Be(_product.CreatedAt);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -175,7 +177,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
-            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), _creator.Id, "OtherProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(_category.Id);
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
@@ -193,7 +196,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             firstChild.FirstKey.Should().Be(product.Id);
             firstChild.SecondKey.Should().Be(_category.Id);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -202,7 +205,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
-            var product = new Product(new ProductId(), _creator.Id, "OtherProductName", "ExampleProducer");
+            var product = new Product(new ProductId(), _creator.Id, "OtherProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AssignCategory(_category.Id);
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
@@ -223,7 +227,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             firstChild.FirstKey.Should().Be(product.Id);
             firstChild.SecondKey.Should().Be(_category.Id);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
     }
 }

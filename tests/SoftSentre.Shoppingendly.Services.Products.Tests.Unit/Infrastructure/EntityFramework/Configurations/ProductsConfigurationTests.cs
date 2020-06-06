@@ -109,7 +109,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             // Arrange
             const string producer = nameof(Product.Producer);
-            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(producer);
+            const string producerName = nameof(Product.Name);
+            
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(producer)
+                .GetTargetType()
+                .FindDeclaredProperty(producerName);
 
             // Act
             var maxLength = dbProperty.GetMaxLength();

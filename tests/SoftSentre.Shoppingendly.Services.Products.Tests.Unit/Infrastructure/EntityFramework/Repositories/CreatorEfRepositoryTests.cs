@@ -50,9 +50,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
                 new SqlSettings(), dbContextOptions);
-            productServiceDbContext.Database.EnsureDeleted();
-            productServiceDbContext.Database.EnsureCreated();
-
+            
+            await productServiceDbContext.Database.EnsureDeletedAsync();
+            await productServiceDbContext.Database.EnsureCreatedAsync();
             await productServiceDbContext.Creators.AddAsync(_creator);
             await productServiceDbContext.SaveChangesAsync();
 
@@ -77,7 +77,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Role.Should().Be(creator.Role);
             testResult.CreatedAt.Should().Be(creator.CreatedAt);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             dbContext.Creators.Should().BeEmpty();
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.Role.Should().Be(_creator.Role);
             testResult.Value.CreatedAt.Should().Be(_creator.CreatedAt);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.Role.Should().Be(_creator.Role);
             testResult.Value.CreatedAt.Should().Be(_creator.CreatedAt);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             testResult.Name.Should().Be(name);
 
-            dbContext.Dispose();
+            await dbContext.DisposeAsync();
         }
     }
 }

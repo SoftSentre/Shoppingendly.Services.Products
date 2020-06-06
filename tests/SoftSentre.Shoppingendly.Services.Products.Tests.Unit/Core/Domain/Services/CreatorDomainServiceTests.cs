@@ -228,7 +228,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             var creatorRepository = new Mock<ICreatorRepository>();
             var creator = new Creator(new CreatorId(), CreatorName, Role.User);
             creator.Products.Add(new Product(new ProductId(), creator.Id, Picture.Empty, "ExampleProductName",
-                "ExampleProducer"));
+                ProductProducer.CreateProductProducer("ExampleProducer")));
 
             creatorRepository.Setup(cr => cr.GetWithIncludesAsync(CreatorName))
                 .ReturnsAsync(creator);
