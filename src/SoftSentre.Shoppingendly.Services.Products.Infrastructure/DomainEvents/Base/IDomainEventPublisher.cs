@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base
 {

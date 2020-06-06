@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Services.Creators;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services
 {

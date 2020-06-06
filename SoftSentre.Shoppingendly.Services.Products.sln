@@ -32,6 +32,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftSentre.Shoppingendly.Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftSentre.Shoppingendly.Services.Products.WebApi", "src\SoftSentre.Shoppingendly.Services.Products.WebApi\SoftSentre.Shoppingendly.Services.Products.WebApi.csproj", "{0D871355-1072-4375-9497-755CCDC1EB4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftSentre.Shoppingendly.Services.Products.BasicTypes", "src\SoftSentre.Shoppingendly.Services.Products.BasicTypes\SoftSentre.Shoppingendly.Services.Products.BasicTypes.csproj", "{60DD055A-6D28-44E2-8397-BC995156894C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftSentre.Shoppingendly.Services.Products.Extensions", "src\SoftSentre.Shoppingendly.Services.Products.Extensions\SoftSentre.Shoppingendly.Services.Products.Extensions.csproj", "{4B9F9025-DA6B-4E30-98D3-068DC7C800B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftSentre.Shoppingendly.Services.Products.Globals", "src\SoftSentre.Shoppingendly.Services.Products.Globals\SoftSentre.Shoppingendly.Services.Products.Globals.csproj", "{C04299CB-6BE4-4508-A9B3-CD6240901189}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +51,9 @@ Global
 		{E0A46262-BE22-4465-BB2F-8689FCAA1A90} = {BB196B00-EC09-4AD3-8127-EEC861F32F2A}
 		{EAE459DF-D33E-4318-836C-037C7C513591} = {BB196B00-EC09-4AD3-8127-EEC861F32F2A}
 		{0D871355-1072-4375-9497-755CCDC1EB4A} = {BB196B00-EC09-4AD3-8127-EEC861F32F2A}
+		{60DD055A-6D28-44E2-8397-BC995156894C} = {BB196B00-EC09-4AD3-8127-EEC861F32F2A}
+		{4B9F9025-DA6B-4E30-98D3-068DC7C800B8} = {BB196B00-EC09-4AD3-8127-EEC861F32F2A}
+		{C04299CB-6BE4-4508-A9B3-CD6240901189} = {BB196B00-EC09-4AD3-8127-EEC861F32F2A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E0AC97D5-15E5-41D6-B14F-BFE71AFE632D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -71,5 +80,17 @@ Global
 		{0D871355-1072-4375-9497-755CCDC1EB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D871355-1072-4375-9497-755CCDC1EB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D871355-1072-4375-9497-755CCDC1EB4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DD055A-6D28-44E2-8397-BC995156894C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DD055A-6D28-44E2-8397-BC995156894C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DD055A-6D28-44E2-8397-BC995156894C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DD055A-6D28-44E2-8397-BC995156894C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B9F9025-DA6B-4E30-98D3-068DC7C800B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B9F9025-DA6B-4E30-98D3-068DC7C800B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B9F9025-DA6B-4E30-98D3-068DC7C800B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B9F9025-DA6B-4E30-98D3-068DC7C800B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C04299CB-6BE4-4508-A9B3-CD6240901189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C04299CB-6BE4-4508-A9B3-CD6240901189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C04299CB-6BE4-4508-A9B3-CD6240901189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C04299CB-6BE4-4508-A9B3-CD6240901189}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

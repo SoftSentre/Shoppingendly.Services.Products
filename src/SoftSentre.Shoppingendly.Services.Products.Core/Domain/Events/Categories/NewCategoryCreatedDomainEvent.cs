@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Categories

@@ -14,7 +14,7 @@
 
 using System;
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions

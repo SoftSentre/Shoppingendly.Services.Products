@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Products
 {
     internal class InvalidPictureUrlException : ShoppingendlyException

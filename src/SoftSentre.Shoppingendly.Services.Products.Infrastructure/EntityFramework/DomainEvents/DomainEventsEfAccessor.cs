@@ -17,10 +17,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions;
 

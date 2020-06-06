@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Identification;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects
 {

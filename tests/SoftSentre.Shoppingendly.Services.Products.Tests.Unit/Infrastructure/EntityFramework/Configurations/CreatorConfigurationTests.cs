@@ -19,7 +19,7 @@ using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;
-using static SoftSentre.Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Configurations
 {

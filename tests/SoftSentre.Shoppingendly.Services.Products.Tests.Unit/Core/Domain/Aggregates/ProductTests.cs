@@ -17,12 +17,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Products;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Products;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggregates

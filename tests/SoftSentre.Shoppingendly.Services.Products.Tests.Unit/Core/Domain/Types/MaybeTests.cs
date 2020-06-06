@@ -14,7 +14,7 @@
 
 using System;
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Types

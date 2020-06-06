@@ -15,13 +15,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Creators;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
 {

@@ -14,15 +14,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Aggregates;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Products;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Products;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
-using static SoftSentre.Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates
 {

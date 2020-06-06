@@ -29,7 +29,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Application\SoftSentre.Shoppingendly.Services.Products.Application.csproj" />
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.BasicTypes\SoftSentre.Shoppingendly.Services.Products.BasicTypes.csproj" />
     <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Core\SoftSentre.Shoppingendly.Services.Products.Core.csproj" />
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Extensions\SoftSentre.Shoppingendly.Services.Products.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Globals\SoftSentre.Shoppingendly.Services.Products.Globals.csproj" />
     <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.Infrastructure\SoftSentre.Shoppingendly.Services.Products.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\SoftSentre.Shoppingendly.Services.Products.WebApi\SoftSentre.Shoppingendly.Services.Products.WebApi.csproj" />
   </ItemGroup>

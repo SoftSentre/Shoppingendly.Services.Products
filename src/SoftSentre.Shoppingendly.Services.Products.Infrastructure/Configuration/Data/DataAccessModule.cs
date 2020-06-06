@@ -17,12 +17,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Data
 {

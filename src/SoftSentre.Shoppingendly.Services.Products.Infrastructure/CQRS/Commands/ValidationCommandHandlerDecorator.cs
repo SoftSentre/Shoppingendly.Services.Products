@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
 using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Commands

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities

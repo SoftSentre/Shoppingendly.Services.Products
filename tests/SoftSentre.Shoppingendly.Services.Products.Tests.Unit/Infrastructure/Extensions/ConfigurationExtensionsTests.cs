@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Options;
 using Xunit;
 

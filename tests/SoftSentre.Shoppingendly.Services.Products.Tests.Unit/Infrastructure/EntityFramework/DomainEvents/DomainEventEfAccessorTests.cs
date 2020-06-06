@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.DomainEvents;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Creators;

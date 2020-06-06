@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Base.Entities;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Categories;
-using SoftSentre.Shoppingendly.Services.Products.Core.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Core.Validation.GlobalValidationVariables;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities
 {

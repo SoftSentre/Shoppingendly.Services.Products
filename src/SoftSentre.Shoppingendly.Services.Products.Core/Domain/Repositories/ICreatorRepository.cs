@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Core.Types;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories
 {
