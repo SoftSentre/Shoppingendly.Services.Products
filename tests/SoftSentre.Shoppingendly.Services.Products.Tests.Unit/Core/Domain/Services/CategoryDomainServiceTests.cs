@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Services.Base;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Services.Categories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Categories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Services

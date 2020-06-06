@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Core\SoftSentre.Shoppingendly.Services.Products.Core.csproj" PrivateAssets="All"/>
+    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Domain\SoftSentre.Shoppingendly.Services.Products.Domain.csproj" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>

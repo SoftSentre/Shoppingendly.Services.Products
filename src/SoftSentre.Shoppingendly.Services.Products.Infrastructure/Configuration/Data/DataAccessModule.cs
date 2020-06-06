@@ -16,7 +16,7 @@ using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;

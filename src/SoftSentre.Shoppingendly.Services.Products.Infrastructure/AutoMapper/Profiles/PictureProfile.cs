@@ -14,7 +14,7 @@
 
 using AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles
 {

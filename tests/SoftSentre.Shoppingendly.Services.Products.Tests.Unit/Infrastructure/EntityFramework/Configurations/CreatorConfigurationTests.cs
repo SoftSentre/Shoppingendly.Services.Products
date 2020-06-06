@@ -15,7 +15,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;

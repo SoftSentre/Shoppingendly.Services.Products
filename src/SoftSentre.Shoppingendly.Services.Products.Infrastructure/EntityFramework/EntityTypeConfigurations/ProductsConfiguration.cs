@@ -14,7 +14,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Aggregates;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations

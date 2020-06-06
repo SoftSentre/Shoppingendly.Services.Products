@@ -18,7 +18,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Repositories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Data;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;

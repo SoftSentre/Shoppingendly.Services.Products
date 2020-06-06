@@ -17,10 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Entities;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.Events.Categories;
-using SoftSentre.Shoppingendly.Services.Products.Core.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Core.Exceptions.Categories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Entities
