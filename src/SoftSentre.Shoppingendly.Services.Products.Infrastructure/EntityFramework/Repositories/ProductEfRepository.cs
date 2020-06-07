@@ -34,9 +34,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<Maybe<Product>> GetByIdAsync(ProductId productId)
+        public async Task<Maybe<Product>> GetByIdAsync(ProductId id)
         {
-            return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(productId));
+            return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(id));
         }
 
         public async Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId)
@@ -48,13 +48,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public async Task<Maybe<IEnumerable<Product>>> GetManyByNameAsync(string name)
         {
             return await _productServiceDbContext.Products
-                .Where(p => p.Name == name).ToListAsync();
+                .Where(p => p.ProductName == name).ToListAsync();
         }
 
         public async Task<Maybe<IEnumerable<Product>>> GetManyByNameWithIncludesAsync(string name)
         {
             return await _productServiceDbContext.Products.Include(p => p.ProductCategories)
-                .Where(p => p.Name == name).ToListAsync();
+                .Where(p => p.ProductName == name).ToListAsync();
         }
 
         public async Task AddAsync(Product product)

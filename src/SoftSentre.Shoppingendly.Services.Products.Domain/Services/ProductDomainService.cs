@@ -63,8 +63,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId)
         {
             var product = await _productRepository.GetByIdWithIncludesAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
             var assignedCategories = product.GetAllAssignedCategories();
 
@@ -78,8 +77,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
             if (product.HasValue)
             {
-                throw new ProductAlreadyExistsException(
-                    $"Unable to add new product, because product with id: {productId} is already exists.");
+                throw new ProductAlreadyExistsException(productId);
             }
 
             var newProduct = Product.Create(productId, creatorId, name, producer);
@@ -95,8 +93,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
             if (product.HasValue)
             {
-                throw new ProductAlreadyExistsException(
-                    $"Unable to add new product, because product with id: {productId} is already exists.");
+                throw new ProductAlreadyExistsException(productId);
             }
 
             var newProduct = Product.Create(productId, creatorId, name, producer);
@@ -111,13 +108,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return newProduct;
         }
 
-        public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture picture)
+        public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, ProductPicture productPicture)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
-            var isPictureChanged = product.AddOrChangePicture(picture);
+            var isPictureChanged = product.AddOrChangeProductPicture(productPicture);
 
             if (isPictureChanged)
             {
@@ -130,20 +126,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task RemovePictureFromProductAsync(ProductId productId)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
-            product.RemovePicture();
+            product.RemoveProductPicture();
             _productRepository.Update(product);
         }
 
         public async Task<bool> ChangeProductNameAsync(ProductId productId, string name)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
-            var isNameChanged = product.SetName(name);
+            var isNameChanged = product.SetProductName(name);
 
             if (isNameChanged)
             {
@@ -156,10 +150,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer producer)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
-            var isProducerChanged = product.SetProducer(producer);
+            var isProducerChanged = product.SetProductProducer(producer);
 
             if (isProducerChanged)
             {
@@ -172,8 +165,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
             product.AssignCategory(categoryId);
             _productRepository.Update(product);
@@ -182,8 +174,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
             product.DeallocateCategory(categoryId);
             _productRepository.Update(product);
@@ -192,8 +183,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task DeallocateProductFromAllCategoriesAsync(ProductId productId)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(
-                    $"Unable to mutate product state, because product with id: {productId} is empty."));
+                new ProductNotFoundException(productId));
 
             product.DeallocateAllCategories();
             _productRepository.Update(product);

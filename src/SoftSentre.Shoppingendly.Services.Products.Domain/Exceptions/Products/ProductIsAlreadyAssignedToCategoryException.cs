@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    internal class ProductIsAlreadyAssignedToCategoryException : ShoppingendlyException
+    internal class ProductIsAlreadyAssignedToCategoryException : DomainException
     {
-        internal ProductIsAlreadyAssignedToCategoryException(string message) : base(message)
+        internal ProductIsAlreadyAssignedToCategoryException(CategoryId categoryId) : base(
+            $"Product already assigned to category with id: {categoryId}.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductIsAlreadyAssignedToCategory;
     }
 }

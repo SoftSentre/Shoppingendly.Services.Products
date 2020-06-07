@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers
 {
-    internal class InvalidCategoryNameException : ShoppingendlyException
+    internal class ProductProducerCanNotBeNullException : DomainException
     {
-        internal InvalidCategoryNameException(string message) : base(message)
+        internal ProductProducerCanNotBeNullException() : base("Product producer can not be null.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductProducerCanNotBeNull;
     }
 }

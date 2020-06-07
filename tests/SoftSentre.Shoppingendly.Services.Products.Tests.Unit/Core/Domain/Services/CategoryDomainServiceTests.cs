@@ -78,7 +78,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             //Assert
             var testResult = await func.Invoke();
             testResult.Should().BeTrue();
-            category.Description.Should().Be("OtherExampleCategoryDescription");
+            category.CategoryDescription.Should().Be("OtherExampleCategoryDescription");
             categoryRepository.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once);
             categoryRepository.Verify(cr => cr.Update(category), Times.Once);
         }
@@ -118,7 +118,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             testResult.Should().BeTrue();
-            category.Name.Should().Be("OtherExampleCategoryName");
+            category.CategoryName.Should().Be("OtherExampleCategoryName");
             categoryRepository.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once());
             categoryRepository.Verify(cr => cr.Update(category), Times.Once);
         }
@@ -139,8 +139,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             //Assert
             var testResult = await function.Invoke();
             testResult.Value.Id.Should().Be(_categoryId);
-            testResult.Value.Name.Should().Be(CategoryName);
-            testResult.Value.Description.Should().Be(null);
+            testResult.Value.CategoryName.Should().Be(CategoryName);
+            testResult.Value.CategoryDescription.Should().Be(null);
             testResult.Value.CreatedAt.Should().NotBe(default);
             categoryRepository.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once);
             categoryRepository.Verify(cr => cr.AddAsync(It.IsAny<Category>()), Times.Once);
@@ -198,8 +198,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             testResult.Value.Id.Should().Be(_categoryId);
-            testResult.Value.Name.Should().Be(CategoryName);
-            testResult.Value.Description.Should().Be(CategoryDescription);
+            testResult.Value.CategoryName.Should().Be(CategoryName);
+            testResult.Value.CategoryDescription.Should().Be(CategoryDescription);
             testResult.Value.CreatedAt.Should().NotBe(default);
             categoryRepository.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once);
             categoryRepository.Verify(cr => cr.AddAsync(It.IsAny<Category>()),

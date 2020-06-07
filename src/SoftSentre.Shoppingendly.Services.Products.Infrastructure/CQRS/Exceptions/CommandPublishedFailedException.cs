@@ -16,7 +16,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions
 {
-    public class CommandPublishedFailedException : ShoppingendlyException
+    public class CommandPublishedFailedException : InternalException
     {
         public CommandPublishedFailedException(string message) : base(message)
         {

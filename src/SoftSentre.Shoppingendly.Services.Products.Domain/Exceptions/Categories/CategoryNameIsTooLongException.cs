@@ -1,4 +1,4 @@
-// Copyright 2020 SoftSentre Contributors
+﻿// Copyright 2020 SoftSentre Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
 {
-    internal class InvalidPictureNameException : ShoppingendlyException
+    internal class CategoryNameIsTooLongException : DomainException
     {
-        internal InvalidPictureNameException(string message) : base(message)
+        internal CategoryNameIsTooLongException(int categoryNameMaxLength) : base(
+            $"Category name can not be longer than {categoryNameMaxLength} characters.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CategoryNameIsTooLong;
     }
 }

@@ -19,10 +19,12 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 {
@@ -35,27 +37,29 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
         {
         }
 
-        internal Product(ProductId id, CreatorId creatorId, string name, ProductProducer producer) : base(id)
+        internal Product(ProductId id, CreatorId creatorId, string productName, ProductProducer producer) : base(id)
         {
             CreatorId = creatorId;
-            Picture = Picture.Empty;
-            Name = ValidateName(name);
+            ProductPicture = ProductPicture.Empty;
+            ProductName = ValidateProductName(productName);
             Producer = producer;
-            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, Picture.Empty));
+            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, productName, producer,
+                ProductPicture.Empty));
         }
 
-        internal Product(ProductId id, CreatorId creatorId, Picture picture, string name, ProductProducer producer) : base(id)
+        internal Product(ProductId id, CreatorId creatorId, ProductPicture productPicture, string productName,
+            ProductProducer producer) : base(id)
         {
             CreatorId = creatorId;
-            Picture = picture;
-            Name = ValidateName(name);
+            ProductPicture = productPicture;
+            ProductName = ValidateProductName(productName);
             Producer = producer;
-            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, name, producer, picture));
+            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, productName, producer, productPicture));
         }
 
         public CreatorId CreatorId { get; }
-        public Picture Picture { get; private set; }
-        public string Name { get; private set; }
+        public ProductPicture ProductPicture { get; private set; }
+        public string ProductName { get; private set; }
         public ProductProducer Producer { get; private set; }
 
         // Navigation property
@@ -67,59 +71,62 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             set => _productCategories = new HashSet<ProductCategory>(value);
         }
 
-        internal bool SetName(string name)
+        internal bool SetProductName(string productName)
         {
-            ValidateName(name);
+            ValidateProductName(productName);
 
-            if (Name.EqualsCaseInvariant(name))
+            if (ProductName.EqualsCaseInvariant(productName))
             {
                 return false;
             }
 
-            Name = name;
+            ProductName = productName;
             SetUpdatedDate();
-            AddDomainEvent(new ProductNameChangedDomainEvent(Id, name));
+            AddDomainEvent(new ProductNameChangedDomainEvent(Id, productName));
             return true;
         }
 
-        internal bool SetProducer(ProductProducer producer)
+        internal bool SetProductProducer(ProductProducer productProducer)
         {
-            if (producer == null)
-                throw new InvalidProductProducerException("Product producer can not be null.");
-            
-            if (Producer.Name.EqualsCaseInvariant(producer.Name))
-                return false;
+            if (productProducer == null)
+            {
+                throw new ProductProducerCanNotBeNullException();
+            }
 
-            Producer = producer;
-            SetUpdatedDate();
-            AddDomainEvent(new ProductProducerChangedDomainEvent(Id, producer));
-            return true;
-        }
-
-        internal bool AddOrChangePicture(Maybe<Picture> picture)
-        {
-            var validatePicture = ValidatePicture(picture);
-
-            if (!Picture.IsEmpty && Picture.Equals(validatePicture))
+            if (Producer.Name.EqualsCaseInvariant(productProducer.Name))
             {
                 return false;
             }
 
-            Picture = validatePicture;
+            Producer = productProducer;
             SetUpdatedDate();
-            AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, validatePicture));
+            AddDomainEvent(new ProductProducerChangedDomainEvent(Id, productProducer));
             return true;
         }
 
-        internal void RemovePicture()
+        internal bool AddOrChangeProductPicture(Maybe<ProductPicture> productPicture)
         {
-            if (Picture.IsEmpty)
+            var validatedProductPicture = ValidatePicture(productPicture);
+
+            if (!ProductPicture.IsEmpty && ProductPicture.Equals(validatedProductPicture))
             {
-                throw new CanNotRemoveEmptyPictureException(
-                    "Unable to remove picture, because it's already empty.");
+                return false;
             }
 
-            Picture = Picture.Empty;
+            ProductPicture = validatedProductPicture;
+            SetUpdatedDate();
+            AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, validatedProductPicture));
+            return true;
+        }
+
+        internal void RemoveProductPicture()
+        {
+            if (ProductPicture.IsEmpty)
+            {
+                throw new PictureCanNotBeNullOrEmptyException();
+            }
+
+            ProductPicture = ProductPicture.Empty;
             SetUpdatedDate();
             AddDomainEvent(new PictureRemovedDomainEvent(Id));
         }
@@ -130,8 +137,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             if (assignedCategory.HasValue)
             {
-                throw new ProductIsAlreadyAssignedToCategoryException(
-                    $"Product already assigned to category with id: {categoryId.Id}.");
+                throw new ProductIsAlreadyAssignedToCategoryException(categoryId);
             }
 
             var newAssignedCategory = new ProductCategory(Id, categoryId);
@@ -147,8 +153,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             if (assignedCategory.HasNoValue)
             {
-                throw new ProductWithAssignedCategoryNotFoundException(
-                    $"Product with assigned category with id: {categoryId.Id} not found.");
+                throw new ProductWithAssignedCategoryNotFoundException(categoryId);
             }
 
             _productCategories.Remove(assignedCategory.Value);
@@ -161,8 +166,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
         {
             if (!_productCategories.Any())
             {
-                throw new AnyProductWithAssignedCategoryNotFoundException(
-                    "Unable to find any product with assigned category.");
+                throw new ProductWithAssignedCategoriesNotFoundException();
             }
 
             var categoriesIds = _productCategories.Select(pc => pc.SecondKey).ToList();
@@ -181,41 +185,39 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             return GetProductCategory(categoryId);
         }
 
-        internal static Product Create(ProductId id, CreatorId creatorId, string name, ProductProducer producer)
+        internal static Product Create(ProductId id, CreatorId creatorId, string productName, ProductProducer producer)
         {
-            return new Product(id, creatorId, name, producer);
+            return new Product(id, creatorId, productName, producer);
         }
 
-        private static string ValidateName(string name)
+        private static string ValidateProductName(string productName)
         {
-            if (IsProductNameRequired && name.IsEmpty())
+            if (IsProductNameRequired && productName.IsEmpty())
             {
-                throw new InvalidProductNameException("Product name can not be empty.");
+                throw new ProductNameCanNotBeEmptyException();
             }
 
-            if (name.IsLongerThan(ProductNameMaxLength))
+            if (productName.IsLongerThan(ProductNameMaxLength))
             {
-                throw new InvalidProductNameException(
-                    $"Product name can not be longer than {ProductNameMaxLength} characters.");
+                throw new ProductNameIsTooLongException(ProductNameMaxLength);
             }
 
-            if (name.IsShorterThan(ProductNameMinLength))
+            if (productName.IsShorterThan(ProductNameMinLength))
             {
-                throw new InvalidProductNameException(
-                    $"Product name can not be shorter than {ProductNameMinLength} characters.");
+                throw new ProductNameIsTooShortException(ProductNameMinLength);
             }
 
-            return name;
+            return productName;
         }
 
-        private static Picture ValidatePicture(Maybe<Picture> picture)
+        private static ProductPicture ValidatePicture(Maybe<ProductPicture> productPicture)
         {
-            if (picture.HasNoValue || picture.Value.IsEmpty)
+            if (productPicture.HasNoValue || productPicture.Value.IsEmpty)
             {
-                throw new PictureCanNotBeEmptyException("Picture can not be empty.");
+                throw new PictureCanNotBeNullOrEmptyException();
             }
 
-            return picture.Value;
+            return productPicture.Value;
         }
 
         private Maybe<ProductCategory> GetProductCategory(CategoryId categoryId)

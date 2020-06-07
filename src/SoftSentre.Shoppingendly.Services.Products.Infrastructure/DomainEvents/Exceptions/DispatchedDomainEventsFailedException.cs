@@ -17,7 +17,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
 {
-    public class DispatchedDomainEventsFailedException : ShoppingendlyException
+    public class DispatchedDomainEventsFailedException : InternalException
     {
         public DispatchedDomainEventsFailedException(string message, Exception innerException)
             : base(message, innerException)

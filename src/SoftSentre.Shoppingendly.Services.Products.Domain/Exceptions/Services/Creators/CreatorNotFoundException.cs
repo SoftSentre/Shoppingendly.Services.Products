@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Creators
 {
-    internal class CreatorNotFoundException : ShoppingendlyException
+    internal class CreatorNotFoundException : DomainException
     {
-        internal CreatorNotFoundException(string message) : base(message)
+        internal CreatorNotFoundException(CreatorId creatorId) : base(
+            $"Unable to mutate creator state, because creator with id: {creatorId} not found.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CreatorNotFound;
     }
 }

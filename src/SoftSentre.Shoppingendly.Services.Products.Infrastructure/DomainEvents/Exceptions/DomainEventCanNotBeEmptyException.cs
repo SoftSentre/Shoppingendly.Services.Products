@@ -16,7 +16,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
 {
-    public class DomainEventCanNotBeEmptyException : ShoppingendlyException
+    public class DomainEventCanNotBeEmptyException : InternalException
     {
         public DomainEventCanNotBeEmptyException()
         {

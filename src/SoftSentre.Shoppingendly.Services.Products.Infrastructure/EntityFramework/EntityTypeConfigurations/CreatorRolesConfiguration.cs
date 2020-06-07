@@ -15,13 +15,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
-    public class CreatorRolesConfiguration : IEntityTypeConfiguration<Role>
+    public class CreatorRolesConfiguration : IEntityTypeConfiguration<CreatorRole>
     {
-        public void Configure(EntityTypeBuilder<Role> creatorRolesConfiguration)
+        public void Configure(EntityTypeBuilder<CreatorRole> creatorRolesConfiguration)
         {
             creatorRolesConfiguration.ToTable("CreatorRoles", ProductServiceDbContext.DefaultSchema);
 
@@ -33,7 +33,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .IsRequired();
 
             creatorRolesConfiguration.Property(cr => cr.Name)
-                .HasMaxLength(RoleNameMaxLength)
+                .HasMaxLength(CreatorRoleNameMaxLength)
                 .IsRequired();
         }
     }

@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Globals.Validation
+namespace SoftSentre.Shoppingendly.Services.Products.Globals
 {
-    /// <summary>
-    ///     Central point in application with configuration for validation.
-    ///     I'm decided to store the validation values in one place in application,
-    ///     this approach provide more consistency for values used during the validations.
-    /// </summary>
     public static class GlobalValidationVariables
     {
         // Product
         public const int ProductNameMinLength = 4;
         public const int ProductNameMaxLength = 30;
         public const bool IsProductNameRequired = true;
+
+        // ProductProducer
         public const int ProductProducerMinLength = 2;
         public const int ProductProducerMaxLength = 50;
         public const bool IsProductProducerRequired = true;
@@ -42,11 +39,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals.Validation
         public const int CategoryDescriptionMaxLength = 4000;
         public const bool IsCategoryDescriptionRequired = false;
 
-        // Role
-        public const int RoleNameMaxLength = 50;
+        // CreatorRole
+        public const int CreatorRoleNameMaxLength = 50;
 
-        // Picture
-        public const int PictureNameMaxLength = 200;
-        public const int PictureUrlMaxLength = 500;
+        // ProductPicture
+        public const int ProductPictureNameMaxLength = 200;
+        public const int ProductPictureUrlMaxLength = 500;
     }
 }

@@ -15,7 +15,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -27,11 +27,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             productsConfiguration.HasKey(p => p.Id);
 
-            productsConfiguration.Property(p => p.Name)
+            productsConfiguration.Property(p => p.ProductName)
                 .HasColumnName("ProductName")
                 .HasMaxLength(ProductNameMaxLength)
                 .IsRequired();
-            
+
             productsConfiguration.Property(p => p.CreatorId)
                 .HasColumnName("ProductCreatorId")
                 .IsRequired();
@@ -44,16 +44,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .IsRequired();
 
             productsConfiguration.OwnsOne(
-                p => p.Picture,
+                p => p.ProductPicture,
                 pi =>
                 {
                     pi.Property(pp => pp.Name)
                         .HasColumnName("ProductPictureName")
-                        .HasMaxLength(PictureNameMaxLength);
+                        .HasMaxLength(ProductPictureNameMaxLength);
 
                     pi.Property(pp => pp.Url)
                         .HasColumnName("ProductPictureUrl")
-                        .HasMaxLength(PictureUrlMaxLength);
+                        .HasMaxLength(ProductPictureUrlMaxLength);
 
                     pi.Property(pp => pp.IsEmpty)
                         .HasColumnName("IsProductPictureEmpty");

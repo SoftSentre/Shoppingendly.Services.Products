@@ -57,7 +57,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(category.Id.Id.ToString());
-            testResult.Name.Should().Be(category.Name);
+            testResult.Name.Should().Be(category.CategoryName);
         }
 
         [Fact]
@@ -72,8 +72,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(category.Id.Id.ToString());
-            testResult.Description.Should().Be(category.Description);
-            testResult.Name.Should().Be(category.Name);
+            testResult.Description.Should().Be(category.CategoryDescription);
+            testResult.Name.Should().Be(category.CategoryName);
         }
 
         [Fact]
@@ -81,8 +81,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         {
             // Arrange
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
-            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", ProductProducer.CreateProductProducer("ExampleProducer"));
-            product.AddOrChangePicture(new Picture("name", "picture.jpg"));
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
+            product.AddOrChangeProductPicture(new ProductPicture("name", "picture.jpg"));
             var productCategory = new ProductCategory(product.Id, category.Id) {Product = product};
             category.ProductCategories.Add(productCategory);
 
@@ -92,11 +93,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(category.Id.Id.ToString());
-            testResult.Description.Should().Be(category.Description);
-            testResult.Name.Should().Be(category.Name);
+            testResult.Description.Should().Be(category.CategoryDescription);
+            testResult.Name.Should().Be(category.CategoryName);
             testResult.Products.Should().HaveCount(1);
             testResult.Products.ToList().Should().Contain(p =>
-                p.Id == product.Id.Id.ToString() && p.Icon.Url == product.Picture.Url && p.Name == product.Name &&
+                p.Id == product.Id.Id.ToString() && p.Icon.Url == product.ProductPicture.Url &&
+                p.Name == product.ProductName &&
                 p.Producer == product.Producer.Name);
         }
 
@@ -104,7 +106,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         public void CheckIfItPossibleMapCreatorToBasicCreatorDto()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
             var testResult = _mapperWrapper.MapCreatorToBasicCreatorDto(creator);
@@ -112,14 +114,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(creator.Id.Id.ToString());
-            testResult.Name.Should().Be(creator.Name);
+            testResult.Name.Should().Be(creator.CreatorName);
         }
 
         [Fact]
         public void CheckIfItPossibleMapCreatorToCreatorDto()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
             var testResult = _mapperWrapper.MapCreatorToCreatorDto(creator);
@@ -127,19 +129,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(creator.Id.Id.ToString());
-            testResult.Name.Should().Be(creator.Name);
-            testResult.Role.Id.Should().Be(creator.Role.Id.ToString());
-            testResult.Role.Role.Should().Be(creator.Role.Name);
+            testResult.Name.Should().Be(creator.CreatorName);
+            testResult.Role.Id.Should().Be(creator.CreatorRole.Id.ToString());
+            testResult.Role.Role.Should().Be(creator.CreatorRole.Name);
         }
 
         [Fact]
         public void CheckIfItPossibleMapCreatorToCreatorWithProductsDto()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
-            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = new Picture("Example", "picture.jpg");
-            product.AddOrChangePicture(picture);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
+            var picture = new ProductPicture("Example", "picture.jpg");
+            product.AddOrChangeProductPicture(picture);
             creator.Products.Add(product);
 
             // Act
@@ -148,19 +151,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(creator.Id.Id.ToString());
-            testResult.Name.Should().Be(creator.Name);
-            testResult.Role.Id.Should().Be(creator.Role.Id.ToString());
-            testResult.Role.Role.Should().Be(creator.Role.Name);
+            testResult.Name.Should().Be(creator.CreatorName);
+            testResult.Role.Id.Should().Be(creator.CreatorRole.Id.ToString());
+            testResult.Role.Role.Should().Be(creator.CreatorRole.Name);
             testResult.Products.Should().Contain(p =>
-                p.Id == product.Id.Id.ToString() && p.Name == product.Name && p.Producer == product.Producer.Name &&
-                p.Icon.Url == product.Picture.Url);
+                p.Id == product.Id.Id.ToString() && p.Name == product.ProductName &&
+                p.Producer == product.Producer.Name &&
+                p.Icon.Url == product.ProductPicture.Url);
         }
 
         [Fact]
         public void CheckIfItPossibleMapPictureToPictureDto()
         {
             // Arrange
-            var picture = Picture.Create("Name", "picture.jpg");
+            var picture = ProductPicture.Create("Name", "picture.jpg");
 
             // Act
             var testResult = _mapperWrapper.MapPictureToPictureDto(picture);
@@ -176,8 +180,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = Picture.Create("Name", "picture.jpg");
-            product.AddOrChangePicture(picture);
+            var picture = ProductPicture.Create("Name", "picture.jpg");
+            product.AddOrChangeProductPicture(picture);
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var secondCategory = new Category(new CategoryId(), "SecondExampleCategory", "Other correct description");
             var productCategory = ProductCategory.Create(product.Id, category.Id);
@@ -193,20 +197,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(product.Id.Id.ToString());
-            testResult.Name.Should().Be(product.Name);
+            testResult.Name.Should().Be(product.ProductName);
             testResult.Producer.Should().Be(product.Producer.Name);
-            testResult.Picture.Url.Should().Be(product.Picture.Url);
-            testResult.Categories.Should().Contain(c => c == category.Name);
-            testResult.Categories.Should().Contain(c => c == secondCategory.Name);
+            testResult.Picture.Url.Should().Be(product.ProductPicture.Url);
+            testResult.Categories.Should().Contain(c => c == category.CategoryName);
+            testResult.Categories.Should().Contain(c => c == secondCategory.CategoryName);
         }
 
         [Fact]
         public void CheckIfItPossibleMapProductToProductDto()
         {
             // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName", ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = Picture.Create("Name", "picture.jpg");
-            product.AddOrChangePicture(picture);
+            var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
+            var picture = ProductPicture.Create("Name", "picture.jpg");
+            product.AddOrChangeProductPicture(picture);
 
             // Act
             var testResult = _mapperWrapper.MapProductToProductDto(product);
@@ -214,16 +219,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Assert
             testResult.Should().NotBeNull();
             testResult.Id.Should().Be(product.Id.Id.ToString());
-            testResult.Name.Should().Be(product.Name);
+            testResult.Name.Should().Be(product.ProductName);
             testResult.Producer.Should().Be(product.Producer.Name);
-            testResult.Icon.Url.Should().Be(product.Picture.Url);
+            testResult.Icon.Url.Should().Be(product.ProductPicture.Url);
         }
 
         [Fact]
         public void CheckIfItPossibleMapRoleToRoleDto()
         {
             // Arrange
-            var role = Role.Moderator;
+            var role = CreatorRole.Moderator;
 
             // Act
             var testResult = _mapperWrapper.MapRoleToRoleDto(role);

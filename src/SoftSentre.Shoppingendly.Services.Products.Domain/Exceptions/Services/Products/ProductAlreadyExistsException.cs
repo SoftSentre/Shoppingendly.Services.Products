@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Products
 {
-    internal class ProductAlreadyExistsException : ShoppingendlyException
+    internal class ProductAlreadyExistsException : DomainException
     {
-        internal ProductAlreadyExistsException(string message) : base(message)
+        internal ProductAlreadyExistsException(ProductId productId) : base(
+            $"Unable to add new product, because product with id: {productId} is already exists.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductAlreadyExists;
     }
 }

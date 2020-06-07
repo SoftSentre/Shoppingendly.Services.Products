@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
@@ -20,7 +19,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 {
@@ -33,18 +32,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
         {
         }
 
-        internal Creator(CreatorId creatorId, string name, Role role) : base(creatorId)
+        internal Creator(CreatorId creatorId, string creatorName, CreatorRole creatorRole) : base(creatorId)
         {
-            Name = ValidateName(name);
-            Role = ValidateRole(role);
-            AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, name, role));
+            CreatorName = ValidateName(creatorName);
+            CreatorRole = ValidateRole(creatorRole);
+            AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, creatorName, creatorRole));
         }
 
         public int RoleId { get; private set; }
-        public string Name { get; private set; }
+        public string CreatorName { get; private set; }
 
         // Navigation property
-        public Role Role { get; private set; }
+        public CreatorRole CreatorRole { get; private set; }
 
         public HashSet<Product> Products
         {
@@ -52,61 +51,57 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
             set => _products = new HashSet<Product>(value);
         }
 
-        internal void SetName(string name)
+        internal void SetCreatorName(string creatorName)
         {
-            ValidateName(name);
+            ValidateName(creatorName);
 
-            Name = name;
+            CreatorName = creatorName;
             SetUpdatedDate();
-            AddDomainEvent(new CreatorNameChangedDomainEvent(Id, name));
+            AddDomainEvent(new CreatorNameChangedDomainEvent(Id, creatorName));
         }
-        
-        internal void SetRole(Role role)
-        {
-            ValidateRole(role);
 
-            Role = role;
+        internal void SetCreatorRole(CreatorRole creatorRole)
+        {
+            ValidateRole(creatorRole);
+
+            CreatorRole = creatorRole;
             SetUpdatedDate();
-            AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, role));
+            AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, creatorRole));
         }
 
-        internal static Creator Create(CreatorId creatorId, string name, Role role)
+        internal static Creator Create(CreatorId creatorId, string creatorName, CreatorRole creatorRole)
         {
-            return new Creator(creatorId, name, role);
+            return new Creator(creatorId, creatorName, creatorRole);
         }
 
-        private static string ValidateName(string name)
+        private static string ValidateName(string creatorName)
         {
-            if (IsCreatorNameRequired && name.IsEmpty())
+            if (IsCreatorNameRequired && creatorName.IsEmpty())
             {
-                throw new InvalidCreatorNameException("Creator name can not be empty.");
+                throw new CreatorNameCanNotBeEmptyException();
             }
 
-            if (name.IsLongerThan(CreatorNameMaxLength))
+            if (creatorName.IsLongerThan(CreatorNameMaxLength))
             {
-                throw new InvalidCreatorNameException(
-                    $"Creator name can not be longer than {CreatorNameMaxLength} characters.");
+                throw new CreatorNameIsTooLongException(CreatorNameMaxLength);
             }
 
-            if (name.IsShorterThan(CreatorNameMinLength))
+            if (creatorName.IsShorterThan(CreatorNameMinLength))
             {
-                throw new InvalidCreatorNameException(
-                    $"Creator name can not be shorter than {CreatorNameMinLength} characters.");
+                throw new CreatorNameIsTooShortException(CreatorNameMinLength);
             }
 
-            return name;
+            return creatorName;
         }
 
-
-        private static Role ValidateRole(Role role)
+        private static CreatorRole ValidateRole(CreatorRole creatorRole)
         {
-            if (role.Name.IsLongerThan(RoleNameMaxLength))
+            if (creatorRole.Name.IsLongerThan(CreatorRoleNameMaxLength))
             {
-                throw new ArgumentException(
-                    $"Creator role name can not be longer than {CreatorNameMinLength} characters.");
+                throw new RoleIsTooLongException(CreatorRoleNameMaxLength);
             }
 
-            return role;
+            return creatorRole;
         }
     }
 }

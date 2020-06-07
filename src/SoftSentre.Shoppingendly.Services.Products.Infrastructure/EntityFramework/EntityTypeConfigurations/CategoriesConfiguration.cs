@@ -15,7 +15,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -27,12 +27,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             categoriesConfiguration.HasKey(c => c.Id);
 
-            categoriesConfiguration.Property(c => c.Name)
+            categoriesConfiguration.Property(c => c.CategoryName)
                 .HasColumnName("CategoryName")
                 .HasMaxLength(CategoryNameMaxLength)
                 .IsRequired();
 
-            categoriesConfiguration.Property(c => c.Description)
+            categoriesConfiguration.Property(c => c.CategoryDescription)
                 .HasColumnName("CategoryDescription")
                 .HasMaxLength(CategoryDescriptionMaxLength)
                 .IsRequired(IsCategoryDescriptionRequired);

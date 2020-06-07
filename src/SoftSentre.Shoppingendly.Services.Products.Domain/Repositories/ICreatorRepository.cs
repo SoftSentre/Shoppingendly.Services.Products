@@ -21,7 +21,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
 {
     public interface ICreatorRepository
     {
-        Task<Maybe<Creator>> GetByIdAsync(CreatorId creatorId);
+        Task<Maybe<Creator>> GetByIdAsync(CreatorId id);
         Task<Maybe<Creator>> GetByNameAsync(string name);
         Task<Maybe<Creator>> GetWithIncludesAsync(string name);
         Task AddAsync(Creator creator);

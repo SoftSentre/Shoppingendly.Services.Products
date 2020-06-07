@@ -13,22 +13,22 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
-    public class Picture : ValueObject<Picture>
+    public class ProductPicture : ValueObject<ProductPicture>
     {
         private bool _isEmpty;
 
-        private Picture()
+        private ProductPicture()
         {
             // Required for EF
         }
 
-        internal Picture(string name, string url)
+        internal ProductPicture(string name, string url)
         {
             Name = ValidatePictureName(name);
             Url = ValidatePictureUrl(url);
@@ -39,18 +39,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 
         public bool IsEmpty => _isEmpty = Name.IsEmpty() || Url.IsEmpty();
 
-        public static Picture Empty => new Picture();
+        public static ProductPicture Empty => new ProductPicture();
 
         private static string ValidatePictureName(string name)
         {
             if (name.IsEmpty())
             {
-                throw new InvalidPictureNameException("Picture name can not be empty.");
+                throw new PictureNameCanNotBeEmptyException();
             }
 
-            if (name.IsLongerThan(PictureNameMaxLength))
+            if (name.IsLongerThan(ProductPictureNameMaxLength))
             {
-                throw new InvalidPictureNameException("Picture name can not be longer than 200 characters.");
+                throw new PictureNameIsTooLongException(ProductPictureNameMaxLength);
             }
 
             return name;
@@ -60,28 +60,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
         {
             if (url.IsEmpty())
             {
-                throw new InvalidPictureUrlException("Picture url can not be empty.");
+                throw new PictureUrlCanNotBeEmptyException();
             }
 
             if (url.Contains(' '))
             {
-                throw new InvalidPictureUrlException("Picture url can not have whitespaces.");
+                throw new PictureUrlCanNotContainsWhitespacesException();
             }
 
-            if (url.IsLongerThan(PictureUrlMaxLength))
+            if (url.IsLongerThan(ProductPictureUrlMaxLength))
             {
-                throw new InvalidPictureUrlException("Picture url can not be longer than 500 characters.");
+                throw new PictureUrlIsTooLongException(ProductPictureUrlMaxLength);
             }
 
             return url;
         }
 
-        public static Picture Create(string name, string url)
+        public static ProductPicture Create(string name, string url)
         {
-            return new Picture(name, url);
+            return new ProductPicture(name, url);
         }
 
-        protected override bool EqualsCore(Picture other)
+        protected override bool EqualsCore(ProductPicture other)
         {
             return Name.Equals(other.Name) && Url.Equals(other.Url);
         }

@@ -16,7 +16,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions
 {
-    public class InvalidCommandException : ShoppingendlyException
+    public class InvalidCommandException : InternalException
     {
         public InvalidCommandException(string message) : base(message)
         {

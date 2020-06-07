@@ -13,44 +13,45 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
     public class ProductProducer : ValueObject<ProductProducer>
     {
-        public string Name { get; }
-
         private ProductProducer(string name)
         {
             Name = ValidateProducer(name);
         }
-        
+
+        public string Name { get; }
+
         private static string ValidateProducer(string name)
         {
             if (IsProductProducerRequired && name.IsEmpty())
             {
-                throw new InvalidProductProducerException("Product producer can not be empty.");
+                throw new ProductProducerNameCanNotBeEmptyException();
             }
 
             if (name.IsLongerThan(ProductProducerMaxLength))
             {
-                throw new InvalidProductProducerException(
-                    $"Product producer can not be longer than {ProductProducerMaxLength} characters.");
+                throw new ProductProducerNameIsTooLongException(ProductProducerMaxLength);
             }
 
             if (name.IsShorterThan(ProductProducerMinLength))
             {
-                throw new InvalidProductProducerException(
-                    $"Product producer can not be shorter than {ProductProducerMinLength} characters.");
+                throw new ProductProducerNameIsTooShortException(ProductProducerMinLength);
             }
 
             return name;
         }
 
-        public static ProductProducer CreateProductProducer(string name) => new ProductProducer(name);
+        public static ProductProducer CreateProductProducer(string name)
+        {
+            return new ProductProducer(name);
+        }
 
         protected override bool EqualsCore(ProductProducer other)
         {
@@ -61,7 +62,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
         {
             var hash = 13;
             hash = hash * 7 + Name.GetHashCode();
-            
+
             return hash;
         }
     }

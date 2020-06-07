@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    internal class InvalidCategoryDescriptionException : ShoppingendlyException
+    internal class ProductNameCanNotBeEmptyException : DomainException
     {
-        internal InvalidCategoryDescriptionException(string message) : base(message)
+        internal ProductNameCanNotBeEmptyException() : base("Product name can not be empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductNameCanNotBeEmpty;
     }
 }

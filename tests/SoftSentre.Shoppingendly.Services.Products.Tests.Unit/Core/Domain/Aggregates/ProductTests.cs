@@ -21,6 +21,8 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using Xunit;
@@ -41,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Func<bool> func = () => product.SetName(productName);
+            Func<bool> func = () => product.SetProductName(productName);
             var testResult = func.Invoke();
 
             // Assert
@@ -60,10 +62,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Func<bool> func = () => product.SetName(productName);
+            Func<bool> func = () => product.SetProductName(productName);
 
             // Assert
-            func.Should().Throw<InvalidProductNameException>()
+            func.Should().Throw<ProductNameCanNotBeEmptyException>()
                 .WithMessage("Product name can not be empty.");
         }
 
@@ -79,27 +81,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Func<bool> func = () => product.SetProducer(productProducer);
+            Func<bool> func = () => product.SetProductProducer(productProducer);
             var testResult = func.Invoke();
 
             // Assert
             func.Should().NotThrow();
             testResult.Should().BeTrue();
-        }
-        
-        [Fact]
-        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenEmptyNameHasBeenProvided()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
-
-            // Act
-            Func<bool> func = () => product.SetProducer(null);
-
-            // Assert
-            func.Should().Throw<InvalidProductProducerException>()
-                .WithMessage("Product producer can not be null.");
         }
 
         [Fact]
@@ -108,15 +95,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = Picture.Create("ExamplePictureName", "ExamplePictureUrl");
+            var picture = ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl");
 
             // Act
-            Func<bool> function = () => product.AddOrChangePicture(picture);
+            Func<bool> function = () => product.AddOrChangeProductPicture(picture);
             var testResult = function.Invoke();
 
             // Assert
             function.Should().NotThrow();
-            product.Picture.Should().Be(picture);
+            product.ProductPicture.Should().Be(picture);
             testResult.Should().BeTrue();
         }
 
@@ -128,7 +115,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.AddOrChangePicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
+            product.AddOrChangeProductPicture(ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl"));
             var productNameChangedDomainEvent =
                 product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent ??
                 It.IsAny<PictureAddedOrChangedDomainEvent>();
@@ -138,7 +125,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             productNameChangedDomainEvent.Should().BeOfType<PictureAddedOrChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
             productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent.Picture.Should().Be(product.Picture);
+            productNameChangedDomainEvent.ProductPicture.Should().Be(product.ProductPicture);
         }
 
         [Fact]
@@ -147,13 +134,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = Picture.Empty;
+            var picture = ProductPicture.Empty;
 
             // Act
-            Func<bool> function = () => product.AddOrChangePicture(picture);
+            Func<bool> function = () => product.AddOrChangeProductPicture(picture);
 
             // Assert
-            function.Should().Throw<PictureCanNotBeEmptyException>().WithMessage("Picture can not be empty.");
+            function.Should().Throw<PictureCanNotBeNullOrEmptyException>()
+                .WithMessage("Picture can not be null or empty.");
         }
 
         [Fact]
@@ -214,7 +202,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
 
             // Assert
             action.Should().Throw<ProductIsAlreadyAssignedToCategoryException>()
-                .WithMessage($"Product already assigned to category with id: {categoryId.Id}.");
+                .WithMessage($"Product already assigned to category with id: {categoryId}.");
         }
 
         [Fact]
@@ -249,7 +237,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             newCategoryCreatedDomainEvent.Should().NotBeNull();
             newCategoryCreatedDomainEvent.ProductId.Should().Be(product.Id);
             newCategoryCreatedDomainEvent.CreatorId.Should().Be(product.CreatorId);
-            newCategoryCreatedDomainEvent.ProductName.Should().Be(product.Name);
+            newCategoryCreatedDomainEvent.ProductName.Should().Be(product.ProductName);
             newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.Producer);
         }
 
@@ -330,7 +318,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
 
             // Assert
             action.Should().Throw<ProductWithAssignedCategoryNotFoundException>()
-                .WithMessage($"Product with assigned category with id: {categoryId.Id} not found.");
+                .WithMessage($"Product with assigned category with id: {categoryId} not found.");
         }
 
         [Fact]
@@ -364,8 +352,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             Action action = () => product.DeallocateAllCategories();
 
             // Assert
-            action.Should().Throw<AnyProductWithAssignedCategoryNotFoundException>()
-                .WithMessage("Unable to find any product with assigned category.");
+            action.Should().Throw<ProductWithAssignedCategoriesNotFoundException>()
+                .WithMessage("Unable to find any product with assigned categories.");
         }
 
         [Fact]
@@ -430,11 +418,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Action action = () => product.RemovePicture();
+            Action action = () => product.RemoveProductPicture();
 
             // Assert
-            action.Should().Throw<CanNotRemoveEmptyPictureException>()
-                .WithMessage("Unable to remove picture, because it's already empty.");
+            action.Should().Throw<PictureCanNotBeNullOrEmptyException>()
+                .WithMessage("Picture can not be null or empty.");
         }
 
         [Fact]
@@ -442,17 +430,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
+                ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Action action = () => product.RemovePicture();
+            Action action = () => product.RemoveProductPicture();
 
             // Assert
             action.Should().NotThrow();
-            product.Picture.Name.Should().Be(null);
-            product.Picture.Url.Should().Be(null);
-            product.Picture.IsEmpty.Should().BeTrue();
+            product.ProductPicture.Name.Should().Be(null);
+            product.ProductPicture.Url.Should().Be(null);
+            product.ProductPicture.IsEmpty.Should().BeTrue();
         }
 
         [Fact]
@@ -460,11 +448,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
+                ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.RemovePicture();
+            product.RemoveProductPicture();
             var productNameChangedDomainEvent =
                 product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent ??
                 It.IsAny<PictureRemovedDomainEvent>();
@@ -484,7 +472,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.SetProducer(ProductProducer.CreateProductProducer("Other producer"));
+            product.SetProductProducer(ProductProducer.CreateProductProducer("Other producer"));
             var productProducerChanged =
                 product.GetUncommitted().LastOrDefault() as ProductProducerChangedDomainEvent ??
                 It.IsAny<ProductProducerChangedDomainEvent>();
@@ -506,7 +494,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            var testResult = product.SetName(productName);
+            var testResult = product.SetProductName(productName);
 
             // Assert
             testResult.Should().BeFalse();
@@ -521,7 +509,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            var testResult = product.SetName(productName);
+            var testResult = product.SetProductName(productName);
 
             // Assert
             testResult.Should().BeTrue();
@@ -535,7 +523,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.SetName("NewProductName");
+            product.SetProductName("NewProductName");
             var productNameChangedDomainEvent =
                 product.GetUncommitted().LastOrDefault() as ProductNameChangedDomainEvent ??
                 It.IsAny<ProductNameChangedDomainEvent>();
@@ -545,7 +533,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             productNameChangedDomainEvent.Should().BeOfType<ProductNameChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
             productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-            productNameChangedDomainEvent.ProductName.Should().Be(product.Name);
+            productNameChangedDomainEvent.ProductName.Should().Be(product.ProductName);
         }
 
         [Fact]
@@ -557,10 +545,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.SetName(productName);
+            product.SetProductName(productName);
 
             // Assert
-            product.Name.Should().Be(productName);
+            product.ProductName.Should().Be(productName);
             product.UpdatedDate.Should().NotBe(default);
             product.CreatedAt.Should().NotBe(default);
         }
@@ -574,10 +562,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Func<bool> func = () => product.SetName(productName);
+            Func<bool> func = () => product.SetProductName(productName);
 
             // Assert
-            func.Should().Throw<InvalidProductNameException>()
+            func.Should().Throw<ProductNameIsTooLongException>()
                 .WithMessage("Product name can not be longer than 30 characters.");
         }
 
@@ -590,10 +578,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            Func<bool> func = () => product.SetName(productName);
+            Func<bool> func = () => product.SetProductName(productName);
 
             // Assert
-            func.Should().Throw<InvalidProductNameException>()
+            func.Should().Throw<ProductNameIsTooShortException>()
                 .WithMessage("Product name can not be shorter than 4 characters.");
         }
 
@@ -605,7 +593,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", productProducer);
 
             // Act
-            var testResult = product.SetProducer(productProducer);
+            var testResult = product.SetProductProducer(productProducer);
 
             // Assert
             testResult.Should().BeFalse();
@@ -620,7 +608,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            var testResult = product.SetProducer(productProducer);
+            var testResult = product.SetProductProducer(productProducer);
 
             // Assert
             testResult.Should().BeTrue();
@@ -635,12 +623,27 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.SetProducer(productProducer);
+            product.SetProductProducer(productProducer);
 
             // Assert
             product.Producer.Should().Be(productProducer);
             product.UpdatedDate.Should().NotBe(default);
             product.CreatedAt.Should().NotBe(default);
+        }
+
+        [Fact]
+        public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenEmptyNameHasBeenProvided()
+        {
+            // Arrange
+            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
+                ProductProducer.CreateProductProducer("ExampleProducer"));
+
+            // Act
+            Func<bool> func = () => product.SetProductProducer(null);
+
+            // Assert
+            func.Should().Throw<ProductProducerCanNotBeNullException>()
+                .WithMessage("Product producer can not be null.");
         }
     }
 }

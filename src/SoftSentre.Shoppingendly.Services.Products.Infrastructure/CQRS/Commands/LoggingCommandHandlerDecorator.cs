@@ -54,7 +54,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
 
                 result = CommandResult.Failed(invalidCommandException.Message);
             }
-            catch (ShoppingendlyException shoppingendlyException)
+            catch (InternalException shoppingendlyException)
             {
                 _logger.LogError(
                     $"Custom exception occured when processing a command. Message: {shoppingendlyException.Message}",

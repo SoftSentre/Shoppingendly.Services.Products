@@ -22,7 +22,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.P
     {
         public RoleProfile()
         {
-            CreateMap<Role, RoleDto>()
+            CreateMap<CreatorRole, RoleDto>()
                 .ConstructUsing(r => new RoleDto(r.Id.ToString(), r.Name));
         }
     }

@@ -12,23 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures
 {
-    public abstract class ShoppingendlyException : Exception
+    internal class PictureUrlCanNotContainsWhitespacesException : DomainException
     {
-        protected ShoppingendlyException()
+        internal PictureUrlCanNotContainsWhitespacesException() : base("Picture url can not have whitespaces.")
         {
         }
 
-        protected ShoppingendlyException(string message) : base(message)
-        {
-        }
-
-        protected ShoppingendlyException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+        public override string Code { get; } = ErrorCodes.PictureUrlCanNotContainsWhitespaces;
     }
 }

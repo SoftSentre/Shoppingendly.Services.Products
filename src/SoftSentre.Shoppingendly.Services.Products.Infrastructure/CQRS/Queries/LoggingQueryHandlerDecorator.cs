@@ -46,7 +46,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
                 result = await _decorated.QueryAsync(query);
                 _logger.LogInformation("Query successfully processed.");
             }
-            catch (ShoppingendlyException shoppingendlyException)
+            catch (InternalException shoppingendlyException)
             {
                 _logger.LogError(
                     $"Custom exception occured when processing a query. Message: {shoppingendlyException.Message}",

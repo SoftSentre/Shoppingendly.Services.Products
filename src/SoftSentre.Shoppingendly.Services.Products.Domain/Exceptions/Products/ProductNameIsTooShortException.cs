@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    public class Role : Enumeration
+    internal class ProductNameIsTooShortException : DomainException
     {
-        public static readonly Role Admin = new Role(1, "Admin");
-        public static readonly Role Moderator = new Role(2, "Moderator");
-        public static readonly Role User = new Role(3, "User");
-
-        private Role(int id, string name) : base(id, name)
+        internal ProductNameIsTooShortException(int productNameMinLength) : base(
+            $"Product name can not be shorter than {productNameMinLength} characters.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductNameIsTooShort;
     }
 }

@@ -61,7 +61,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public DbSet<Category> Categories { get; set; }
         public DbSet<Creator> Creators { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<Role> CreatorRoles { get; set; }
+        public DbSet<CreatorRole> CreatorRoles { get; set; }
 
         public IDbContextTransaction GetCurrentTransaction()
         {

@@ -26,9 +26,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
 {
     public class CommandHandlersTestStartUp<TCommand> : IAsyncLifetime where TCommand : class, ICommand
     {
-        protected Mock<ILogger<LoggingCommandHandlerDecorator<TCommand>>> Logger;
-        protected Mock<IDbContextTransaction> DbContextTransaction;
         protected Mock<IValidator<TCommand>> CommandValidator;
+        protected Mock<IDbContextTransaction> DbContextTransaction;
+        protected Mock<ILogger<LoggingCommandHandlerDecorator<TCommand>>> Logger;
         protected Mock<IUnitOfWork> UnitOfWorkMock;
 
         public virtual async Task InitializeAsync()

@@ -15,7 +15,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
@@ -27,7 +27,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             creatorsConfiguration.HasKey(c => c.Id);
 
-            creatorsConfiguration.Property(c => c.Name)
+            creatorsConfiguration.Property(c => c.CreatorName)
                 .HasColumnName("CreatorName")
                 .HasMaxLength(CreatorNameMaxLength)
                 .IsRequired();
@@ -43,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .HasColumnName("CreatedDate")
                 .IsRequired();
 
-            creatorsConfiguration.HasOne(c => c.Role)
+            creatorsConfiguration.HasOne(c => c.CreatorRole)
                 .WithMany()
                 .HasForeignKey(c => c.RoleId);
 

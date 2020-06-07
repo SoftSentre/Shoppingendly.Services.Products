@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
 {
-    internal class InvalidCreatorNameException : ShoppingendlyException
+    internal class CategoryNameCanNotBeEmptyException : DomainException
     {
-        internal InvalidCreatorNameException(string message) : base(message)
+        internal CategoryNameCanNotBeEmptyException() : base("Category name can not be empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CategoryNameCanNotBeEmpty;
     }
 }
