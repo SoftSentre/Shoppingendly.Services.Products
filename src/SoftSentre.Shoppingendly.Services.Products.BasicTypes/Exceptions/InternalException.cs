@@ -18,8 +18,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
 {
     public abstract class InternalException : Exception
     {
-        public virtual string Code { get; }
-        
         protected InternalException()
         {
         }
@@ -32,5 +30,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
             : base(message, innerException)
         {
         }
+
+        public virtual string Code { get; }
     }
 }

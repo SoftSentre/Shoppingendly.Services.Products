@@ -19,10 +19,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
 {
     public class DomainEventCanNotBeEmptyException : InfrastructureException
     {
-        public override string Code { get; } = ErrorCodes.DomainEventCanNotBeEmpty;
-
         public DomainEventCanNotBeEmptyException() : base("Domain event can not be null.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.DomainEventCanNotBeEmpty;
     }
 }

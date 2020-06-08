@@ -20,12 +20,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
 {
     public class DispatchedDomainEventsFailedException : InfrastructureException
     {
-        public override string Code { get; } = ErrorCodes.DispatchDomainEventsFailed;
-
         public DispatchedDomainEventsFailedException(Exception innerException)
             : base($"Error occured when dispatching the domain events. Message: {innerException.Message}",
                 innerException)
         {
         }
+
+        public override string Code { get; } = ErrorCodes.DispatchDomainEventsFailed;
     }
 }

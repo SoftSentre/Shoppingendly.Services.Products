@@ -20,11 +20,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Excepti
 {
     public class SendingQueryFailedException : InfrastructureException
     {
-        public override string Code { get; } = ErrorCodes.SendingQueryFailed;
-
         public SendingQueryFailedException(IQuery query) : base(
             $"Can not send query: {query.GetType().Name}.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.SendingQueryFailed;
     }
 }

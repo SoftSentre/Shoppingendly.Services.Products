@@ -20,11 +20,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
 {
     public class PublishDomainEventFailedException : InfrastructureException
     {
-        public override string Code { get; } = ErrorCodes.PublishDomainEventFailedException;
-
         public PublishDomainEventFailedException(IDomainEvent domainEvent) : base(
             $"Unable to publish domain event {domainEvent}.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.PublishDomainEventFailedException;
     }
 }

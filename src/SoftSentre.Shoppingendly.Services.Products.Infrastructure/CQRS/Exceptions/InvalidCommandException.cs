@@ -19,10 +19,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Excepti
 {
     public class InvalidCommandException : InfrastructureException
     {
-        public override string Code { get; } = ErrorCodes.InvalidCommand;
-
         public InvalidCommandException(string message) : base(message)
         {
         }
+
+        public override string Code { get; } = ErrorCodes.InvalidCommand;
     }
 }

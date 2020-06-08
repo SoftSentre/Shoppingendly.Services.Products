@@ -57,12 +57,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const string PictureUrlCanNotBeEmpty = "picture_url_can_not_be_empty";
         public const string PictureUrlCanNotContainsWhitespaces = "picture_url_can_not_contains_whitespaces";
         public const string PictureUrlIsTooLong = "picture_url_is_too_long";
-        
+
         // Domain events
         public const string DispatchDomainEventsFailed = "dispatch_domain_events_failed";
         public const string DomainEventCanNotBeEmpty = "domain_event_can_not_be_empty";
         public const string PublishDomainEventFailedException = "publish_domain_event_failed";
-        
+
         // Commands
         public const string CommandPublishedFailed = "command_published_failed";
         public const string InvalidCommand = "invalid_command";

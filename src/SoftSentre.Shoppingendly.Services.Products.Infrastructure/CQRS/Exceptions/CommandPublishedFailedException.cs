@@ -20,11 +20,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Excepti
 {
     public class CommandPublishedFailedException : InfrastructureException
     {
-        public override string Code { get; } = ErrorCodes.CommandPublishedFailed;
-
         public CommandPublishedFailedException(ICommand command) : base(
             $"Unable to publish command: {command.GetType().Name}")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CommandPublishedFailed;
     }
 }
