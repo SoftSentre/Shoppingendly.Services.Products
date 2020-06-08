@@ -36,7 +36,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
     public class ProductEfRepositoryTests
     {
         private readonly Creator _creator = new Creator(new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-            "Creator", Role.Admin);
+            "Creator", CreatorRole.Admin);
 
         private readonly Category _category =
             new Category(new CategoryId(new Guid("1F9FEDB4-0F85-4E47-A4C3-F4C25F0E9996")), "ExampleCategory");
@@ -58,7 +58,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
                 new SqlSettings(), dbContextOptions);
-            
+
             await productServiceDbContext.Database.EnsureDeletedAsync();
             await productServiceDbContext.Database.EnsureCreatedAsync();
             await productServiceDbContext.Creators.AddAsync(_creator);
@@ -84,7 +84,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = dbContext.Products.FirstOrDefault(p => p.Id.Equals(product.Id)) ?? It.IsAny<Product>();
 
             // Assert
-            testResult.Name.Should().Be(product.Name);
+            testResult.ProductName.Should().Be(product.ProductName);
             testResult.Producer.Should().Be(product.Producer);
             testResult.CreatorId.Should().Be(product.CreatorId);
             testResult.CreatedAt.Should().Be(product.CreatedAt);
@@ -102,14 +102,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Act
             var productFromDatabase = await dbContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(_product.Id));
-            productFromDatabase.SetName(newProductName);
+            productFromDatabase.SetProductName(newProductName);
             productRepository.Update(productFromDatabase);
             await dbContext.SaveChangesAsync();
 
             var testResult = dbContext.Products.FirstOrDefault(p => p.Id.Equals(_product.Id)) ?? It.IsAny<Product>();
 
             // Assert
-            testResult.Name.Should().Be(newProductName);
+            testResult.ProductName.Should().Be(newProductName);
 
             await dbContext.DisposeAsync();
         }
@@ -139,12 +139,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             IProductRepository productRepository = new ProductEfRepository(dbContext);
 
             // Act
-            var testResult = await productRepository.GetManyByNameAsync(_product.Name);
+            var testResult = await productRepository.GetManyByNameAsync(_product.ProductName);
 
             // Assert
             testResult.Value.Should().HaveCount(1);
             var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
-            firstItem.Name.Should().Be(_product.Name);
+            firstItem.ProductName.Should().Be(_product.ProductName);
             firstItem.Producer.Should().Be(_product.Producer);
             firstItem.CreatorId.Should().Be(_product.CreatorId);
             firstItem.CreatedAt.Should().Be(_product.CreatedAt);
@@ -163,7 +163,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = await productRepository.GetByIdAsync(_product.Id);
 
             // Assert
-            testResult.Value.Name.Should().Be(_product.Name);
+            testResult.Value.ProductName.Should().Be(_product.ProductName);
             testResult.Value.Producer.Should().Be(_product.Producer);
             testResult.Value.CreatorId.Should().Be(_product.CreatorId);
             testResult.Value.CreatedAt.Should().Be(_product.CreatedAt);
@@ -187,7 +187,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = await productRepository.GetByIdWithIncludesAsync(product.Id);
 
             // Assert
-            testResult.Value.Name.Should().Be(product.Name);
+            testResult.Value.ProductName.Should().Be(product.ProductName);
             testResult.Value.Producer.Should().Be(product.Producer);
             testResult.Value.CreatorId.Should().Be(product.CreatorId);
             testResult.Value.CreatedAt.Should().Be(product.CreatedAt);
@@ -212,13 +212,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             await dbContext.SaveChangesAsync();
 
             // Act
-            var testResult = await productRepository.GetManyByNameWithIncludesAsync(product.Name);
+            var testResult = await productRepository.GetManyByNameWithIncludesAsync(product.ProductName);
 
             // Assert
             testResult.Value.Should().HaveCount(1);
 
             var firstItem = testResult.Value.FirstOrDefault() ?? It.IsAny<Product>();
-            firstItem.Name.Should().Be(product.Name);
+            firstItem.ProductName.Should().Be(product.ProductName);
             firstItem.Producer.Should().Be(product.Producer);
             firstItem.CreatorId.Should().Be(product.CreatorId);
             firstItem.CreatedAt.Should().Be(product.CreatedAt);

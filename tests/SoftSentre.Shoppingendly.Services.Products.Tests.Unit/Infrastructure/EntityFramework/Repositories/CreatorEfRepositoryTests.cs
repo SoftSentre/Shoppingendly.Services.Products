@@ -35,7 +35,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
     public class CreatorEfRepositoryTests
     {
         private readonly Creator _creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")),
-            "Creator", Role.Admin);
+            "Creator", CreatorRole.Admin);
 
         private async Task<ProductServiceDbContext> CreateDbContext()
         {
@@ -50,7 +50,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
                 new SqlSettings(), dbContextOptions);
-            
+
             await productServiceDbContext.Database.EnsureDeletedAsync();
             await productServiceDbContext.Database.EnsureCreatedAsync();
             await productServiceDbContext.Creators.AddAsync(_creator);
@@ -65,7 +65,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             ICreatorRepository creatorRepository = new CreatorEfRepository(dbContext);
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
             await creatorRepository.AddAsync(creator);
@@ -73,8 +73,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
-            testResult.Name.Should().Be(creator.Name);
-            testResult.Role.Should().Be(creator.Role);
+            testResult.CreatorName.Should().Be(creator.CreatorName);
+            testResult.CreatorRole.Should().Be(creator.CreatorRole);
             testResult.CreatedAt.Should().Be(creator.CreatedAt);
 
             await dbContext.DisposeAsync();
@@ -108,8 +108,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = await creatorRepository.GetByIdAsync(_creator.Id);
 
             // Arrange
-            testResult.Value.Name.Should().Be(_creator.Name);
-            testResult.Value.Role.Should().Be(_creator.Role);
+            testResult.Value.CreatorName.Should().Be(_creator.CreatorName);
+            testResult.Value.CreatorRole.Should().Be(_creator.CreatorRole);
             testResult.Value.CreatedAt.Should().Be(_creator.CreatedAt);
 
             await dbContext.DisposeAsync();
@@ -123,11 +123,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             ICreatorRepository creatorRepository = new CreatorEfRepository(dbContext);
 
             // Act
-            var testResult = await creatorRepository.GetByNameAsync(_creator.Name);
+            var testResult = await creatorRepository.GetByNameAsync(_creator.CreatorName);
 
             // Arrange
-            testResult.Value.Name.Should().Be(_creator.Name);
-            testResult.Value.Role.Should().Be(_creator.Role);
+            testResult.Value.CreatorName.Should().Be(_creator.CreatorName);
+            testResult.Value.CreatorRole.Should().Be(_creator.CreatorRole);
             testResult.Value.CreatedAt.Should().Be(_creator.CreatedAt);
 
             await dbContext.DisposeAsync();
@@ -143,14 +143,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Act
             var creatorFromDatabase = await dbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(_creator.Id));
-            creatorFromDatabase.SetName(name);
+            creatorFromDatabase.SetCreatorName(name);
             creatorRepository.Update(creatorFromDatabase);
             await dbContext.SaveChangesAsync();
 
             var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id)) ?? It.IsAny<Creator>();
 
             // Assert
-            testResult.Name.Should().Be(name);
+            testResult.CreatorName.Should().Be(name);
 
             await dbContext.DisposeAsync();
         }

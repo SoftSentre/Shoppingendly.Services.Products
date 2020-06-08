@@ -19,13 +19,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Creators
 {
     public class CreatorNameChangedDomainEvent : DomainEventBase
     {
-        internal CreatorNameChangedDomainEvent(CreatorId creatorId, string name)
+        internal CreatorNameChangedDomainEvent(CreatorId creatorId, string creatorName)
         {
             CreatorId = creatorId;
-            Name = name;
+            CreatorName = creatorName;
         }
 
         public CreatorId CreatorId { get; }
-        public string Name { get; }
+        public string CreatorName { get; }
     }
 }

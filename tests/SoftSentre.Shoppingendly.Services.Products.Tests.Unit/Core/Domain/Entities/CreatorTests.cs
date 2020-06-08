@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using Moq;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators;
@@ -32,13 +33,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorNameDoNotThrowExceptionWhenCorrectNameHasBeenProvided(string creatorName)
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            Action action = () => creator.SetName(creatorName);
+            Action action = () => creator.SetCreatorName(creatorName);
 
             //Assert
-            action.Should().NotThrow<InvalidCreatorNameException>();
+            action.Should().NotThrow<DomainException>();
         }
 
         [Theory]
@@ -47,13 +48,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorNameThrowExceptionWhenNameIsEmptyOrNull(string creatorName)
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            Action action = () => creator.SetName(creatorName);
+            Action action = () => creator.SetCreatorName(creatorName);
 
             //Assert
-            action.Should().Throw<InvalidCreatorNameException>()
+            action.Should().Throw<CreatorNameCanNotBeEmptyException>()
                 .WithMessage("Creator name can not be empty.");
         }
 
@@ -61,7 +62,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfClearDomainEventsMethodWorkingProperly()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
             creator.ClearDomainEvents();
@@ -76,7 +77,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             // Arrange
 
             // Act
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
             var newCreatorCreatedDomainEvent =
                 creator.GetUncommitted().LastOrDefault() as NewCreatorCreatedDomainEvent ??
                 It.IsAny<NewCreatorCreatedDomainEvent>();
@@ -86,15 +87,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             newCreatorCreatedDomainEvent.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             newCreatorCreatedDomainEvent.Should().NotBeNull();
             newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.Id);
-            newCreatorCreatedDomainEvent.Name.Should().Be(creator.Name);
-            newCreatorCreatedDomainEvent.Role.Should().Be(creator.Role);
+            newCreatorCreatedDomainEvent.CreatorName.Should().Be(creator.CreatorName);
+            newCreatorCreatedDomainEvent.CreatorRole.Should().Be(creator.CreatorRole);
         }
 
         [Fact]
         public void CheckIfGetUncommittedDomainEventsMethodWorkingProperly()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
             var domainEvents = creator.GetUncommitted().ToList();
@@ -103,16 +104,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             domainEvents.Should().NotBeNull();
             domainEvents.LastOrDefault().Should().BeOfType<NewCreatorCreatedDomainEvent>();
         }
-        
+
 
         [Fact]
         public void CheckIfSetCreatorNameMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            creator.SetName("NewCreatorName");
+            creator.SetCreatorName("NewCreatorName");
             var creatorNameChangedDomainEvent =
                 creator.GetUncommitted().LastOrDefault() as CreatorNameChangedDomainEvent ??
                 It.IsAny<CreatorNameChangedDomainEvent>();
@@ -122,7 +123,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             creatorNameChangedDomainEvent.Should().BeOfType<CreatorNameChangedDomainEvent>();
             creatorNameChangedDomainEvent.Should().NotBeNull();
             creatorNameChangedDomainEvent.CreatorId.Should().Be(creator.Id);
-            creatorNameChangedDomainEvent.Name.Should().Be(creator.Name);
+            creatorNameChangedDomainEvent.CreatorName.Should().Be(creator.CreatorName);
         }
 
         [Fact]
@@ -130,13 +131,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             const string creatorName = "New creator";
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            creator.SetName(creatorName);
+            creator.SetCreatorName(creatorName);
 
             // Assert
-            creator.Name.Should().Be(creatorName);
+            creator.CreatorName.Should().Be(creatorName);
             creator.UpdatedDate.Should().NotBe(default);
             creator.CreatedAt.Should().NotBe(default);
         }
@@ -146,13 +147,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             const string creatorName = "Creator name should not be longer than 50 characters.";
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            Action action = () => creator.SetName(creatorName);
+            Action action = () => creator.SetCreatorName(creatorName);
 
             //Assert
-            action.Should().Throw<InvalidCreatorNameException>()
+            action.Should().Throw<CreatorNameIsTooLongException>()
                 .WithMessage("Creator name can not be longer than 50 characters.");
         }
 
@@ -161,13 +162,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         {
             // Arrange
             const string creatorName = "Jo";
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            Action action = () => creator.SetName(creatorName);
+            Action action = () => creator.SetCreatorName(creatorName);
 
             //Assert
-            action.Should().Throw<InvalidCreatorNameException>()
+            action.Should().Throw<CreatorNameIsTooShortException>()
                 .WithMessage("Creator name can not be shorter than 3 characters.");
         }
 
@@ -175,11 +176,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorRoleDoNotThrowExceptionWhenCorrectRoleHasBeenProvided()
         {
             // Arrange
-            var creatorRole = Role.Moderator;
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creatorRole = CreatorRole.Moderator;
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            Action action = () => creator.SetRole(creatorRole);
+            Action action = () => creator.SetCreatorRole(creatorRole);
 
             //Assert
             action.Should().NotThrow<Exception>();
@@ -189,10 +190,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
         public void CheckIfSetCreatorRoleMethodProduceDomainEventWithAppropriateTypeAndValues()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            creator.SetRole(Role.User);
+            creator.SetCreatorRole(CreatorRole.User);
             var creatorRoleChangedDomainEvent =
                 creator.GetUncommitted().LastOrDefault() as CreatorRoleChangedDomainEvent ??
                 It.IsAny<CreatorRoleChangedDomainEvent>();
@@ -202,21 +203,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             creatorRoleChangedDomainEvent.Should().BeOfType<CreatorRoleChangedDomainEvent>();
             creatorRoleChangedDomainEvent.Should().NotBeNull();
             creatorRoleChangedDomainEvent.CreatorId.Should().Be(creator.Id);
-            creatorRoleChangedDomainEvent.Role.Should().Be(creator.Role);
+            creatorRoleChangedDomainEvent.CreatorRole.Should().Be(creator.CreatorRole);
         }
 
         [Fact]
         public void CheckIfSetCreatorRoleMethodSetValuesWhenCorrectRoleHasBeenProvided()
         {
             // Arrange
-            var creatorRole = Role.Moderator;
-            var creator = new Creator(new CreatorId(), "Creator", Role.Admin);
+            var creatorRole = CreatorRole.Moderator;
+            var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
 
             // Act
-            creator.SetRole(creatorRole);
+            creator.SetCreatorRole(creatorRole);
 
             // Assert
-            creator.Role.Should().Be(creatorRole);
+            creator.CreatorRole.Should().Be(creatorRole);
             creator.UpdatedDate.Should().NotBe(default);
             creator.CreatedAt.Should().NotBe(default);
         }

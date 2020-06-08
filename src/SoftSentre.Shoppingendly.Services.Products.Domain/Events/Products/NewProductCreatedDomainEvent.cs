@@ -20,19 +20,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
     public class NewProductCreatedDomainEvent : DomainEventBase
     {
         internal NewProductCreatedDomainEvent(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, Picture picture)
+            ProductProducer productProducer, ProductPicture productPicture)
         {
             ProductId = productId;
             CreatorId = creatorId;
             ProductName = productName;
             ProductProducer = productProducer;
-            Picture = picture;
+            ProductPicture = productPicture;
         }
 
         public ProductId ProductId { get; }
         public CreatorId CreatorId { get; }
         public string ProductName { get; }
         public ProductProducer ProductProducer { get; }
-        public Picture Picture { get; }
+        public ProductPicture ProductPicture { get; }
     }
 }

@@ -22,7 +22,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
 {
     public interface IProductRepository
     {
-        Task<Maybe<Product>> GetByIdAsync(ProductId productId);
+        Task<Maybe<Product>> GetByIdAsync(ProductId id);
         Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId);
         Task<Maybe<IEnumerable<Product>>> GetManyByNameAsync(string name);
         Task<Maybe<IEnumerable<Product>>> GetManyByNameWithIncludesAsync(string name);

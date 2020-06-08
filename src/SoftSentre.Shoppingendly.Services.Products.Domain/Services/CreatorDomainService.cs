@@ -51,17 +51,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return creator;
         }
 
-        public async Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, string creatorName, Role creatorRole)
+        public async Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, string creatorName,
+            CreatorRole creatorCreatorRole)
         {
             var creator = await _creatorRepository.GetByIdAsync(creatorId);
 
             if (creator.HasValue)
             {
-                throw new CreatorAlreadyExistsException(
-                    $"Unable to add new creator, because creator with id: {creatorId} is already exists.");
+                throw new CreatorAlreadyExistsException(creatorId);
             }
 
-            var newCreator = Creator.Create(creatorId, creatorName, creatorRole);
+            var newCreator = Creator.Create(creatorId, creatorName, creatorCreatorRole);
             await _creatorRepository.AddAsync(newCreator);
 
             return newCreator;
@@ -70,20 +70,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
         public async Task SetCreatorNameAsync(CreatorId creatorId, string creatorName)
         {
             var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
-                new CreatorNotFoundException(
-                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+                new CreatorNotFoundException(creatorId));
 
-            creator.SetName(creatorName);
+            creator.SetCreatorName(creatorName);
             _creatorRepository.Update(creator);
         }
 
-        public async Task SetCreatorRoleAsync(CreatorId creatorId, Role creatorRole)
+        public async Task SetCreatorRoleAsync(CreatorId creatorId, CreatorRole creatorCreatorRole)
         {
             var creator = await _creatorRepository.GetByIdAsync(creatorId).UnwrapAsync(
-                new CreatorNotFoundException(
-                    $"Unable to mutate creator state, because creator with id: {creatorId} not found."));
+                new CreatorNotFoundException(creatorId));
 
-            creator.SetRole(creatorRole);
+            creator.SetCreatorRole(creatorCreatorRole);
             _creatorRepository.Update(creator);
         }
     }

@@ -13,13 +13,18 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Creators
 {
-    internal class CreatorAlreadyExistsException : ShoppingendlyException
+    internal class CreatorAlreadyExistsException : DomainException
     {
-        internal CreatorAlreadyExistsException(string message) : base(message)
+        internal CreatorAlreadyExistsException(CreatorId creatorId) : base(
+            $"Unable to add new creator, because creator with id: {creatorId} is already exists.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CreatorAlreadyExists;
     }
 }

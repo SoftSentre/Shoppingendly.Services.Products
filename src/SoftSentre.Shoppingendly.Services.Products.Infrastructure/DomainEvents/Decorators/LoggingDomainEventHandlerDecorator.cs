@@ -43,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
                 await _decorated.HandleAsync(@event);
                 _logger.LogInformation("Domain event successfully processed.");
             }
-            catch (ShoppingendlyException shoppingendlyException)
+            catch (InternalException shoppingendlyException)
             {
                 _logger.LogError(
                     $"Custom exception occured when processing a domain event. Message: {shoppingendlyException.Message}",

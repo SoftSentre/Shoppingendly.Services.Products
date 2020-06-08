@@ -24,7 +24,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
     public class EventHandlerTestsStartUp<TEvent> : IAsyncLifetime where TEvent : class, IDomainEvent
     {
         protected Mock<ILogger<LoggingDomainEventHandlerDecorator<TEvent>>> Logger;
-        
+
         public virtual async Task InitializeAsync()
         {
             Logger = new Mock<ILogger<LoggingDomainEventHandlerDecorator<TEvent>>>();

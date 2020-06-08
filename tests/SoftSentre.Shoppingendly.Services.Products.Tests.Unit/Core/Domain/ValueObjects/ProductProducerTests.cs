@@ -14,7 +14,7 @@
 
 using System;
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using Xunit;
 
@@ -22,19 +22,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
 {
     public class ProductProducerTests
     {
-        [Fact]
-        public void CheckIfCreateProductProducerMethodWorkingProperlyWhenCorrectValueHasBeenProvided()
-        {
-            // Arrange
-            const string producerName = "ExampleProducerName";
-            
-            // Act
-            var productProducer = ProductProducer.CreateProductProducer("ExampleProducerName");
-
-            // Assert
-            productProducer.Name.Should().BeEquivalentTo(producerName);
-        }
-        
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -42,13 +29,26 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             string name)
         {
             // Arrange
-            
+
             // Act
             Action action = () => ProductProducer.CreateProductProducer(name);
 
             // Assert
-            action.Should().Throw<InvalidProductProducerException>()
+            action.Should().Throw<ProductProducerNameCanNotBeEmptyException>()
                 .WithMessage("Product producer can not be empty.");
+        }
+
+        [Fact]
+        public void CheckIfCreateProductProducerMethodWorkingProperlyWhenCorrectValueHasBeenProvided()
+        {
+            // Arrange
+            const string producerName = "ExampleProducerName";
+
+            // Act
+            var productProducer = ProductProducer.CreateProductProducer("ExampleProducerName");
+
+            // Assert
+            productProducer.Name.Should().BeEquivalentTo(producerName);
         }
 
         [Fact]
@@ -57,11 +57,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             // Arrange
 
             // Act
-            Action action = () =>             ProductProducer.CreateProductProducer("IProvideMaximalNumberOfLettersAndFewMoreBecauseProducerCanNotBeLongerThan50Characters");
-            
+            Action action = () =>
+                ProductProducer.CreateProductProducer(
+                    "IProvideMaximalNumberOfLettersAndFewMoreBecauseProducerCanNotBeLongerThan50Characters");
 
             // Assert
-            action.Should().Throw<InvalidProductProducerException>()
+            action.Should().Throw<ProductProducerNameIsTooLongException>()
                 .WithMessage("Product producer can not be longer than 50 characters.");
         }
 
@@ -69,12 +70,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
         public void CheckIfSetProductProducerMethodThrowProperExceptionAndMessageWhenTooShortNameHasBeenProvided()
         {
             // Arrange
-            
+
             // Act
             Action action = () => ProductProducer.CreateProductProducer("p");
 
             // Assert
-            action.Should().Throw<InvalidProductProducerException>()
+            action.Should().Throw<ProductProducerNameIsTooShortException>()
                 .WithMessage("Product producer can not be shorter than 2 characters.");
         }
     }

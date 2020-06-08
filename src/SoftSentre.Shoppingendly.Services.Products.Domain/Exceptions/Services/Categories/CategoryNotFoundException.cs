@@ -13,13 +13,18 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Categories
 {
-    internal class CategoryNotFoundException : ShoppingendlyException
+    internal class CategoryNotFoundException : DomainException
     {
-        internal CategoryNotFoundException(string message) : base(message)
+        internal CategoryNotFoundException(CategoryId categoryId) : base(
+            $"Unable to mutate category state, because category with id: {categoryId} not found.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CategoryNotFound;
     }
 }

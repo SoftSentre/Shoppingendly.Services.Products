@@ -13,13 +13,18 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    internal class ProductWithAssignedCategoryNotFoundException : ShoppingendlyException
+    internal class ProductWithAssignedCategoryNotFoundException : DomainException
     {
-        internal ProductWithAssignedCategoryNotFoundException(string message) : base(message)
+        internal ProductWithAssignedCategoryNotFoundException(CategoryId categoryId) : base(
+            $"Product with assigned category with id: {categoryId} not found.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductWithAssignedCategoryNotFound;
     }
 }

@@ -19,7 +19,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Configurations
 {
@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCategoryDescriptionHasConfiguredValidValues()
         {
             // Arrange
-            const string description = nameof(Category.Description);
+            const string description = nameof(Category.CategoryDescription);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(description);
 
             // Act
@@ -72,7 +72,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCategoryNameHasConfiguredValidValues()
         {
             // Arrange
-            const string name = nameof(Category.Name);
+            const string name = nameof(Category.CategoryName);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(name);
 
             // Act

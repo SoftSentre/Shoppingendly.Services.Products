@@ -18,7 +18,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 {
@@ -31,21 +31,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
         {
         }
 
-        internal Category(CategoryId categoryId, string name) : base(categoryId)
+        internal Category(CategoryId categoryId, string categoryName) : base(categoryId)
         {
-            Name = ValidateCategoryName(name);
-            AddDomainEvent(new NewCategoryCreatedDomainEvent(Id, name));
+            CategoryName = ValidateCategoryName(categoryName);
+            AddDomainEvent(new NewCategoryCreatedDomainEvent(Id, categoryName));
         }
 
-        internal Category(CategoryId categoryId, string name, string description) : base(categoryId)
+        internal Category(CategoryId categoryId, string categoryName, string description) : base(categoryId)
         {
-            Name = ValidateCategoryName(name);
-            Description = ValidateCategoryDescription(description);
-            AddDomainEvent(new NewCategoryCreatedDomainEvent(categoryId, name, description));
+            CategoryName = ValidateCategoryName(categoryName);
+            CategoryDescription = ValidateCategoryDescription(description);
+            AddDomainEvent(new NewCategoryCreatedDomainEvent(categoryId, categoryName, description));
         }
 
-        public string Name { get; private set; }
-        public string Description { get; private set; }
+        public string CategoryName { get; private set; }
+        public string CategoryDescription { get; private set; }
 
         public HashSet<ProductCategory> ProductCategories
         {
@@ -53,88 +53,84 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
             set => _productCategories = new HashSet<ProductCategory>(value);
         }
 
-        internal bool SetName(string name)
+        internal bool SetCategoryName(string categoryName)
         {
-            ValidateCategoryName(name);
+            ValidateCategoryName(categoryName);
 
-            if (Name.EqualsCaseInvariant(name))
+            if (CategoryName.EqualsCaseInvariant(categoryName))
             {
                 return false;
             }
 
-            Name = name;
+            CategoryName = categoryName;
             SetUpdatedDate();
-            AddDomainEvent(new CategoryNameChangedDomainEvent(Id, name));
+            AddDomainEvent(new CategoryNameChangedDomainEvent(Id, categoryName));
             return true;
         }
 
-        internal bool SetDescription(string description)
+        internal bool SetCategoryDescription(string categoryDescription)
         {
-            ValidateCategoryDescription(description);
+            ValidateCategoryDescription(categoryDescription);
 
-            if (Description.EqualsCaseInvariant(description))
+            if (CategoryDescription.EqualsCaseInvariant(categoryDescription))
             {
                 return false;
             }
 
-            Description = description;
+            CategoryDescription = categoryDescription;
             SetUpdatedDate();
-            AddDomainEvent(new CategoryDescriptionChangedDomainEvent(Id, description));
+            AddDomainEvent(new CategoryDescriptionChangedDomainEvent(Id, categoryDescription));
             return true;
         }
 
-        internal static Category Create(CategoryId categoryId, string name)
+        internal static Category Create(CategoryId categoryId, string categoryName)
         {
-            return new Category(categoryId, name);
+            return new Category(categoryId, categoryName);
         }
 
-        internal static Category Create(CategoryId categoryId, string name, string description)
+        internal static Category Create(CategoryId categoryId, string categoryName, string description)
         {
-            return new Category(categoryId, name, description);
+            return new Category(categoryId, categoryName, description);
         }
 
-        private static string ValidateCategoryName(string name)
+        private static string ValidateCategoryName(string categoryName)
         {
-            if (IsCategoryNameRequired && name.IsEmpty())
+            if (IsCategoryNameRequired && categoryName.IsEmpty())
             {
-                throw new InvalidCategoryNameException("Category name can not be empty.");
+                throw new CategoryNameCanNotBeEmptyException();
             }
 
-            if (name.IsLongerThan(CategoryNameMaxLength))
+            if (categoryName.IsLongerThan(CategoryNameMaxLength))
             {
-                throw new InvalidCategoryNameException(
-                    $"Category name can not be longer than {CategoryNameMaxLength} characters.");
+                throw new CategoryNameIsTooLongException(CategoryNameMaxLength);
             }
 
-            if (name.IsShorterThan(CategoryNameMinLength))
+            if (categoryName.IsShorterThan(CategoryNameMinLength))
             {
-                throw new InvalidCategoryNameException(
-                    $"Category name can not be shorter than {CategoryNameMinLength} characters.");
+                throw new CategoryNameIsTooShortException(CategoryNameMinLength);
             }
 
-            return name;
+            return categoryName;
         }
 
-        private static string ValidateCategoryDescription(string description)
+        private static string ValidateCategoryDescription(string categoryDescription)
         {
-            if (IsCategoryDescriptionRequired && description.IsEmpty())
+            if (IsCategoryDescriptionRequired && categoryDescription.IsEmpty())
             {
-                throw new InvalidCategoryDescriptionException("Category description can not be empty.");
+                throw new CategoryDescriptionCanNotBeEmptyException();
             }
 
-            if (description.IsShorterThan(CategoryDescriptionMinLength))
+            if (categoryDescription.IsShorterThan(CategoryDescriptionMinLength))
             {
-                throw new InvalidCategoryDescriptionException(
-                    $"Category description can not be shorter than {CategoryDescriptionMinLength} characters.");
+                throw new CategoryDescriptionIsTooShortException(CategoryDescriptionMinLength);
             }
 
-            if (description.IsLongerThan(CategoryDescriptionMaxLength))
+            if (categoryDescription.IsLongerThan(CategoryDescriptionMaxLength))
             {
-                throw new InvalidCategoryDescriptionException(
-                    $"Category description can not be longer than {CategoryDescriptionMaxLength} characters.");
+                throw new CategoryDescriptionIsTooLongException(CategoryDescriptionMaxLength);
             }
 
-            return description;
+            return categoryDescription;
         }
     }
 }

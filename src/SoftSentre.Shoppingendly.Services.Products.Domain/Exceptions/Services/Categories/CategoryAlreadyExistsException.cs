@@ -13,13 +13,18 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Categories
 {
-    internal class CategoryAlreadyExistsException : ShoppingendlyException
+    internal class CategoryAlreadyExistsException : DomainException
     {
-        internal CategoryAlreadyExistsException(string message) : base(message)
+        internal CategoryAlreadyExistsException(CategoryId categoryId) : base(
+            $"Unable to add new category, because category with id: {categoryId} is already exists.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CategoryAlreadyExists;
     }
 }

@@ -13,13 +13,18 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Products
 {
-    internal class ProductNotFoundException : ShoppingendlyException
+    internal class ProductNotFoundException : DomainException
     {
-        internal ProductNotFoundException(string message) : base(message)
+        internal ProductNotFoundException(ProductId productId) : base(
+            $"Unable to mutate product state, because product with id: {productId} is empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductNotFound;
     }
 }

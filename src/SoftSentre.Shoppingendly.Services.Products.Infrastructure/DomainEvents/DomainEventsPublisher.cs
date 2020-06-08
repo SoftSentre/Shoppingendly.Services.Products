@@ -38,8 +38,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
 
             if (domainEventHandler == null)
             {
-                throw new PublishDomainEventFailed(
-                    $"Unable to publish domain event {@event}.");
+                throw new PublishDomainEventFailedException(@event);
             }
 
             await domainEventHandler.HandleAsync(@event);

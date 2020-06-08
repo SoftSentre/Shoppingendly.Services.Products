@@ -54,8 +54,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
             {
                 _logger.LogError($"Error occured when dispatching the domain events. Message: {exception.Message}",
                     exception);
-                throw new DispatchedDomainEventsFailedException(
-                    $"Error occured when dispatching the domain events. Message: {exception.Message}", exception);
+                throw new DispatchedDomainEventsFailedException(exception);
             }
         }
     }

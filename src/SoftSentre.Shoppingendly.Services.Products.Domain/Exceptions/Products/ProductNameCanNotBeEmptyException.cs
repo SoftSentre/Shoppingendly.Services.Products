@@ -13,13 +13,16 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    public class PublishDomainEventFailed : ShoppingendlyException
+    internal class ProductNameCanNotBeEmptyException : DomainException
     {
-        public PublishDomainEventFailed(string message) : base(message)
+        internal ProductNameCanNotBeEmptyException() : base("Product name can not be empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductNameCanNotBeEmpty;
     }
 }

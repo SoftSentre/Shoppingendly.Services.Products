@@ -13,13 +13,16 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
 {
-    internal class InvalidCategoryDescriptionException : ShoppingendlyException
+    internal class CategoryNameCanNotBeEmptyException : DomainException
     {
-        internal InvalidCategoryDescriptionException(string message) : base(message)
+        internal CategoryNameCanNotBeEmptyException() : base("Category name can not be empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.CategoryNameCanNotBeEmpty;
     }
 }

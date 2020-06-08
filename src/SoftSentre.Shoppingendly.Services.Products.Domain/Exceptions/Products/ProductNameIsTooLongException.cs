@@ -1,4 +1,4 @@
-// Copyright 2020 SoftSentre Contributors
+﻿// Copyright 2020 SoftSentre Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    internal class AnyProductWithAssignedCategoryNotFoundException : ShoppingendlyException
+    internal class ProductNameIsTooLongException : DomainException
     {
-        internal AnyProductWithAssignedCategoryNotFoundException(string message) : base(message)
+        internal ProductNameIsTooLongException(int productNameMaxLength) : base(
+            $"Product name can not be longer than {productNameMaxLength} characters.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductNameIsTooLong;
     }
 }

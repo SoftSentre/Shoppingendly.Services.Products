@@ -13,13 +13,17 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    internal class InvalidProductProducerException : ShoppingendlyException
+    internal class ProductNameIsTooShortException : DomainException
     {
-        internal InvalidProductProducerException(string message) : base(message)
+        internal ProductNameIsTooShortException(int productNameMinLength) : base(
+            $"Product name can not be shorter than {productNameMinLength} characters.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ProductNameIsTooShort;
     }
 }

@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Options
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
+
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers
 {
-    public class AppOptions
+    internal class ProductProducerNameIsTooShortException : DomainException
     {
-        public string Name { get; set; }
-        public string Service { get; set; }
-        public string Instance { get; set; }
-        public string Version { get; set; }
+        internal ProductProducerNameIsTooShortException(int productProducerMinLength) : base(
+            $"Product producer can not be shorter than {productProducerMinLength} characters.")
+        {
+        }
+
+        public override string Code { get; } = ErrorCodes.ProductProducerNameIsTooShort;
     }
 }

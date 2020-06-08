@@ -20,10 +20,10 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Settings;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Settings;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Options;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger

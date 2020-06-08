@@ -52,7 +52,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
                 new SqlSettings(), dbContextOptions);
-            
+
             await productServiceDbContext.Database.EnsureDeletedAsync();
             await productServiceDbContext.Database.EnsureCreatedAsync();
             await productServiceDbContext.Categories.AddAsync(_category);
@@ -79,11 +79,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
 
             // Act
-            var testResult = await categoryRepository.GetByNameWithIncludesAsync(_category.Name);
+            var testResult = await categoryRepository.GetByNameWithIncludesAsync(_category.CategoryName);
 
             // Assert
-            testResult.Value.Name.Should().Be(_category.Name);
-            testResult.Value.Description.Should().Be(_category.Description);
+            testResult.Value.CategoryName.Should().Be(_category.CategoryName);
+            testResult.Value.CategoryDescription.Should().Be(_category.CategoryDescription);
             testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
             testResult.Value.ProductCategories.Should().HaveCount(2);
 
@@ -104,8 +104,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = dbContext.Categories.FirstOrDefault(p => p.Id.Equals(category.Id)) ?? It.IsAny<Category>();
 
             // Assert
-            testResult.Name.Should().Be(category.Name);
-            testResult.Description.Should().Be(category.Description);
+            testResult.CategoryName.Should().Be(category.CategoryName);
+            testResult.CategoryDescription.Should().Be(category.CategoryDescription);
             testResult.CreatedAt.Should().Be(category.CreatedAt);
 
             await dbContext.DisposeAsync();
@@ -164,7 +164,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Assert
             testResult.Value.Should().HaveCount(3);
-            var testResultItem = testResult.Value.FirstOrDefault(c => c.Name == _category.Name) ?? It.IsAny<Category>();
+            var testResultItem = testResult.Value.FirstOrDefault(c => c.CategoryName == _category.CategoryName) ??
+                                 It.IsAny<Category>();
             testResultItem.ProductCategories.Should().HaveCount(2);
 
             await dbContext.DisposeAsync();
@@ -181,8 +182,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var testResult = await categoryRepository.GetByIdAsync(_category.Id);
 
             // Assert
-            testResult.Value.Name.Should().Be(_category.Name);
-            testResult.Value.Description.Should().Be(_category.Description);
+            testResult.Value.CategoryName.Should().Be(_category.CategoryName);
+            testResult.Value.CategoryDescription.Should().Be(_category.CategoryDescription);
             testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
 
             await dbContext.DisposeAsync();
@@ -196,11 +197,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
 
             // Act
-            var testResult = await categoryRepository.GetByNameAsync(_category.Name);
+            var testResult = await categoryRepository.GetByNameAsync(_category.CategoryName);
 
             // Assert
-            testResult.Value.Name.Should().Be(_category.Name);
-            testResult.Value.Description.Should().Be(_category.Description);
+            testResult.Value.CategoryName.Should().Be(_category.CategoryName);
+            testResult.Value.CategoryDescription.Should().Be(_category.CategoryDescription);
             testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
 
             await dbContext.DisposeAsync();
@@ -216,7 +217,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Act
             var categoryFromDatabase = await dbContext.Categories.FirstOrDefaultAsync(p => p.Id.Equals(_category.Id));
-            categoryFromDatabase.SetName(newCategoryName);
+            categoryFromDatabase.SetCategoryName(newCategoryName);
             categoryRepository.Update(categoryFromDatabase);
             await dbContext.SaveChangesAsync();
 
@@ -224,7 +225,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                              It.IsAny<Category>();
 
             // Assert
-            testResult.Name.Should().Be(newCategoryName);
+            testResult.CategoryName.Should().Be(newCategoryName);
 
             await dbContext.DisposeAsync();
         }

@@ -33,20 +33,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<Maybe<Category>> GetByIdAsync(CategoryId categoryId)
+        public async Task<Maybe<Category>> GetByIdAsync(CategoryId id)
         {
-            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Id.Equals(categoryId));
+            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Id.Equals(id));
         }
 
         public async Task<Maybe<Category>> GetByNameAsync(string name)
         {
-            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Name == name);
+            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.CategoryName == name);
         }
 
         public async Task<Maybe<Category>> GetByNameWithIncludesAsync(string name)
         {
             return await _productServiceDbContext.Categories.Include(c => c.ProductCategories)
-                .FirstOrDefaultAsync(c => c.Name == name);
+                .FirstOrDefaultAsync(c => c.CategoryName == name);
         }
 
         public async Task<Maybe<IEnumerable<Category>>> GetAllAsync()

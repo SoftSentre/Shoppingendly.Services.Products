@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
-    internal class InvalidProductNameException : ShoppingendlyException
+    public class CreatorRole : Enumeration
     {
-        internal InvalidProductNameException(string message) : base(message)
+        public static readonly CreatorRole Admin = new CreatorRole(1, "Admin");
+        public static readonly CreatorRole Moderator = new CreatorRole(2, "Moderator");
+        public static readonly CreatorRole User = new CreatorRole(3, "User");
+
+        private CreatorRole(int id, string name) : base(id, name)
         {
         }
     }

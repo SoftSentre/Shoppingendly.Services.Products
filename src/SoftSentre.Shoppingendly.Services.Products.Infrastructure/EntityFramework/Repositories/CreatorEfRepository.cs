@@ -32,20 +32,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .IfEmptyThenThrowAndReturnValue();
         }
 
-        public async Task<Maybe<Creator>> GetByIdAsync(CreatorId creatorId)
+        public async Task<Maybe<Creator>> GetByIdAsync(CreatorId id)
         {
-            return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(creatorId));
+            return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(id));
         }
 
         public async Task<Maybe<Creator>> GetByNameAsync(string name)
         {
-            return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.Name == name);
+            return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.CreatorName == name);
         }
 
         public async Task<Maybe<Creator>> GetWithIncludesAsync(string name)
         {
             return await _productServiceDbContext.Creators.Include(c => c.Products)
-                .FirstOrDefaultAsync(p => p.Name == name);
+                .FirstOrDefaultAsync(p => p.CreatorName == name);
         }
 
         public async Task AddAsync(Creator creator)

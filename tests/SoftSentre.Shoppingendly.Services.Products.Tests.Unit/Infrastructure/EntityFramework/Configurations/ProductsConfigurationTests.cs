@@ -20,7 +20,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Configurations
 {
@@ -56,7 +56,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfProductNameHasConfiguredValidValues()
         {
             // Arrange
-            const string name = nameof(Product.Name);
+            const string name = nameof(Product.ProductName);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(name);
 
             // Act
@@ -72,8 +72,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfProductPictureNameHasConfiguredValidValues()
         {
             // Arrange
-            const string picture = nameof(Product.Picture);
-            const string pictureName = nameof(Picture.Name);
+            const string picture = nameof(Product.ProductPicture);
+            const string pictureName = nameof(ProductPicture.Name);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(picture)
                 .GetTargetType()
@@ -83,15 +83,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var maxLength = dbProperty.GetMaxLength();
 
             // Assert
-            maxLength.Should().Be(PictureNameMaxLength);
+            maxLength.Should().Be(ProductPictureNameMaxLength);
         }
 
         [Fact]
         public void CheckIfProductPictureUrlHasConfiguredValidValues()
         {
             // Arrange
-            const string picture = nameof(Product.Picture);
-            const string pictureUrl = nameof(Picture.Url);
+            const string picture = nameof(Product.ProductPicture);
+            const string pictureUrl = nameof(ProductPicture.Url);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(picture)
                 .GetTargetType()
@@ -101,7 +101,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var maxLength = dbProperty.GetMaxLength();
 
             // Assert
-            maxLength.Should().Be(PictureUrlMaxLength);
+            maxLength.Should().Be(ProductPictureUrlMaxLength);
         }
 
         [Fact]
@@ -109,8 +109,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             // Arrange
             const string producer = nameof(Product.Producer);
-            const string producerName = nameof(Product.Name);
-            
+            const string producerName = nameof(Product.Producer.Name);
+
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(producer)
                 .GetTargetType()
                 .FindDeclaredProperty(producerName);

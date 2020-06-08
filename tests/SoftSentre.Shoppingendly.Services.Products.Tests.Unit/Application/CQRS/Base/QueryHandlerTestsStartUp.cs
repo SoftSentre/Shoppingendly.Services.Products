@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
         public async Task InitializeAsync()
         {
             Logger = new Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>>();
-            
+
             await Task.CompletedTask;
         }
 

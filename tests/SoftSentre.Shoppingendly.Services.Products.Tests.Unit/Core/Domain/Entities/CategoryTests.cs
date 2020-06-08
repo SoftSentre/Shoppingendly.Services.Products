@@ -38,7 +38,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            Func<bool> func = () => category.SetName(categoryName);
+            Func<bool> func = () => category.SetCategoryName(categoryName);
             var testResult = func.Invoke();
 
             // Assert
@@ -56,10 +56,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            Func<bool> func = () => category.SetName(categoryName);
+            Func<bool> func = () => category.SetCategoryName(categoryName);
 
             // Assert
-            func.Should().Throw<InvalidCategoryNameException>()
+            func.Should().Throw<CategoryNameCanNotBeEmptyException>()
                 .WithMessage("Category name can not be empty.");
         }
 
@@ -75,7 +75,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
 
             // Act
-            Func<bool> func = () => category.SetDescription(categoryDescription);
+            Func<bool> func = () => category.SetCategoryDescription(categoryDescription);
             var testResult = func.Invoke();
 
             // Assert
@@ -122,8 +122,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
             newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
-            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
-            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.Description);
+            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.CategoryName);
+            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.CategoryDescription);
         }
 
         [Fact]
@@ -143,8 +143,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
             newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
-            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.Name);
-            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.Description);
+            newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.CategoryName);
+            newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.CategoryDescription);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
 
             // Act
-            category.SetDescription("Other correct description");
+            category.SetCategoryDescription("Other correct description");
             var categoryDescriptionChanged =
                 category.GetUncommitted().LastOrDefault() as CategoryDescriptionChangedDomainEvent ??
                 It.IsAny<CategoryDescriptionChangedDomainEvent>();
@@ -178,7 +178,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             categoryDescriptionChanged.Should().BeOfType<CategoryDescriptionChangedDomainEvent>();
             categoryDescriptionChanged.Should().NotBeNull();
             categoryDescriptionChanged.CategoryId.Should().Be(category.Id);
-            categoryDescriptionChanged.CategoryDescription.Should().Be(category.Description);
+            categoryDescriptionChanged.CategoryDescription.Should().Be(category.CategoryDescription);
         }
 
         [Fact]
@@ -189,7 +189,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", description);
 
             // Act
-            var testResult = category.SetDescription(description);
+            var testResult = category.SetCategoryDescription(description);
 
             // Assert
             testResult.Should().BeFalse();
@@ -203,7 +203,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", "Other description is correct.");
 
             // Act
-            var testResult = category.SetDescription(description);
+            var testResult = category.SetCategoryDescription(description);
 
             // Assert
             testResult.Should().BeTrue();
@@ -217,10 +217,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
 
             // Act
-            category.SetDescription(categoryDescription);
+            category.SetCategoryDescription(categoryDescription);
 
             // Assert
-            category.Description.Should().Be(categoryDescription);
+            category.CategoryDescription.Should().Be(categoryDescription);
             category.UpdatedDate.Should().NotBe(default);
             category.CreatedAt.Should().NotBe(default);
         }
@@ -234,10 +234,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
 
             // Act
-            Func<bool> func = () => category.SetDescription(description);
+            Func<bool> func = () => category.SetCategoryDescription(description);
 
             // Assert
-            func.Should().Throw<InvalidCategoryDescriptionException>()
+            func.Should().Throw<CategoryDescriptionIsTooLongException>()
                 .WithMessage("Category description can not be longer than 4000 characters.");
         }
 
@@ -250,10 +250,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory", "Description is correct.");
 
             // Act
-            Func<bool> func = () => category.SetDescription(description);
+            Func<bool> func = () => category.SetCategoryDescription(description);
 
             // Assert
-            func.Should().Throw<InvalidCategoryDescriptionException>()
+            func.Should().Throw<CategoryDescriptionIsTooShortException>()
                 .WithMessage("Category description can not be shorter than 20 characters.");
         }
 
@@ -264,7 +264,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            category.SetName("NewCategoryName");
+            category.SetCategoryName("NewCategoryName");
             var categoryNameChangedDomainEvent =
                 category.GetUncommitted().LastOrDefault() as CategoryNameChangedDomainEvent ??
                 It.IsAny<CategoryNameChangedDomainEvent>();
@@ -274,7 +274,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             categoryNameChangedDomainEvent.Should().BeOfType<CategoryNameChangedDomainEvent>();
             categoryNameChangedDomainEvent.Should().NotBeNull();
             categoryNameChangedDomainEvent.CategoryId.Should().Be(category.Id);
-            categoryNameChangedDomainEvent.CategoryName.Should().Be(category.Name);
+            categoryNameChangedDomainEvent.CategoryName.Should().Be(category.CategoryName);
         }
 
         [Fact]
@@ -285,10 +285,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            category.SetName(categoryName);
+            category.SetCategoryName(categoryName);
 
             // Assert
-            category.Name.Should().Be(categoryName);
+            category.CategoryName.Should().Be(categoryName);
             category.UpdatedDate.Should().NotBe(default);
             category.CreatedAt.Should().NotBe(default);
         }
@@ -301,10 +301,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            Func<bool> func = () => category.SetName(categoryName);
+            Func<bool> func = () => category.SetCategoryName(categoryName);
 
             // Assert
-            func.Should().Throw<InvalidCategoryNameException>()
+            func.Should().Throw<CategoryNameIsTooLongException>()
                 .WithMessage("Category name can not be longer than 30 characters.");
         }
 
@@ -316,10 +316,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            Func<bool> func = () => category.SetName(categoryName);
+            Func<bool> func = () => category.SetCategoryName(categoryName);
 
             // Assert
-            func.Should().Throw<InvalidCategoryNameException>()
+            func.Should().Throw<CategoryNameIsTooShortException>()
                 .WithMessage("Category name can not be shorter than 4 characters.");
         }
 
@@ -331,7 +331,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), categoryName);
 
             // Act
-            var testResult = category.SetName(categoryName);
+            var testResult = category.SetCategoryName(categoryName);
 
             // Assert
             testResult.Should().BeFalse();
@@ -345,7 +345,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             var category = new Category(new CategoryId(), "ExampleCategory");
 
             // Act
-            var testResult = category.SetName(categoryName);
+            var testResult = category.SetCategoryName(categoryName);
 
             // Assert
             testResult.Should().BeTrue();

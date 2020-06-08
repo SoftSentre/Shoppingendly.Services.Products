@@ -19,8 +19,8 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Sinks.Elasticsearch;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Settings;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Settings;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Options;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
 {

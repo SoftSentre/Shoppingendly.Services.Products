@@ -13,13 +13,16 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions
 {
-    public class InvalidCommandException : ShoppingendlyException
+    public class InvalidCommandException : InfrastructureException
     {
         public InvalidCommandException(string message) : base(message)
         {
         }
+
+        public override string Code { get; } = ErrorCodes.InvalidCommand;
     }
 }

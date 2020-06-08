@@ -29,9 +29,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Application.Mapper
         CreatorDto MapCreatorToCreatorDto(Creator creator);
         CreatorWithProductsDto MapCreatorToCreatorWithProductsDto(Creator creator);
 
-        RoleDto MapRoleToRoleDto(Role role);
+        RoleDto MapRoleToRoleDto(CreatorRole creatorRole);
 
-        PictureDto MapPictureToPictureDto(Picture picture);
+        PictureDto MapPictureToPictureDto(ProductPicture productPicture);
 
         ProductDto MapProductToProductDto(Product product);
         ProductDetailsDto MapProductToProductDetailsDto(Product product);

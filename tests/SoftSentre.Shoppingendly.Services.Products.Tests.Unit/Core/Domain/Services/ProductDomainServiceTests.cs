@@ -36,15 +36,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             _productId = new ProductId();
             _productProducer = ProductProducer.CreateProductProducer("ExampleProducer");
-            _picture = Picture.Create("PictureName", "PictureUrl");
+            _productPicture = ProductPicture.Create("PictureName", "PictureUrl");
             _product = Product.Create(_productId, new CreatorId(), ProductName, _productProducer);
         }
 
         private const string ProductName = "ExampleProductName";
-        
+
         private readonly ProductProducer _productProducer;
         private readonly ProductId _productId;
-        private readonly Picture _picture;
+        private readonly ProductPicture _productPicture;
         private readonly Product _product;
 
         [Fact]
@@ -58,7 +58,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.Name, _product.Producer);
+                _product.CreatorId, _product.ProductName, _product.Producer);
 
             //Assert
             func.Should().NotThrow();
@@ -77,7 +77,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.Name, _product.Producer);
+                _product.CreatorId, _product.ProductName, _product.Producer);
 
             //Assert
             func.Should().Throw<ProductAlreadyExistsException>()
@@ -101,13 +101,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            var testResult = await productDomainService.AddNewProductAsync(product.Id, product.CreatorId, product.Name,
+            var testResult = await productDomainService.AddNewProductAsync(product.Id, product.CreatorId,
+                product.ProductName,
                 product.Producer, categories);
 
             //Assert
             testResult.Value.Id.Should().Be(product.Id);
             testResult.Value.CreatorId.Should().Be(product.CreatorId);
-            testResult.Value.Name.Should().Be(product.Name);
+            testResult.Value.ProductName.Should().Be(product.ProductName);
             testResult.Value.Producer.Should().Be(product.Producer);
             testResult.Value.CreatedAt.Should().NotBe(default);
             var expectedFirstCategory =
@@ -134,12 +135,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             var testResult = await productDomainService.AddNewProductAsync(_productId, _product.CreatorId,
-                _product.Name, _product.Producer);
+                _product.ProductName, _product.Producer);
 
             //Assert
             testResult.Value.Id.Should().Be(_product.Id);
             testResult.Value.CreatorId.Should().Be(_product.CreatorId);
-            testResult.Value.Name.Should().Be(_product.Name);
+            testResult.Value.ProductName.Should().Be(_product.ProductName);
             testResult.Value.Producer.Should().Be(_product.Producer);
             testResult.Value.CreatedAt.Should().NotBe(default);
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
@@ -157,7 +158,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.Name, _product.Producer,
+                _product.CreatorId, _product.ProductName, _product.Producer,
                 new List<CategoryId> {new CategoryId(), new CategoryId()});
 
             //Assert
@@ -177,7 +178,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.Name, _product.Producer,
+                _product.CreatorId, _product.ProductName, _product.Producer,
                 new List<CategoryId> {new CategoryId(), new CategoryId()});
 
             //Assert
@@ -200,12 +201,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            var testResult = await productDomainService.AddOrChangeProductPictureAsync(_productId, _picture);
+            var testResult = await productDomainService.AddOrChangeProductPictureAsync(_productId, _productPicture);
 
             //Assert
             testResult.Should().BeTrue();
-            product.Picture.Should().Be(_picture);
-            product.Picture.IsEmpty.Should().BeFalse();
+            product.ProductPicture.Should().Be(_productPicture);
+            product.ProductPicture.IsEmpty.Should().BeFalse();
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
@@ -223,7 +224,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task> func = async () =>
-                await productDomainService.AddOrChangeProductPictureAsync(_productId, _picture);
+                await productDomainService.AddOrChangeProductPictureAsync(_productId, _productPicture);
 
             //Assert
             func.Should().NotThrow();
@@ -244,7 +245,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task> func = async () =>
-                await productDomainService.AddOrChangeProductPictureAsync(_productId, Picture.Empty);
+                await productDomainService.AddOrChangeProductPictureAsync(_productId, ProductPicture.Empty);
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
@@ -360,7 +361,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             testResult.Should().BeTrue();
-            product.Name.Should().Be(newProductName);
+            product.ProductName.Should().Be(newProductName);
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
@@ -757,7 +758,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), _picture, ProductName, _productProducer);
+            var product = new Product(new ProductId(), new CreatorId(), _productPicture, ProductName, _productProducer);
             productRepository.Setup(pr => pr.GetByIdAsync(_productId))
                 .ReturnsAsync(product);
 
@@ -767,9 +768,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             await productDomainService.RemovePictureFromProductAsync(_productId);
 
             //Assert
-            product.Picture.IsEmpty.Should().BeTrue();
-            product.Picture.Name.Should().Be(null);
-            product.Picture.Url.Should().Be(null);
+            product.ProductPicture.IsEmpty.Should().BeTrue();
+            product.ProductPicture.Name.Should().Be(null);
+            product.ProductPicture.Url.Should().Be(null);
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(product), Times.Once);
         }

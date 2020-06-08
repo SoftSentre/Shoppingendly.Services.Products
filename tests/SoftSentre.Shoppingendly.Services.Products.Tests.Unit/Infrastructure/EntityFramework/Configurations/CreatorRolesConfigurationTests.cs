@@ -19,7 +19,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.Validation.GlobalValidationVariables;
+using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Configurations
 {
@@ -29,17 +29,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             _entityTypeBuilder =
                 ConfigurationMetadataTestsExtensions
-                    .GetCustomerEntityConfigurationMetadata<Role, CreatorRolesConfiguration>(
+                    .GetCustomerEntityConfigurationMetadata<CreatorRole, CreatorRolesConfiguration>(
                         new CreatorRolesConfiguration());
         }
 
-        private readonly EntityTypeBuilder<Role> _entityTypeBuilder;
+        private readonly EntityTypeBuilder<CreatorRole> _entityTypeBuilder;
 
         [Fact]
         public void CheckIfRoleIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string roleId = nameof(Role.Id);
+            const string roleId = nameof(CreatorRole.Id);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(roleId);
 
             // Act
@@ -55,7 +55,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfRoleNameHasConfiguredValidValues()
         {
             // Arrange
-            const string name = nameof(Role.Name);
+            const string name = nameof(CreatorRole.Name);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(name);
 
             // Act
@@ -63,7 +63,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var isRequired = !dbProperty.IsNullable;
 
             // Assert
-            maxLength.Should().Be(RoleNameMaxLength);
+            maxLength.Should().Be(CreatorRoleNameMaxLength);
             isRequired.Should().BeTrue();
         }
     }

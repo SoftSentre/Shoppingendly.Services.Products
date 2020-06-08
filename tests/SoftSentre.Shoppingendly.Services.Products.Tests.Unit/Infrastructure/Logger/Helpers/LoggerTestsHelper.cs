@@ -20,7 +20,7 @@ using Moq.Language.Flow;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Logger.Helpers
 {
-     public static class LoggerTestHelper
+    public static class LoggerTestHelper
     {
         public static ISetup<ILogger<T>> Setup<T>(this Mock<ILogger<T>> logger, LogLevel level)
         {

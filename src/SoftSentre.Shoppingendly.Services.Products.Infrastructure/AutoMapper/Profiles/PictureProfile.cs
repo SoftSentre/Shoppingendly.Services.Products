@@ -22,7 +22,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.P
     {
         public PictureProfile()
         {
-            CreateMap<Picture, PictureDto>()
+            CreateMap<ProductPicture, PictureDto>()
                 .ConstructUsing(p => new PictureDto(p.Url));
         }
     }

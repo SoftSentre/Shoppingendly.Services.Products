@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using Xunit;
 
@@ -30,10 +30,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
         public void CheckIfWhenNotEmptyPictureAreCreatingThenCorrectValuesShouldBeProvided(string name, string url)
         {
             // Act
-            Action action = () => Picture.Create(name, url);
+            Action action = () => ProductPicture.Create(name, url);
 
             //Assert
-            action.Should().Throw<ShoppingendlyException>();
+            action.Should().Throw<InternalException>();
         }
 
         private class PictureFieldsDataGenerator
@@ -56,7 +56,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             const string url = "ExamplePictureUrl";
 
             // Act
-            var picture = Picture.Create(name, url);
+            var picture = ProductPicture.Create(name, url);
 
             //Assert
             picture.Name.Should().Be(name);
@@ -68,7 +68,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
         public void CheckIfItPossibleToCreateEmptyPicture()
         {
             // Act
-            var picture = Picture.Empty;
+            var picture = ProductPicture.Empty;
 
             //Assert
             picture.Name.Should().Be(null);
@@ -83,10 +83,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             const string url = "ValidUrl";
 
             // Act
-            Action action = () => Picture.Create(string.Empty, url);
+            Action action = () => ProductPicture.Create(string.Empty, url);
 
             //Assert
-            action.Should().Throw<InvalidPictureNameException>()
+            action.Should().Throw<PictureNameCanNotBeEmptyException>()
                 .WithMessage("Picture name can not be empty.");
         }
 
@@ -97,10 +97,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             const string url = "ValidUrl";
 
             // Act
-            Action action = () => Picture.Create(new string('*', 201), url);
+            Action action = () => ProductPicture.Create(new string('*', 201), url);
 
             //Assert
-            action.Should().Throw<InvalidPictureNameException>()
+            action.Should().Throw<PictureNameIsTooLongException>()
                 .WithMessage("Picture name can not be longer than 200 characters.");
         }
 
@@ -111,10 +111,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             const string name = "ValidName";
 
             // Act
-            Action action = () => Picture.Create(name, "Some   url");
+            Action action = () => ProductPicture.Create(name, "Some   url");
 
             //Assert
-            action.Should().Throw<InvalidPictureUrlException>()
+            action.Should().Throw<PictureUrlCanNotContainsWhitespacesException>()
                 .WithMessage("Picture url can not have whitespaces.");
         }
 
@@ -125,10 +125,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             const string name = "ValidName";
 
             // Act
-            Action action = () => Picture.Create(name, string.Empty);
+            Action action = () => ProductPicture.Create(name, string.Empty);
 
             //Assert
-            action.Should().Throw<InvalidPictureUrlException>()
+            action.Should().Throw<PictureUrlCanNotBeEmptyException>()
                 .WithMessage("Picture url can not be empty.");
         }
 
@@ -139,10 +139,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Valu
             const string name = "ValidName";
 
             // Act
-            Action action = () => Picture.Create(name, new string('*', 501));
+            Action action = () => ProductPicture.Create(name, new string('*', 501));
 
             //Assert
-            action.Should().Throw<InvalidPictureUrlException>()
+            action.Should().Throw<PictureUrlIsTooLongException>()
                 .WithMessage("Picture url can not be longer than 500 characters.");
         }
     }

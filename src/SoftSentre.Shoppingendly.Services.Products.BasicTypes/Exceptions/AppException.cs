@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using System;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
 {
-    internal class InvalidCategoryNameException : ShoppingendlyException
+    public class AppException : InternalException
     {
-        internal InvalidCategoryNameException(string message) : base(message)
+        protected AppException()
+        {
+        }
+
+        protected AppException(string message) : base(message)
+        {
+        }
+
+        protected AppException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

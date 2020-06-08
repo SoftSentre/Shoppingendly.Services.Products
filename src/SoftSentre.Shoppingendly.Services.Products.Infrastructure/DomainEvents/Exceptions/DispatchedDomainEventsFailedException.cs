@@ -14,14 +14,18 @@
 
 using System;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
 {
-    public class DispatchedDomainEventsFailedException : ShoppingendlyException
+    public class DispatchedDomainEventsFailedException : InfrastructureException
     {
-        public DispatchedDomainEventsFailedException(string message, Exception innerException)
-            : base(message, innerException)
+        public DispatchedDomainEventsFailedException(Exception innerException)
+            : base($"Error occured when dispatching the domain events. Message: {innerException.Message}",
+                innerException)
         {
         }
+
+        public override string Code { get; } = ErrorCodes.DispatchDomainEventsFailed;
     }
 }

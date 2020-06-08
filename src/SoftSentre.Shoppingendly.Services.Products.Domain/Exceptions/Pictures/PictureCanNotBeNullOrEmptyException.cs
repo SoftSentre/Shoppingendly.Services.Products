@@ -13,13 +13,16 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures
 {
-    internal class InvalidPictureUrlException : ShoppingendlyException
+    internal class PictureCanNotBeNullOrEmptyException : DomainException
     {
-        internal InvalidPictureUrlException(string message) : base(message)
+        internal PictureCanNotBeNullOrEmptyException() : base("Picture can not be null or empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.PictureCanNotBeNullOrEmpty;
     }
 }

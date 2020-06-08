@@ -13,13 +13,17 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures
 {
-    internal class InvalidCreatorNameException : ShoppingendlyException
+    internal class PictureNameIsTooLongException : DomainException
     {
-        internal InvalidCreatorNameException(string message) : base(message)
+        internal PictureNameIsTooLongException(int pictureNameMaxLength) : base(
+            $"Picture name can not be longer than {pictureNameMaxLength} characters.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.PictureNameIsTooLong;
     }
 }

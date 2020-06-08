@@ -70,8 +70,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
             if (category.HasValue)
             {
-                throw new CategoryAlreadyExistsException(
-                    $"Unable to add new category, because category with id: {categoryId} is already exists.");
+                throw new CategoryAlreadyExistsException(categoryId);
             }
 
             var newCategory = Category.Create(categoryId, categoryName);
@@ -87,8 +86,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
             if (category.HasValue)
             {
-                throw new CategoryAlreadyExistsException(
-                    $"Unable to add new category, because category with id: {categoryId} is already exists.");
+                throw new CategoryAlreadyExistsException(categoryId);
             }
 
             var newCategory = Category.Create(categoryId, categoryName, description);
@@ -99,11 +97,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
         public async Task<bool> SetCategoryNameAsync(CategoryId categoryId, string categoryName)
         {
-            var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
-                new CategoryNotFoundException(
-                    $"Unable to mutate category state, because category with id: {categoryId} not found."));
+            var category = await _categoryRepository.GetByIdAsync(categoryId)
+                .UnwrapAsync(new CategoryNotFoundException(categoryId));
 
-            var isNameChanged = category.SetName(categoryName);
+            var isNameChanged = category.SetCategoryName(categoryName);
 
             if (isNameChanged)
             {
@@ -115,11 +112,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
         public async Task<bool> SetCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription)
         {
-            var category = await _categoryRepository.GetByIdAsync(categoryId).UnwrapAsync(
-                new CategoryNotFoundException(
-                    $"Unable to mutate category state, because category with id: {categoryId} not found."));
+            var category = await _categoryRepository.GetByIdAsync(categoryId)
+                .UnwrapAsync(new CategoryNotFoundException(categoryId));
 
-            var isDescriptionChanged = category.SetDescription(categoryDescription);
+            var isDescriptionChanged = category.SetCategoryDescription(categoryDescription);
 
             if (isDescriptionChanged)
             {

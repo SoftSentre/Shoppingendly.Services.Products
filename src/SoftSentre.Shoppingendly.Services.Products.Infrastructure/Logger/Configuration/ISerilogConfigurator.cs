@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Serilog;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Options;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Settings;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
 {

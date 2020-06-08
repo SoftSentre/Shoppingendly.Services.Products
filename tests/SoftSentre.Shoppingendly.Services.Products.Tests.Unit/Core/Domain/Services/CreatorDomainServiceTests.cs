@@ -33,14 +33,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public CreatorDomainServiceTests()
         {
             _creatorId = new CreatorId();
-            _creatorRole = Role.User;
-            _creator = Creator.Create(_creatorId, CreatorName, _creatorRole);
+            _creatorCreatorRole = CreatorRole.User;
+            _creator = Creator.Create(_creatorId, CreatorName, _creatorCreatorRole);
         }
 
         private const string CreatorName = "ExampleCreatorName";
 
         private readonly CreatorId _creatorId;
-        private readonly Role _creatorRole;
+        private readonly CreatorRole _creatorCreatorRole;
         private readonly Creator _creator;
 
 
@@ -55,12 +55,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             var testResult =
-                await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorRole);
+                await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorCreatorRole);
 
             //Assert
             testResult.Value.Id.Should().Be(_creatorId);
-            testResult.Value.Name.Should().Be(CreatorName);
-            testResult.Value.Role.Should().Be(_creatorRole);
+            testResult.Value.CreatorName.Should().Be(CreatorName);
+            testResult.Value.CreatorRole.Should().Be(_creatorCreatorRole);
             testResult.Value.CreatedAt.Should().NotBe(default);
             creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
             creatorRepository.Verify(cr => cr.AddAsync(It.IsAny<Creator>()),
@@ -76,7 +76,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Creator>>> func = async () =>
-                await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorRole);
+                await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorCreatorRole);
 
             //Assert
             func.Should().NotThrow();
@@ -95,7 +95,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Creator>>> func = async () =>
-                await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorRole);
+                await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorCreatorRole);
 
             //Assert
             func.Should().Throw<CreatorAlreadyExistsException>()
@@ -109,7 +109,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
-            var creator = new Creator(new CreatorId(), "ExampleCreatorName", Role.User);
+            var creator = new Creator(new CreatorId(), "ExampleCreatorName", CreatorRole.User);
             creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
                 .ReturnsAsync(creator);
             ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
@@ -129,7 +129,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             const string newCreatorName = "OtherExampleCreatorName";
-            var creator = new Creator(new CreatorId(), "ExampleCreatorName", Role.User);
+            var creator = new Creator(new CreatorId(), "ExampleCreatorName", CreatorRole.User);
             var creatorRepository = new Mock<ICreatorRepository>();
             creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
                 .ReturnsAsync(creator);
@@ -140,7 +140,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             action.Invoke();
 
             //Assert
-            creator.Name.Should().Be("OtherExampleCreatorName");
+            creator.CreatorName.Should().Be("OtherExampleCreatorName");
             creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
             creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
         }
@@ -150,14 +150,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
-            var creator = new Creator(new CreatorId(), "ExampleCreatorName", Role.User);
+            var creator = new Creator(new CreatorId(), "ExampleCreatorName", CreatorRole.User);
             creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
                 .ReturnsAsync(creator);
             ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorRoleAsync(_creatorId, Role.Admin);
+                await creatorDomainService.SetCreatorRoleAsync(_creatorId, CreatorRole.Admin);
 
             //Assert
             func.Should().NotThrow();
@@ -169,18 +169,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public void CheckIfChangeCreatorRoleMethodSetValueWhenCorrectValueAreProvided()
         {
             // Arrange
-            var creator = new Creator(new CreatorId(), "ExampleCreatorName", Role.User);
+            var creator = new Creator(new CreatorId(), "ExampleCreatorName", CreatorRole.User);
             var creatorRepository = new Mock<ICreatorRepository>();
             creatorRepository.Setup(cr => cr.GetByIdAsync(_creatorId))
                 .ReturnsAsync(creator);
             ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
 
             // Act
-            Action action = async () => await creatorDomainService.SetCreatorRoleAsync(_creatorId, Role.Admin);
+            Action action = async () => await creatorDomainService.SetCreatorRoleAsync(_creatorId, CreatorRole.Admin);
             action.Invoke();
 
             //Assert
-            creator.Role.Should().Be(Role.Admin);
+            creator.CreatorRole.Should().Be(CreatorRole.Admin);
             creatorRepository.Verify(cr => cr.GetByIdAsync(_creatorId), Times.Once);
             creatorRepository.Verify(cr => cr.Update(creator), Times.Once);
         }
@@ -226,8 +226,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
-            var creator = new Creator(new CreatorId(), CreatorName, Role.User);
-            creator.Products.Add(new Product(new ProductId(), creator.Id, Picture.Empty, "ExampleProductName",
+            var creator = new Creator(new CreatorId(), CreatorName, CreatorRole.User);
+            creator.Products.Add(new Product(new ProductId(), creator.Id, ProductPicture.Empty, "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer")));
 
             creatorRepository.Setup(cr => cr.GetWithIncludesAsync(CreatorName))
@@ -274,7 +274,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task> func = async () =>
-                await creatorDomainService.SetCreatorRoleAsync(_creatorId, Role.Admin);
+                await creatorDomainService.SetCreatorRoleAsync(_creatorId, CreatorRole.Admin);
 
             //Assert
             func.Should().Throw<CreatorNotFoundException>()

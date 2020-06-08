@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures
 {
-    public class Role : Enumeration
+    internal class PictureNameCanNotBeEmptyException : DomainException
     {
-        public static readonly Role Admin = new Role(1, "Admin");
-        public static readonly Role Moderator = new Role(2, "Moderator");
-        public static readonly Role User = new Role(3, "User");
-
-        private Role(int id, string name) : base(id, name)
+        internal PictureNameCanNotBeEmptyException() : base("Picture name can not be empty.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.PictureNameCanNotBeEmpty;
     }
 }

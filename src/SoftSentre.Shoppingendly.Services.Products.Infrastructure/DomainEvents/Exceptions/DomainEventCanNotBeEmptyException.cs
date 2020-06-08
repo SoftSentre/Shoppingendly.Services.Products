@@ -13,17 +13,16 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
 {
-    public class DomainEventCanNotBeEmptyException : ShoppingendlyException
+    public class DomainEventCanNotBeEmptyException : InfrastructureException
     {
-        public DomainEventCanNotBeEmptyException()
+        public DomainEventCanNotBeEmptyException() : base("Domain event can not be null.")
         {
         }
 
-        public DomainEventCanNotBeEmptyException(string message) : base(message)
-        {
-        }
+        public override string Code { get; } = ErrorCodes.DomainEventCanNotBeEmpty;
     }
 }
