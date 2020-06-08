@@ -39,8 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
             if (commandHandler == null)
             {
-                throw new CommandPublishedFailedException(
-                    $"Unable to publish command: {command.GetType().Name}");
+                throw new CommandPublishedFailedException(command);
             }
 
             return await commandHandler.SendAsync(command);

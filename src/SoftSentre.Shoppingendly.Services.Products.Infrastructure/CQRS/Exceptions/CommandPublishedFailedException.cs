@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions
 {
-    public class CommandPublishedFailedException : InternalException
+    public class CommandPublishedFailedException : InfrastructureException
     {
-        public CommandPublishedFailedException(string message) : base(message)
+        public override string Code { get; } = ErrorCodes.CommandPublishedFailed;
+
+        public CommandPublishedFailedException(ICommand command) : base(
+            $"Unable to publish command: {command.GetType().Name}")
         {
         }
     }

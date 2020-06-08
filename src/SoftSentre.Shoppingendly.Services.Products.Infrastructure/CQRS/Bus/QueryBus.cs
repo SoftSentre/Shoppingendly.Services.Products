@@ -42,8 +42,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
             if (queryHandler == null)
             {
-                throw new SendingQueryFailedException(
-                    $"Can not send query: {query.GetType().Name}.");
+                throw new SendingQueryFailedException(query);
             }
 
             return await queryHandler.QueryAsync((dynamic) query);
@@ -58,8 +57,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
             if (queryHandler == null)
             {
-                throw new SendingQueryFailedException(
-                    $"Can not send query: {query.GetType().Name}.");
+                throw new SendingQueryFailedException(query);
             }
 
             return await queryHandler.QueryAsync(query);

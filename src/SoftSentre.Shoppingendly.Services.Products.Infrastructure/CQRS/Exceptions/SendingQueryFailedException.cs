@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Queries;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions
 {
-    public class SendingQueryFailedException : InternalException
+    public class SendingQueryFailedException : InfrastructureException
     {
-        public SendingQueryFailedException(string message) : base(message)
+        public override string Code { get; } = ErrorCodes.SendingQueryFailed;
+
+        public SendingQueryFailedException(IQuery query) : base(
+            $"Can not send query: {query.GetType().Name}.")
         {
         }
     }

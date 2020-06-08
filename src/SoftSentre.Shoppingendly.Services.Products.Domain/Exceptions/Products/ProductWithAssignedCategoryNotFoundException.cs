@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 

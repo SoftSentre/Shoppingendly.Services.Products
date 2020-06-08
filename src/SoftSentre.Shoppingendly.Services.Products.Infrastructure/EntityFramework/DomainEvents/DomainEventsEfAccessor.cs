@@ -65,8 +65,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             {
                 if (domainEvent == null)
                 {
-                    throw new DomainEventCanNotBeEmptyException(
-                        "Domain event can not be null.");
+                    throw new DomainEventCanNotBeEmptyException();
                 }
 
                 tasks.Add(_domainEventPublisher.PublishAsync(domainEvent));

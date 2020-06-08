@@ -99,8 +99,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.D
 
             // Assert
             action.Should().Throw<DispatchedDomainEventsFailedException>()
-                .WithMessage(
-                    "Error occured when dispatching the domain events. Message: Exception of type 'SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions.DomainEventCanNotBeEmptyException' was thrown.")
                 .WithInnerExceptionExactly<DomainEventCanNotBeEmptyException>();
         }
     }

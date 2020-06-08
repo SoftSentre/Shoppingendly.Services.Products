@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using System;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
 {
-    public class PublishDomainEventFailed : InternalException
+    public class DomainException : InternalException
     {
-        public PublishDomainEventFailed(string message) : base(message)
+        protected DomainException()
+        {
+        }
+
+        protected DomainException(string message) : base(message)
+        {
+        }
+
+        protected DomainException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

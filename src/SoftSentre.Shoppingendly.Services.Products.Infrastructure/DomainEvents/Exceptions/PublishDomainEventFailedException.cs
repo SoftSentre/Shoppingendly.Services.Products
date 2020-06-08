@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
+using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions
+namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions
 {
-    internal abstract class DomainException : InternalException
+    public class PublishDomainEventFailedException : InfrastructureException
     {
-        protected DomainException(string message) : base(message)
+        public override string Code { get; } = ErrorCodes.PublishDomainEventFailedException;
+
+        public PublishDomainEventFailedException(IDomainEvent domainEvent) : base(
+            $"Unable to publish domain event {domainEvent}.")
         {
         }
-
-        public virtual string Code { get; }
     }
 }

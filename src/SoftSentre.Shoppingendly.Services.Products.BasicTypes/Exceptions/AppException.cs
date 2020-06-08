@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Options
+using System;
+
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
 {
-    public class AppOptions
+    public class AppException : InternalException
     {
-        public string Name { get; set; }
-        public string Service { get; set; }
-        public string Instance { get; set; }
-        public string Version { get; set; }
+        protected AppException()
+        {
+        }
+
+        protected AppException(string message) : base(message)
+        {
+        }
+
+        protected AppException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }
