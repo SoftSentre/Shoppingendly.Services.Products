@@ -12,33 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Extensions
 {
-    public static class GenericTypeExtensionsMethods
+    public static class CollectionExtensionsMethods
     {
-        public static string GetGenericTypeName(this object @object)
+        public static bool IsEmpty<T>(this IEnumerable<T> value)
         {
-            return @object.GetType().GetGenericTypeName();
+            return value == null || !value.Any();
         }
 
-        private static string GetGenericTypeName(this Type type)
+        public static bool IsNotEmpty<T>(this IEnumerable<T> value)
         {
-            string typeName;
+            return value != null && value.Any();
+        }
 
-            if (type.IsGenericType)
-            {
-                var genericTypes = string.Join(",", type.GetGenericArguments().Select(t => t.Name).ToArray());
-                typeName = $"{type.Name.Remove(type.Name.IndexOf('`'))}<{genericTypes}>";
-            }
-            else
-            {
-                typeName = type.Name;
-            }
+        public static bool IsEmpty<T>(this List<T> value)
+        {
+            return value == null || !value.Any();
+        }
 
-            return typeName;
+        public static bool IsNotEmpty<T>(this List<T> value)
+        {
+            return value != null && value.Any();
         }
     }
 }

@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
-
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries
 {
-    public interface ICommandHandler<in TCommand> where TCommand : class, ICommand
+    public abstract class PagedQueryBase : IPagedQuery
     {
-        Task<ICommandResult> SendAsync(TCommand command);
+        public int Page { get; set; }
+        public int Results { get; set; }
+        public string OrderBy { get; set; }
+        public string SortOrder { get; set; }
+    }
+
+    public abstract class PagedQueryBase<T> : PagedQueryBase, IPagedQuery
+    {
     }
 }

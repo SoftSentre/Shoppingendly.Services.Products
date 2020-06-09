@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results
+using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results;
+
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands
 {
-    public interface IQueryResult<out T> : IResult
+    public interface ICommandHandler<in TCommand> where TCommand : class, ICommand
     {
-        T Data { get; }
+        Task<ICommandResult> SendAsync(TCommand command);
     }
 }

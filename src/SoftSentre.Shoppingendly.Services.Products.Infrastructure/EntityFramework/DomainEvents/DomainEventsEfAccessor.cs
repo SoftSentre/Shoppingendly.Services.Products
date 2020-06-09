@@ -21,7 +21,6 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainEvents

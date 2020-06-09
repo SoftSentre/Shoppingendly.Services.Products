@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Queries;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using Xunit;
 

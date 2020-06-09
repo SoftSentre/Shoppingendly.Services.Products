@@ -12,17 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Queries;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
+using System.Collections.Generic;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results
 {
-    public interface IQueryBus
+    public class CommandResult : CommonResult, ICommandResult
     {
-        Task<IQueryResult<TResult>> QueryAsync<TResult>(IQuery<TResult> query);
+        public static CommandResult Success()
+        {
+            return new CommandResult {Ok = true};
+        }
 
-        Task<IQueryResult<TResult>> QueryAsync<TQuery, TResult>(TQuery query)
-            where TQuery : class, IQuery<TResult>;
+        public static CommandResult Failed(string error)
+        {
+            return new CommandResult {Ok = false, Message = error};
+        }
+
+        public static CommandResult Failed(IDictionary<string, string> errors)
+        {
+            return new CommandResult {Ok = false, Errors = errors};
+        }
     }
 }

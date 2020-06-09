@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
+using System.Collections.Generic;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Queries
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results
 {
-    public interface IQueryHandler<in TQuery, TResult>
-        where TQuery : class, IQuery<TResult>
+    public interface ICommonResult : IResult
     {
-        Task<IQueryResult<TResult>> QueryAsync(TQuery query);
+        bool Ok { get; }
+
+        string Message { get; }
+
+        IDictionary<string, string> Errors { get; }
     }
 }

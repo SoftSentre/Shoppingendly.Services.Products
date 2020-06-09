@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Bus;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions;
 using Xunit;

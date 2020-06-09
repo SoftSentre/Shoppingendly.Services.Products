@@ -26,7 +26,6 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainEvents;

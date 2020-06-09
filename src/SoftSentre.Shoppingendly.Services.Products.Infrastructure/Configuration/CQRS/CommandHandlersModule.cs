@@ -14,7 +14,7 @@
 
 using System.Reflection;
 using Autofac;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 using Module = Autofac.Module;
 

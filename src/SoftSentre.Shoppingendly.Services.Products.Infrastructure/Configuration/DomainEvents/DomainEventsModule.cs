@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using Autofac;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainEvents;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.DomainEvents

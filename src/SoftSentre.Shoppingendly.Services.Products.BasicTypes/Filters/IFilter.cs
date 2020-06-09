@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results
+using System.Collections.Generic;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
+
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Filters
 {
-    public interface ICommandResult : IResult
+    public interface IFilter<TResult, in TQuery> where TQuery : IQuery
     {
+        IEnumerable<TResult> Filter(IEnumerable<TResult> values, TQuery query);
     }
 }

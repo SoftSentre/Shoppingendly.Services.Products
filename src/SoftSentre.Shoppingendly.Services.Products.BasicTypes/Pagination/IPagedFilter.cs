@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
+using System.Collections.Generic;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Pagination.Results;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Pagination
 {
-    public interface ICommandBus
+    public interface IPagedFilter<TResult, in TQuery> where TQuery : IQuery
     {
-        Task<ICommandResult> SendAsync<TCommand>(TCommand command)
-            where TCommand : class, ICommand;
+        PagedResult<TResult> Filter(IEnumerable<TResult> values, TQuery query);
     }
 }

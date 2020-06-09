@@ -15,8 +15,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Queries;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 

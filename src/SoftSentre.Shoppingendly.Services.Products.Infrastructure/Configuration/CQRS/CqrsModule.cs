@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Autofac;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Bus;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS

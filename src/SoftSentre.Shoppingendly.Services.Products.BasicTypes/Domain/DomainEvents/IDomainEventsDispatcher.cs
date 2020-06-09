@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
+using System.Threading.Tasks;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Base
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents
 {
-    public interface IDomainEventAccessor
+    public interface IDomainEventsDispatcher
     {
-        Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents();
-        void DispatchEvents(IEnumerable<IDomainEvent> domainEvents);
-        void ClearAllDomainEvents();
+        Task DispatchAsync();
     }
 }

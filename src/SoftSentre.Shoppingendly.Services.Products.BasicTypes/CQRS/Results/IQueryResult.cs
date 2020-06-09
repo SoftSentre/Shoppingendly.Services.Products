@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results
 {
-    public interface ICommand
+    public interface IQueryResult<out T> : ICommonResult
     {
+        T Data { get; }
     }
 }
