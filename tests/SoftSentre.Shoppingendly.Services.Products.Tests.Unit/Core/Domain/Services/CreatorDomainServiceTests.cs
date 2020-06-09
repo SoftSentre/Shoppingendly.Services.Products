@@ -230,17 +230,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             creator.Products.Add(new Product(new ProductId(), creator.Id, ProductPicture.Empty, "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer")));
 
-            creatorRepository.Setup(cr => cr.GetWithIncludesAsync(CreatorName))
+            creatorRepository.Setup(cr => cr.GetWithIncludesAsync(_creatorId))
                 .ReturnsAsync(creator);
 
             ICreatorDomainService creatorDomainService = new CreatorDomainService(creatorRepository.Object);
 
             // Act
-            var testResult = await creatorDomainService.GetCreatorWithProductsAsync(CreatorName);
+            var testResult = await creatorDomainService.GetCreatorWithProductsAsync(_creatorId);
 
             // Assert
             testResult.Should().Be(creator);
-            creatorRepository.Verify(cr => cr.GetWithIncludesAsync(CreatorName), Times.Once);
+            creatorRepository.Verify(cr => cr.GetWithIncludesAsync(_creatorId), Times.Once);
         }
 
         [Fact]

@@ -45,9 +45,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return creator;
         }
 
-        public async Task<Maybe<Creator>> GetCreatorWithProductsAsync(string name)
+        public async Task<Maybe<Creator>> GetCreatorWithProductsAsync(CreatorId creatorId)
         {
-            var creator = await _creatorRepository.GetWithIncludesAsync(name);
+            var creator = await _creatorRepository.GetWithIncludesAsync(creatorId);
             return creator;
         }
 
