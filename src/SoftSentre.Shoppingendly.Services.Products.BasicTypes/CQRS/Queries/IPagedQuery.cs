@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Queries
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries
 {
-    public interface IQuery
+    public interface IPagedQuery : IQuery
     {
     }
 
-    public interface IQuery<T> : IQuery
+    public interface IPagedQuery<T> : IQuery
     {
     }
 }

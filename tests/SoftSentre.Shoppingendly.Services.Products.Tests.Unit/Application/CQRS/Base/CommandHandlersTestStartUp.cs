@@ -17,7 +17,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Commands;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using Xunit;

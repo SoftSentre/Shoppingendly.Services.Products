@@ -14,9 +14,9 @@
 
 using System.Collections.Generic;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results
 {
-    public class QueryResult<T> : Result, IQueryResult<T>
+    public class QueryResult<T> : CommonResult, IQueryResult<T>
     {
         public T Data { get; private set; }
 

@@ -14,9 +14,9 @@
 
 using System.Threading.Tasks;
 using Autofac;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Bus;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Commands;
-using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Bus;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Exceptions;
 

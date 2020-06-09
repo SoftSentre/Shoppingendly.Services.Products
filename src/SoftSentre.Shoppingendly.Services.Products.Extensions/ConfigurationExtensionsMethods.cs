@@ -12,31 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Extensions
 {
-    public static class CollectionExtensions
+    public static class ConfigurationExtensionsMethods
     {
-        public static bool IsEmpty<T>(this IEnumerable<T> value)
+        public static TModel GetOptions<TModel>(this IConfiguration configuration, string sectionName)
+            where TModel : new()
         {
-            return value == null || !value.Any();
-        }
-
-        public static bool IsNotEmpty<T>(this IEnumerable<T> value)
-        {
-            return value != null && value.Any();
-        }
-
-        public static bool IsEmpty<T>(this List<T> value)
-        {
-            return value == null || !value.Any();
-        }
-
-        public static bool IsNotEmpty<T>(this List<T> value)
-        {
-            return value != null && value.Any();
+            var model = new TModel();
+            configuration.GetSection(sectionName).Bind(model);
+            return model;
         }
     }
 }

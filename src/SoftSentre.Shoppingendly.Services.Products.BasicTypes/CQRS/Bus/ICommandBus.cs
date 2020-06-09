@@ -12,25 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Bus
 {
-    public class CommandResult : Result, ICommandResult
+    public interface ICommandBus
     {
-        public static CommandResult Success()
-        {
-            return new CommandResult {Ok = true};
-        }
-
-        public static CommandResult Failed(string error)
-        {
-            return new CommandResult {Ok = false, Message = error};
-        }
-
-        public static CommandResult Failed(IDictionary<string, string> errors)
-        {
-            return new CommandResult {Ok = false, Errors = errors};
-        }
+        Task<ICommandResult> SendAsync<TCommand>(TCommand command)
+            where TCommand : class, ICommand;
     }
 }

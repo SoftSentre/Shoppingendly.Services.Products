@@ -1,4 +1,4 @@
-// Copyright 2020 SoftSentre Contributors
+﻿// Copyright 2020 SoftSentre Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,18 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.Extensions.Configuration;
-
-namespace SoftSentre.Shoppingendly.Services.Products.Extensions
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands
 {
-    public static class ConfigurationExtensions
+    public interface ICommand
     {
-        public static TModel GetOptions<TModel>(this IConfiguration configuration, string sectionName)
-            where TModel : new()
-        {
-            var model = new TModel();
-            configuration.GetSection(sectionName).Bind(model);
-            return model;
-        }
     }
 }

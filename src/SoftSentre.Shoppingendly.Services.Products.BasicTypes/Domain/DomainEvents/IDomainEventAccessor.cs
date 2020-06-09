@@ -1,4 +1,4 @@
-﻿// Copyright 2020 SoftSentre Contributors
+// Copyright 2020 SoftSentre Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Serilog;
+using System.Collections.Generic;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents
 {
-    public interface ISerilogConfigurator
+    public interface IDomainEventAccessor
     {
-        LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
-            AppOptions appOptions, string environmentName);
+        Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents();
+        void DispatchEvents(IEnumerable<IDomainEvent> domainEvents);
+        void ClearAllDomainEvents();
     }
 }

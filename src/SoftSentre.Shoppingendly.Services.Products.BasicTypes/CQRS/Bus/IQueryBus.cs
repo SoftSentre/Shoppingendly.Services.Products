@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Serilog;
+using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Bus
 {
-    public interface ISerilogConfigurator
+    public interface IQueryBus
     {
-        LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
-            AppOptions appOptions, string environmentName);
+        Task<IQueryResult<TResult>> QueryAsync<TResult>(IQuery<TResult> query);
+
+        Task<IQueryResult<TResult>> QueryAsync<TQuery, TResult>(TQuery query)
+            where TQuery : class, IQuery<TResult>;
     }
 }

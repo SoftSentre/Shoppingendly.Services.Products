@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Serilog;
-
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Pagination.Results
 {
-    public interface ISerilogConfigurator
+    public interface IPagedResult : IResult
     {
-        LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
-            AppOptions appOptions, string environmentName);
+        int CurrentPage { get; }
+        int ResultsPerPage { get; }
+        int TotalPages { get; }
+        long TotalResults { get; }
     }
 }

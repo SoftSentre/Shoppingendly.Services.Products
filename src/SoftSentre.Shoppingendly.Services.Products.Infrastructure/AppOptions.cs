@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Serilog;
-
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
+namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure
 {
-    public interface ISerilogConfigurator
+    public class AppOptions
     {
-        LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
-            AppOptions appOptions, string environmentName);
+        public string Name { get; set; }
+        public string Service { get; set; }
+        public string Instance { get; set; }
+        public string Version { get; set; }
     }
 }

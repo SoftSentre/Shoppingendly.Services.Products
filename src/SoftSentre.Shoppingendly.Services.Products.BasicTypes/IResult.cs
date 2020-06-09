@@ -12,16 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-
-namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Base.Results
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes
 {
     public interface IResult
     {
-        bool Ok { get; }
-
-        string Message { get; }
-
-        IDictionary<string, string> Errors { get; }
     }
 }
