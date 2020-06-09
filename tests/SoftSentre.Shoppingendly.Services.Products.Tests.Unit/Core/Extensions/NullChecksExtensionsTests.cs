@@ -40,10 +40,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         public void CheckIfEmptyAndThrowAndReturnBoolMethodThrowExceptionWhenInputIsEmpty()
         {
             // Arrange
-            string testValue = null;
 
             // Act
-            Func<bool> func = () => testValue.IfEmptyThenThrowAndReturnBool();
+            Func<bool> func = () => ((string) null).IfEmptyThenThrowAndReturnBool();
 
             // Assert
             func.Should().Throw<ArgumentNullException>();
@@ -53,10 +52,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         public void CheckIfEmptyAndThrowAndReturnBoolMethodWithMessageReturnCorrectMessageWhenExceptionWasThrown()
         {
             // Arrange
-            string testValue = null;
 
             // Act
-            Func<bool> func = () => testValue.IfEmptyThenThrowAndReturnBool("Test value can not be null.");
+            Func<bool> func = () => ((string) null).IfEmptyThenThrowAndReturnBool("Test value can not be null.");
 
             // Assert
             func.Should().Throw<ArgumentNullException>()
@@ -80,10 +78,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         public void CheckIfEmptyAndThrowMethodThrowExceptionWhenInputIsEmpty()
         {
             // Arrange
-            string testValue = null;
 
             // Act
-            Action action = () => testValue.IfEmptyThenThrow();
+            Action action = () => ((string) null).IfEmptyThenThrow();
 
             // Assert
             action.Should().Throw<ArgumentNullException>();
@@ -93,10 +90,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         public void CheckIfEmptyAndThrowMethodWithMessageReturnCorrectMessageWhenExceptionWasThrown()
         {
             // Arrange
-            string testValue = null;
 
             // Act
-            Action action = () => testValue.IfEmptyThenThrow("Test value can not be null.");
+            Action action = () => ((string) null).IfEmptyThenThrow("Test value can not be null.");
 
             // Assert
             action.Should().Throw<ArgumentNullException>()
@@ -122,10 +118,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         public void CheckIfEmptyThenThrowAndReturnValueMethodThrowExceptionWhenInputIsEmpty()
         {
             // Arrange
-            string testValue = null;
 
             // Act
-            Func<string> func = () => testValue.IfEmptyThenThrowAndReturnValue();
+            Func<string> func = () => ((string) null).IfEmptyThenThrowAndReturnValue();
 
             // Assert
             func.Should().Throw<ArgumentNullException>();
@@ -135,10 +130,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Extensions
         public void CheckIfEmptyThenThrowAndReturnValueMethodWithMessageReturnCorrectMessageWhenExceptionWasThrown()
         {
             // Arrange
-            string testValue = null;
 
             // Act
-            Func<string> func = () => testValue.IfEmptyThenThrowAndReturnValue("Test value can not be null.");
+            Func<string> func = () => ((string) null).IfEmptyThenThrowAndReturnValue("Test value can not be null.");
 
             // Assert
             func.Should().Throw<ArgumentNullException>()

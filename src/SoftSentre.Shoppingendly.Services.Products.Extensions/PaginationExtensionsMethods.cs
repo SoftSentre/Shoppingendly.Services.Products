@@ -22,44 +22,58 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
 {
     public static class PaginationExtensionsMethods
     {
-        public static PagedResult<T> Paginate<T>(this IEnumerable<T> collection, PagedQueryBase query)
-            => collection.Paginate(query.Page, query.Results);
+        public static PagedResult<T> Paginate<T>(this IEnumerable<T> targetCollection, PagedQueryBase query)
+        {
+            return targetCollection.Paginate(query.Page, query.Results);
+        }
 
-        public static PagedResult<T> Paginate<T>(this IEnumerable<T> collection,
+        public static PagedResult<T> Paginate<T>(this IEnumerable<T> targetCollection,
             int page = 1, int resultsPerPage = 10)
         {
             if (page <= 0)
+            {
                 page = 1;
+            }
 
             if (resultsPerPage <= 0)
+            {
                 resultsPerPage = 10;
+            }
 
-            var enumerable = collection.ToList();
-            
-            if (enumerable.IsEmpty())
+            var collection = targetCollection != null ? targetCollection.ToList() : new List<T>();
+
+            if (collection.IsEmpty())
+            {
                 return PagedResult<T>.Empty;
+            }
 
-            var totalResults = enumerable.Count();
-            var totalPages = (int)Math.Ceiling((decimal)totalResults / resultsPerPage);
-            var data = enumerable.Limit(page, resultsPerPage).ToList();
+            var totalResults = collection.Count;
+            var totalPages = (int) Math.Ceiling((decimal) totalResults / resultsPerPage);
+            var data = collection.Limit(page, resultsPerPage).ToList();
 
             return PagedResult<T>.Create(data, page, resultsPerPage, totalPages, totalResults);
         }
 
-        public static IEnumerable<T> Limit<T>(this IEnumerable<T> collection, PagedQueryBase query)
-            => collection.Limit(query.Page, query.Results);
+        public static IEnumerable<T> Limit<T>(this IEnumerable<T> targetCollection, PagedQueryBase query)
+        {
+            return targetCollection.Limit(query.Page, query.Results);
+        }
 
-        public static IEnumerable<T> Limit<T>(this IEnumerable<T> collection,
+        public static IEnumerable<T> Limit<T>(this IEnumerable<T> targetCollection,
             int page = 1, int resultsPerPage = 10)
         {
             if (page <= 0)
+            {
                 page = 1;
+            }
 
             if (resultsPerPage <= 0)
+            {
                 resultsPerPage = 10;
+            }
 
             var skip = (page - 1) * resultsPerPage;
-            var data = collection.Skip(skip)
+            var data = targetCollection.Skip(skip)
                 .Take(resultsPerPage);
 
             return data;

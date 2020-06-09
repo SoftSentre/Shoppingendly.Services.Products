@@ -16,11 +16,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Pagination.Resul
 {
     public abstract class PagedResultBase : IPagedResult
     {
-        public int CurrentPage { get; }
-        public int ResultsPerPage { get; }
-        public int TotalPages { get; }
-        public long TotalResults { get; }
-
         protected PagedResultBase()
         {
         }
@@ -33,5 +28,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Pagination.Resul
             TotalPages = totalPages;
             TotalResults = totalResults;
         }
+
+        public int CurrentPage { get; }
+        public int ResultsPerPage { get; }
+        public int TotalPages { get; }
+        public long TotalResults { get; }
     }
 }
