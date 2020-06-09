@@ -95,7 +95,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl");
+            var picture = Picture.Create("ExamplePictureName", "ExamplePictureUrl");
 
             // Act
             Func<bool> function = () => product.AddOrChangeProductPicture(picture);
@@ -115,7 +115,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
-            product.AddOrChangeProductPicture(ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl"));
+            product.AddOrChangeProductPicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
             var productNameChangedDomainEvent =
                 product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent ??
                 It.IsAny<PictureAddedOrChangedDomainEvent>();
@@ -134,7 +134,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = ProductPicture.Empty;
+            var picture = Picture.Empty;
 
             // Act
             Func<bool> function = () => product.AddOrChangeProductPicture(picture);
@@ -430,7 +430,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(),
-                ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act
@@ -448,7 +448,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(),
-                ProductPicture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
+                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
 
             // Act

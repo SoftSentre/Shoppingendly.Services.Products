@@ -19,13 +19,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
 {
     public class PictureAddedOrChangedDomainEvent : DomainEventBase
     {
-        internal PictureAddedOrChangedDomainEvent(ProductId productId, ProductPicture productPicture)
+        internal PictureAddedOrChangedDomainEvent(ProductId productId, Picture productPicture)
         {
             ProductId = productId;
             ProductPicture = productPicture;
         }
 
         public ProductId ProductId { get; }
-        public ProductPicture ProductPicture { get; }
+        public Picture ProductPicture { get; }
     }
 }

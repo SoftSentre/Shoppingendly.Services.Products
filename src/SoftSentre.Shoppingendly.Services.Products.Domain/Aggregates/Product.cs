@@ -40,14 +40,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
         internal Product(ProductId id, CreatorId creatorId, string productName, ProductProducer producer) : base(id)
         {
             CreatorId = creatorId;
-            ProductPicture = ProductPicture.Empty;
+            ProductPicture = Picture.Empty;
             ProductName = ValidateProductName(productName);
             Producer = producer;
             AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, productName, producer,
-                ProductPicture.Empty));
+                Picture.Empty));
         }
 
-        internal Product(ProductId id, CreatorId creatorId, ProductPicture productPicture, string productName,
+        internal Product(ProductId id, CreatorId creatorId, Picture productPicture, string productName,
             ProductProducer producer) : base(id)
         {
             CreatorId = creatorId;
@@ -58,7 +58,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
         }
 
         public CreatorId CreatorId { get; }
-        public ProductPicture ProductPicture { get; private set; }
+        public Picture ProductPicture { get; private set; }
         public string ProductName { get; private set; }
         public ProductProducer Producer { get; private set; }
 
@@ -104,7 +104,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             return true;
         }
 
-        internal bool AddOrChangeProductPicture(Maybe<ProductPicture> productPicture)
+        internal bool AddOrChangeProductPicture(Maybe<Picture> productPicture)
         {
             var validatedProductPicture = ValidatePicture(productPicture);
 
@@ -126,7 +126,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
                 throw new PictureCanNotBeNullOrEmptyException();
             }
 
-            ProductPicture = ProductPicture.Empty;
+            ProductPicture = Picture.Empty;
             SetUpdatedDate();
             AddDomainEvent(new PictureRemovedDomainEvent(Id));
         }
@@ -210,7 +210,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             return productName;
         }
 
-        private static ProductPicture ValidatePicture(Maybe<ProductPicture> productPicture)
+        private static Picture ValidatePicture(Maybe<Picture> productPicture)
         {
             if (productPicture.HasNoValue || productPicture.Value.IsEmpty)
             {

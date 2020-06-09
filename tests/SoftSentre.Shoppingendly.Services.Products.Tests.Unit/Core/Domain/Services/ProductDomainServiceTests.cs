@@ -36,7 +36,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         {
             _productId = new ProductId();
             _productProducer = ProductProducer.CreateProductProducer("ExampleProducer");
-            _productPicture = ProductPicture.Create("PictureName", "PictureUrl");
+            _productPicture = Picture.Create("PictureName", "PictureUrl");
             _product = Product.Create(_productId, new CreatorId(), ProductName, _productProducer);
         }
 
@@ -44,7 +44,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
         private readonly ProductProducer _productProducer;
         private readonly ProductId _productId;
-        private readonly ProductPicture _productPicture;
+        private readonly Picture _productPicture;
         private readonly Product _product;
 
         [Fact]
@@ -245,7 +245,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task> func = async () =>
-                await productDomainService.AddOrChangeProductPictureAsync(_productId, ProductPicture.Empty);
+                await productDomainService.AddOrChangeProductPictureAsync(_productId, Picture.Empty);
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()

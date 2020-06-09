@@ -35,7 +35,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string name,
             ProductProducer producer, IEnumerable<CategoryId> categoryIds);
 
-        Task<bool> AddOrChangeProductPictureAsync(ProductId productId, ProductPicture productPicture);
+        Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture productPicture);
         Task RemovePictureFromProductAsync(ProductId productId);
         Task<bool> ChangeProductNameAsync(ProductId productId, string name);
         Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer producer);

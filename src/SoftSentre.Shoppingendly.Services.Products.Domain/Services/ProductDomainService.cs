@@ -108,7 +108,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return newProduct;
         }
 
-        public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, ProductPicture productPicture)
+        public async Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture productPicture)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(productId));

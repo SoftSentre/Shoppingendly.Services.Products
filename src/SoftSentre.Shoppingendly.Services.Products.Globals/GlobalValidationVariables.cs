@@ -43,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const int CreatorRoleNameMaxLength = 50;
 
         // ProductPicture
-        public const int ProductPictureNameMaxLength = 200;
-        public const int ProductPictureUrlMaxLength = 500;
+        public const int PictureNameMaxLength = 200;
+        public const int PictureUrlMaxLength = 500;
     }
 }

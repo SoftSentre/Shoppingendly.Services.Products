@@ -66,9 +66,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper
             return _mapper.Map<CreatorRole, RoleDto>(creatorRole);
         }
 
-        public PictureDto MapPictureToPictureDto(ProductPicture productPicture)
+        public PictureDto MapPictureToPictureDto(Picture productPicture)
         {
-            return _mapper.Map<ProductPicture, PictureDto>(productPicture);
+            return _mapper.Map<Picture, PictureDto>(productPicture);
         }
 
         public ProductDto MapProductToProductDto(Product product)

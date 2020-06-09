@@ -49,11 +49,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 {
                     pi.Property(pp => pp.Name)
                         .HasColumnName("ProductPictureName")
-                        .HasMaxLength(ProductPictureNameMaxLength);
+                        .HasMaxLength(PictureNameMaxLength);
 
                     pi.Property(pp => pp.Url)
                         .HasColumnName("ProductPictureUrl")
-                        .HasMaxLength(ProductPictureUrlMaxLength);
+                        .HasMaxLength(PictureUrlMaxLength);
 
                     pi.Property(pp => pp.IsEmpty)
                         .HasColumnName("IsProductPictureEmpty");

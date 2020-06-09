@@ -83,7 +83,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            product.AddOrChangeProductPicture(new ProductPicture("name", "picture.jpg"));
+            product.AddOrChangeProductPicture(new Picture("name", "picture.jpg"));
             var productCategory = new ProductCategory(product.Id, category.Id) {Product = product};
             category.ProductCategories.Add(productCategory);
 
@@ -141,7 +141,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = new ProductPicture("Example", "picture.jpg");
+            var picture = new Picture("Example", "picture.jpg");
             product.AddOrChangeProductPicture(picture);
             creator.Products.Add(product);
 
@@ -164,7 +164,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         public void CheckIfItPossibleMapPictureToPictureDto()
         {
             // Arrange
-            var picture = ProductPicture.Create("Name", "picture.jpg");
+            var picture = Picture.Create("Name", "picture.jpg");
 
             // Act
             var testResult = _mapperWrapper.MapPictureToPictureDto(picture);
@@ -180,7 +180,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = ProductPicture.Create("Name", "picture.jpg");
+            var picture = Picture.Create("Name", "picture.jpg");
             product.AddOrChangeProductPicture(picture);
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var secondCategory = new Category(new CategoryId(), "SecondExampleCategory", "Other correct description");
@@ -210,7 +210,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var picture = ProductPicture.Create("Name", "picture.jpg");
+            var picture = Picture.Create("Name", "picture.jpg");
             product.AddOrChangeProductPicture(picture);
 
             // Act

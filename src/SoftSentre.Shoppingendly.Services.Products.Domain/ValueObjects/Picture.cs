@@ -19,16 +19,16 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
-    public class ProductPicture : ValueObject<ProductPicture>
+    public class Picture : ValueObject<Picture>
     {
         private bool _isEmpty;
 
-        private ProductPicture()
+        private Picture()
         {
             // Required for EF
         }
 
-        internal ProductPicture(string name, string url)
+        internal Picture(string name, string url)
         {
             Name = ValidatePictureName(name);
             Url = ValidatePictureUrl(url);
@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 
         public bool IsEmpty => _isEmpty = Name.IsEmpty() || Url.IsEmpty();
 
-        public static ProductPicture Empty => new ProductPicture();
+        public static Picture Empty => new Picture();
 
         private static string ValidatePictureName(string name)
         {
@@ -48,9 +48,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
                 throw new PictureNameCanNotBeEmptyException();
             }
 
-            if (name.IsLongerThan(ProductPictureNameMaxLength))
+            if (name.IsLongerThan(PictureNameMaxLength))
             {
-                throw new PictureNameIsTooLongException(ProductPictureNameMaxLength);
+                throw new PictureNameIsTooLongException(PictureNameMaxLength);
             }
 
             return name;
@@ -68,20 +68,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
                 throw new PictureUrlCanNotContainsWhitespacesException();
             }
 
-            if (url.IsLongerThan(ProductPictureUrlMaxLength))
+            if (url.IsLongerThan(PictureUrlMaxLength))
             {
-                throw new PictureUrlIsTooLongException(ProductPictureUrlMaxLength);
+                throw new PictureUrlIsTooLongException(PictureUrlMaxLength);
             }
 
             return url;
         }
 
-        public static ProductPicture Create(string name, string url)
+        public static Picture Create(string name, string url)
         {
-            return new ProductPicture(name, url);
+            return new Picture(name, url);
         }
 
-        protected override bool EqualsCore(ProductPicture other)
+        protected override bool EqualsCore(Picture other)
         {
             return Name.Equals(other.Name) && Url.Equals(other.Url);
         }
