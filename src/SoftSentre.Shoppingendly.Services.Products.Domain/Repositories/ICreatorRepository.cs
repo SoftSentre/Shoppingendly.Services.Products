@@ -23,7 +23,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
     {
         Task<Maybe<Creator>> GetByIdAsync(CreatorId id);
         Task<Maybe<Creator>> GetByNameAsync(string name);
-        Task<Maybe<Creator>> GetWithIncludesAsync(string name);
+        Task<Maybe<Creator>> GetWithIncludesAsync(CreatorId id);
         Task AddAsync(Creator creator);
         void Update(Creator creator);
         void Delete(Creator creator);

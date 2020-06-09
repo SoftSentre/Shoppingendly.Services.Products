@@ -23,7 +23,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
     {
         Task<Maybe<Creator>> GetCreatorAsync(CreatorId creatorId);
         Task<Maybe<Creator>> GetCreatorByNameAsync(string name);
-        Task<Maybe<Creator>> GetCreatorWithProductsAsync(string name);
+        Task<Maybe<Creator>> GetCreatorWithProductsAsync(CreatorId creatorId);
 
         Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId,
             string creatorName, CreatorRole creatorCreatorRole);
