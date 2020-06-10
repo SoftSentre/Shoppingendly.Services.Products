@@ -138,12 +138,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return isNameChanged;
         }
 
-        public async Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer producer)
+        public async Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer productProducer)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(productId));
 
-            var isProducerChanged = product.SetProductProducer(producer);
+            var isProducerChanged = product.SetProductProducer(productProducer);
 
             if (isProducerChanged)
             {

@@ -35,7 +35,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         public async Task<Maybe<Category>> GetByIdAsync(CategoryId id)
         {
-            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Id.Equals(id));
+            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.CategoryId.Equals(id));
         }
 
         public async Task<Maybe<Category>> GetByNameAsync(string name)

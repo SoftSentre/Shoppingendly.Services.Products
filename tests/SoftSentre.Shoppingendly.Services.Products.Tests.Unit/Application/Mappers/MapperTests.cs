@@ -56,7 +56,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(category.Id.Id.ToString());
+            testResult.Id.Should().Be(category.CategoryId.Id.ToString());
             testResult.Name.Should().Be(category.CategoryName);
         }
 
@@ -71,7 +71,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(category.Id.Id.ToString());
+            testResult.Id.Should().Be(category.CategoryId.Id.ToString());
             testResult.Description.Should().Be(category.CategoryDescription);
             testResult.Name.Should().Be(category.CategoryName);
         }
@@ -84,7 +84,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
             product.AddOrChangeProductPicture(new Picture("name", "picture.jpg"));
-            var productCategory = new ProductCategory(product.Id, category.Id) {Product = product};
+            var productCategory = new ProductCategory(product.ProductId, category.CategoryId) {Product = product};
             category.ProductCategories.Add(productCategory);
 
             // Act
@@ -92,14 +92,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(category.Id.Id.ToString());
+            testResult.Id.Should().Be(category.CategoryId.Id.ToString());
             testResult.Description.Should().Be(category.CategoryDescription);
             testResult.Name.Should().Be(category.CategoryName);
             testResult.Products.Should().HaveCount(1);
             testResult.Products.ToList().Should().Contain(p =>
-                p.Id == product.Id.Id.ToString() && p.Icon.Url == product.ProductPicture.Url &&
+                p.Id == product.ProductId.Id.ToString() && p.Icon.Url == product.ProductPicture.Url &&
                 p.Name == product.ProductName &&
-                p.Producer == product.Producer.Name);
+                p.Producer == product.ProductProducer.Name);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(creator.Id.Id.ToString());
+            testResult.Id.Should().Be(creator.CreatorId.Id.ToString());
             testResult.Name.Should().Be(creator.CreatorName);
         }
 
@@ -128,7 +128,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(creator.Id.Id.ToString());
+            testResult.Id.Should().Be(creator.CreatorId.Id.ToString());
             testResult.Name.Should().Be(creator.CreatorName);
             testResult.Role.Id.Should().Be(creator.CreatorRole.Id.ToString());
             testResult.Role.Role.Should().Be(creator.CreatorRole.Name);
@@ -150,13 +150,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(creator.Id.Id.ToString());
+            testResult.Id.Should().Be(creator.CreatorId.Id.ToString());
             testResult.Name.Should().Be(creator.CreatorName);
             testResult.Role.Id.Should().Be(creator.CreatorRole.Id.ToString());
             testResult.Role.Role.Should().Be(creator.CreatorRole.Name);
             testResult.Products.Should().Contain(p =>
-                p.Id == product.Id.Id.ToString() && p.Name == product.ProductName &&
-                p.Producer == product.Producer.Name &&
+                p.Id == product.ProductId.Id.ToString() && p.Name == product.ProductName &&
+                p.Producer == product.ProductProducer.Name &&
                 p.Icon.Url == product.ProductPicture.Url);
         }
 
@@ -184,9 +184,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             product.AddOrChangeProductPicture(picture);
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var secondCategory = new Category(new CategoryId(), "SecondExampleCategory", "Other correct description");
-            var productCategory = ProductCategory.Create(product.Id, category.Id);
+            var productCategory = ProductCategory.Create(product.ProductId, category.CategoryId);
             productCategory.Category = category;
-            var secondProductCategory = ProductCategory.Create(product.Id, secondCategory.Id);
+            var secondProductCategory = ProductCategory.Create(product.ProductId, secondCategory.CategoryId);
             secondProductCategory.Category = secondCategory;
             product.ProductCategories.Add(productCategory);
             product.ProductCategories.Add(secondProductCategory);
@@ -196,9 +196,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(product.Id.Id.ToString());
+            testResult.Id.Should().Be(product.ProductId.Id.ToString());
             testResult.Name.Should().Be(product.ProductName);
-            testResult.Producer.Should().Be(product.Producer.Name);
+            testResult.Producer.Should().Be(product.ProductProducer.Name);
             testResult.Picture.Url.Should().Be(product.ProductPicture.Url);
             testResult.Categories.Should().Contain(c => c == category.CategoryName);
             testResult.Categories.Should().Contain(c => c == secondCategory.CategoryName);
@@ -218,9 +218,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
 
             // Assert
             testResult.Should().NotBeNull();
-            testResult.Id.Should().Be(product.Id.Id.ToString());
+            testResult.Id.Should().Be(product.ProductId.Id.ToString());
             testResult.Name.Should().Be(product.ProductName);
-            testResult.Producer.Should().Be(product.Producer.Name);
+            testResult.Producer.Should().Be(product.ProductProducer.Name);
             testResult.Icon.Url.Should().Be(product.ProductPicture.Url);
         }
 

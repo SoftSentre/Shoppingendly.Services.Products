@@ -58,7 +58,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
                 await creatorDomainService.AddNewCreatorAsync(_creatorId, CreatorName, _creatorCreatorRole);
 
             //Assert
-            testResult.Value.Id.Should().Be(_creatorId);
+            testResult.Value.CreatorId.Should().Be(_creatorId);
             testResult.Value.CreatorName.Should().Be(CreatorName);
             testResult.Value.CreatorRole.Should().Be(_creatorCreatorRole);
             testResult.Value.CreatedAt.Should().NotBe(default);
@@ -227,7 +227,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             var creatorRepository = new Mock<ICreatorRepository>();
             var creator = new Creator(new CreatorId(), CreatorName, CreatorRole.User);
-            creator.Products.Add(new Product(new ProductId(), creator.Id, Picture.Empty, "ExampleProductName",
+            creator.Products.Add(new Product(new ProductId(), creator.CreatorId, Picture.Empty, "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer")));
 
             creatorRepository.Setup(cr => cr.GetWithIncludesAsync(_creatorId))

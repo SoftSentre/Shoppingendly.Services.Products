@@ -27,7 +27,7 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 {
-    public class Product : AuditableAndEventSourcingEntity<ProductId>, IAggregateRoot
+    public class Product : EventSourcingEntity, IAggregateRoot
     {
         private HashSet<ProductCategory> _productCategories = new HashSet<ProductCategory>();
 
@@ -36,30 +36,33 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
         {
         }
 
-        internal Product(ProductId id, CreatorId creatorId, string productName, ProductProducer producer) : base(id)
+        internal Product(ProductId productId, CreatorId creatorId, string productName, ProductProducer productProducer)
         {
+            ProductId = productId;
             CreatorId = creatorId;
             ProductPicture = Picture.Empty;
             ProductName = ValidateProductName(productName);
-            Producer = producer;
-            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, productName, producer,
+            ProductProducer = productProducer;
+            AddDomainEvent(new NewProductCreatedDomainEvent(productId, creatorId, productName, productProducer,
                 Picture.Empty));
         }
 
-        internal Product(ProductId id, CreatorId creatorId, Picture productPicture, string productName,
-            ProductProducer producer) : base(id)
+        internal Product(ProductId productId, CreatorId creatorId, Picture productPicture, string productName,
+            ProductProducer productProducer) 
         {
+            ProductId = productId;
             CreatorId = creatorId;
             ProductPicture = productPicture;
             ProductName = ValidateProductName(productName);
-            Producer = producer;
-            AddDomainEvent(new NewProductCreatedDomainEvent(id, creatorId, productName, producer, productPicture));
+            ProductProducer = productProducer;
+            AddDomainEvent(new NewProductCreatedDomainEvent(productId, creatorId, productName, productProducer, productPicture));
         }
 
+        public ProductId ProductId { get; }
         public CreatorId CreatorId { get; }
         public Picture ProductPicture { get; private set; }
         public string ProductName { get; private set; }
-        public ProductProducer Producer { get; private set; }
+        public ProductProducer ProductProducer { get; private set; }
 
         // Navigation property
         public Creator Creator { get; set; }
@@ -81,7 +84,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             ProductName = productName;
             SetUpdatedDate();
-            AddDomainEvent(new ProductNameChangedDomainEvent(Id, productName));
+            AddDomainEvent(new ProductNameChangedDomainEvent(ProductId, productName));
             return true;
         }
 
@@ -92,14 +95,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
                 throw new ProductProducerCanNotBeNullException();
             }
 
-            if (Producer.Name.EqualsCaseInvariant(productProducer.Name))
+            if (ProductProducer.Name.EqualsCaseInvariant(productProducer.Name))
             {
                 return false;
             }
 
-            Producer = productProducer;
+            ProductProducer = productProducer;
             SetUpdatedDate();
-            AddDomainEvent(new ProductProducerChangedDomainEvent(Id, productProducer));
+            AddDomainEvent(new ProductProducerChangedDomainEvent(ProductId, productProducer));
             return true;
         }
 
@@ -114,7 +117,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             ProductPicture = validatedProductPicture;
             SetUpdatedDate();
-            AddDomainEvent(new ProductPictureAddedOrChangedDomainEvent(Id, validatedProductPicture));
+            AddDomainEvent(new ProductPictureAddedOrChangedDomainEvent(ProductId, validatedProductPicture));
             return true;
         }
 
@@ -127,11 +130,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
                 throw new ProductIsAlreadyAssignedToCategoryException(categoryId);
             }
 
-            var newAssignedCategory = new ProductCategory(Id, categoryId);
+            var newAssignedCategory = new ProductCategory(ProductId, categoryId);
             _productCategories.Add(newAssignedCategory);
             SetUpdatedDate();
-            AddDomainEvent(new ProductAssignedToCategoryDomainEvent(newAssignedCategory.FirstKey,
-                newAssignedCategory.SecondKey));
+            AddDomainEvent(new ProductAssignedToCategoryDomainEvent(newAssignedCategory.ProductId,
+                newAssignedCategory.CategoryId));
         }
 
         internal void DeallocateCategory(CategoryId categoryId)
@@ -145,8 +148,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             _productCategories.Remove(assignedCategory.Value);
             SetUpdatedDate();
-            AddDomainEvent(new ProductDeallocatedFromCategoryDomainEvent(assignedCategory.Value.FirstKey,
-                assignedCategory.Value.SecondKey));
+            AddDomainEvent(new ProductDeallocatedFromCategoryDomainEvent(assignedCategory.Value.ProductId,
+                assignedCategory.Value.CategoryId));
         }
 
         internal void DeallocateAllCategories()
@@ -156,10 +159,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
                 throw new ProductWithAssignedCategoriesNotFoundException();
             }
 
-            var categoriesIds = _productCategories.Select(pc => pc.SecondKey).ToList();
+            var categoriesIds = _productCategories.Select(pc => pc.CategoryId).ToList();
             _productCategories.Clear();
             SetUpdatedDate();
-            AddDomainEvent(new ProductDeallocatedFromAllCategoriesDomainEvent(Id, categoriesIds));
+            AddDomainEvent(new ProductDeallocatedFromAllCategoriesDomainEvent(ProductId, categoriesIds));
         }
 
         internal Maybe<IEnumerable<ProductCategory>> GetAllAssignedCategories()
@@ -209,7 +212,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
         private Maybe<ProductCategory> GetProductCategory(CategoryId categoryId)
         {
-            var assignedCategory = _productCategories.FirstOrDefault(pr => pr.SecondKey.Equals(categoryId));
+            var assignedCategory = _productCategories.FirstOrDefault(pr => pr.CategoryId.Equals(categoryId));
 
             return assignedCategory;
         }

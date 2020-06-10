@@ -12,29 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 
 namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
 {
-    public class AuditableDoubleKeyEntity<TFirstId, TSecondId> : DoubleKeyEntityBase<TFirstId, TSecondId>,
-        IAuditAbleEntity
+    public abstract class EventSourcingEntity : EntityBase, IEventSourcingEntity
     {
-        protected AuditableDoubleKeyEntity()
+        private List<IDomainEvent> _domainEvents;
+
+        public IEnumerable<IDomainEvent> DomainEvents
+            => _domainEvents.AsReadOnly();
+
+        public IEnumerable<IDomainEvent> GetUncommitted()
         {
+            return _domainEvents ??= new List<IDomainEvent>();
         }
 
-        protected AuditableDoubleKeyEntity(TFirstId firstKey, TSecondId secondKey)
-            : base(firstKey, secondKey)
+        public void AddDomainEvent(IDomainEvent domainEvent)
         {
-            CreatedAt = DateTime.UtcNow;
+            _domainEvents ??= new List<IDomainEvent>();
+            _domainEvents.Add(domainEvent);
         }
 
-        public DateTime? UpdatedDate { get; private set; }
-        public DateTime CreatedAt { get; }
-
-        protected void SetUpdatedDate()
+        public void ClearDomainEvents()
         {
-            UpdatedDate = DateTime.UtcNow;
+            _domainEvents?.Clear();
         }
     }
 }

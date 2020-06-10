@@ -58,7 +58,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.ProductName, _product.Producer);
+                _product.CreatorId, _product.ProductName, _product.ProductProducer);
 
             //Assert
             func.Should().NotThrow();
@@ -77,7 +77,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.ProductName, _product.Producer);
+                _product.CreatorId, _product.ProductName, _product.ProductProducer);
 
             //Assert
             func.Should().Throw<ProductAlreadyExistsException>()
@@ -101,22 +101,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            var testResult = await productDomainService.AddNewProductAsync(product.Id, product.CreatorId,
+            var testResult = await productDomainService.AddNewProductAsync(product.ProductId, product.CreatorId,
                 product.ProductName,
-                product.Producer, categories);
+                product.ProductProducer, categories);
 
             //Assert
-            testResult.Value.Id.Should().Be(product.Id);
+            testResult.Value.ProductId.Should().Be(product.ProductId);
             testResult.Value.CreatorId.Should().Be(product.CreatorId);
             testResult.Value.ProductName.Should().Be(product.ProductName);
-            testResult.Value.Producer.Should().Be(product.Producer);
+            testResult.Value.ProductProducer.Should().Be(product.ProductProducer);
             testResult.Value.CreatedAt.Should().NotBe(default);
             var expectedFirstCategory =
-                testResult.Value.ProductCategories.FirstOrDefault(pr => pr.SecondKey.Equals(firstAssignedCategory)) ??
+                testResult.Value.ProductCategories.FirstOrDefault(pr => pr.CategoryId.Equals(firstAssignedCategory)) ??
                 It.IsAny<ProductCategory>();
             expectedFirstCategory.Should().NotBeNull();
             var expectedSecondCategory =
-                testResult.Value.ProductCategories.FirstOrDefault(pr => pr.SecondKey.Equals(secondAssignedCategory)) ??
+                testResult.Value.ProductCategories.FirstOrDefault(pr => pr.CategoryId.Equals(secondAssignedCategory)) ??
                 It.IsAny<ProductCategory>();
             expectedSecondCategory.Should().NotBeNull();
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
@@ -135,13 +135,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             var testResult = await productDomainService.AddNewProductAsync(_productId, _product.CreatorId,
-                _product.ProductName, _product.Producer);
+                _product.ProductName, _product.ProductProducer);
 
             //Assert
-            testResult.Value.Id.Should().Be(_product.Id);
+            testResult.Value.ProductId.Should().Be(_product.ProductId);
             testResult.Value.CreatorId.Should().Be(_product.CreatorId);
             testResult.Value.ProductName.Should().Be(_product.ProductName);
-            testResult.Value.Producer.Should().Be(_product.Producer);
+            testResult.Value.ProductProducer.Should().Be(_product.ProductProducer);
             testResult.Value.CreatedAt.Should().NotBe(default);
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Once);
@@ -158,7 +158,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.ProductName, _product.Producer,
+                _product.CreatorId, _product.ProductName, _product.ProductProducer,
                 new List<CategoryId> {new CategoryId(), new CategoryId()});
 
             //Assert
@@ -178,7 +178,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             // Act
             Func<Task<Maybe<Product>>> func = async () => await productDomainService.AddNewProductAsync(_productId,
-                _product.CreatorId, _product.ProductName, _product.Producer,
+                _product.CreatorId, _product.ProductName, _product.ProductProducer,
                 new List<CategoryId> {new CategoryId(), new CategoryId()});
 
             //Assert
@@ -187,7 +187,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Never);
         }
-        
+
         [Fact]
         public async Task CheckIfAddOrChangeProductPictureMethodCreateValidObject()
         {
@@ -271,8 +271,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             //Assert
             product.ProductCategories.Should().NotBeEmpty();
             var expectedValue = product.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
-            expectedValue.FirstKey.Should().Be(product.Id);
-            expectedValue.SecondKey.Should().Be(categoryId);
+            expectedValue.ProductId.Should().Be(product.ProductId);
+            expectedValue.CategoryId.Should().Be(categoryId);
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
@@ -427,7 +427,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             testResult.Should().BeTrue();
-            product.Producer.Should().Be(newProductProducer);
+            product.ProductProducer.Should().Be(newProductProducer);
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
@@ -611,8 +611,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             // Arrange
             var productRepository = new Mock<IProductRepository>();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName", _productProducer);
-            product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
-            product.ProductCategories.Add(ProductCategory.Create(product.Id, new CategoryId()));
+            product.ProductCategories.Add(ProductCategory.Create(product.ProductId, new CategoryId()));
+            product.ProductCategories.Add(ProductCategory.Create(product.ProductId, new CategoryId()));
             productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(_productId))
                 .ReturnsAsync(product);
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
@@ -719,17 +719,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             var product = new Product(new ProductId(), new CreatorId(), ProductName, _productProducer);
             product.AssignCategory(new CategoryId());
             product.AssignCategory(new CategoryId());
-            productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(product.Id))
+            productRepository.Setup(pr => pr.GetByIdWithIncludesAsync(product.ProductId))
                 .ReturnsAsync(product);
             IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
 
             // Act
-            var testResult = await productDomainService.GetProductWithCategoriesAsync(product.Id);
+            var testResult = await productDomainService.GetProductWithCategoriesAsync(product.ProductId);
 
             // Assert
             testResult.Should().Be(product);
             testResult.Value.ProductCategories.Should().HaveCount(2);
-            productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(product.Id), Times.Once);
+            productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(product.ProductId), Times.Once);
         }
     }
 }

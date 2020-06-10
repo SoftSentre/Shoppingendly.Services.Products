@@ -25,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         {
             categoriesConfiguration.ToTable("Categories", ProductServiceDbContext.DefaultSchema);
 
-            categoriesConfiguration.HasKey(c => c.Id);
+            categoriesConfiguration.HasKey(c => c.CategoryId);
 
             categoriesConfiguration.Property(c => c.CategoryName)
                 .HasColumnName("CategoryName")
@@ -62,7 +62,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             categoriesConfiguration.HasMany(c => c.ProductCategories)
                 .WithOne(pc => pc.Category)
-                .HasForeignKey(pc => pc.SecondKey);
+                .HasForeignKey(pc => pc.CategoryId);
 
             categoriesConfiguration.Metadata.FindNavigation(nameof(Category.ProductCategories))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);

@@ -123,7 +123,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             productNameChangedDomainEvent.Should().BeOfType<ProductPictureAddedOrChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent.ProductId.Should().Be(product.ProductId);
             productNameChangedDomainEvent.ProductPicture.Should().Be(product.ProductPicture);
         }
 
@@ -150,7 +150,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var expectedValue = new ProductCategory(product.Id, categoryId);
+            var expectedValue = new ProductCategory(product.ProductId, categoryId);
 
             // Act
             Action action = () => product.AssignCategory(categoryId);
@@ -160,8 +160,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.ProductCategories.Should().NotBeEmpty();
             product.UpdatedDate.Should().NotBe(default);
             var assignedProduct = product.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
-            assignedProduct.FirstKey.Should().Be(expectedValue.FirstKey);
-            assignedProduct.SecondKey.Should().Be(expectedValue.SecondKey);
+            assignedProduct.ProductId.Should().Be(expectedValue.ProductId);
+            assignedProduct.CategoryId.Should().Be(expectedValue.CategoryId);
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             productAssignedToCategory.Should().BeOfType<ProductAssignedToCategoryDomainEvent>();
             productAssignedToCategory.Should().NotBeNull();
-            productAssignedToCategory.ProductId.Should().Be(product.Id);
+            productAssignedToCategory.ProductId.Should().Be(product.ProductId);
             productAssignedToCategory.CategoryId.Should().Be(categoryId);
         }
 
@@ -193,7 +193,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var newProductCategory = new ProductCategory(product.Id, categoryId);
+            var newProductCategory = new ProductCategory(product.ProductId, categoryId);
             product.ProductCategories.Add(newProductCategory);
 
             // Act
@@ -234,10 +234,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewProductCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent.ProductId.Should().Be(product.Id);
+            newCategoryCreatedDomainEvent.ProductId.Should().Be(product.ProductId);
             newCategoryCreatedDomainEvent.CreatorId.Should().Be(product.CreatorId);
             newCategoryCreatedDomainEvent.ProductName.Should().Be(product.ProductName);
-            newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.Producer);
+            newCategoryCreatedDomainEvent.ProductProducer.Should().Be(product.ProductProducer);
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             productDeallocatedFromAllCategories.Should().BeOfType<ProductDeallocatedFromAllCategoriesDomainEvent>();
             productDeallocatedFromAllCategories.Should().NotBeNull();
-            productDeallocatedFromAllCategories.ProductId.Should().Be(product.Id);
+            productDeallocatedFromAllCategories.ProductId.Should().Be(product.ProductId);
             productDeallocatedFromAllCategories.CategoriesIds.Should().HaveCount(2);
         }
 
@@ -300,7 +300,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             productDeallocatedFromCategory.Should().BeOfType<ProductDeallocatedFromCategoryDomainEvent>();
             productDeallocatedFromCategory.Should().NotBeNull();
-            productDeallocatedFromCategory.ProductId.Should().Be(product.Id);
+            productDeallocatedFromCategory.ProductId.Should().Be(product.ProductId);
             productDeallocatedFromCategory.CategoryId.Should().Be(categoryId);
         }
 
@@ -380,7 +380,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             var categoryId = new CategoryId();
             var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
                 ProductProducer.CreateProductProducer("ExampleProducer"));
-            var expectedValue = new ProductCategory(product.Id, categoryId);
+            var expectedValue = new ProductCategory(product.ProductId, categoryId);
             product.ProductCategories.Add(expectedValue);
 
             // Act
@@ -390,8 +390,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Assert
             func.Should().NotThrow();
             assignedCategory.Should().NotBeNull();
-            assignedCategory.Value.FirstKey.Should().Be(product.Id);
-            assignedCategory.Value.SecondKey.Should().Be(categoryId);
+            assignedCategory.Value.ProductId.Should().Be(product.ProductId);
+            assignedCategory.Value.CategoryId.Should().Be(categoryId);
         }
 
         [Fact]
@@ -426,8 +426,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             productProducerChanged.Should().BeOfType<ProductProducerChangedDomainEvent>();
             productProducerChanged.Should().NotBeNull();
-            productProducerChanged.ProductId.Should().Be(product.Id);
-            productProducerChanged.ProductProducer.Should().Be(product.Producer);
+            productProducerChanged.ProductId.Should().Be(product.ProductId);
+            productProducerChanged.ProductProducer.Should().Be(product.ProductProducer);
         }
 
         [Fact]
@@ -477,7 +477,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.DomainEvents.Should().NotBeEmpty();
             productNameChangedDomainEvent.Should().BeOfType<ProductNameChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
+            productNameChangedDomainEvent.ProductId.Should().Be(product.ProductId);
             productNameChangedDomainEvent.ProductName.Should().Be(product.ProductName);
         }
 
@@ -571,7 +571,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             product.SetProductProducer(productProducer);
 
             // Assert
-            product.Producer.Should().Be(productProducer);
+            product.ProductProducer.Should().Be(productProducer);
             product.UpdatedDate.Should().NotBe(default);
             product.CreatedAt.Should().NotBe(default);
         }

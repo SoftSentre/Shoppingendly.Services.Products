@@ -23,7 +23,7 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 {
-    public class Category : AuditableAndEventSourcingEntity<CategoryId>
+    public class Category : EventSourcingEntity
     {
         private HashSet<ProductCategory> _productCategories = new HashSet<ProductCategory>();
 
@@ -32,31 +32,36 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
         {
         }
 
-        internal Category(CategoryId categoryId, string categoryName) : base(categoryId)
+        internal Category(CategoryId categoryId, string categoryName)
         {
+            CategoryId = categoryId;
             CategoryName = ValidateCategoryName(categoryName);
             CategoryIcon = Picture.Empty;
-            AddDomainEvent(new NewCategoryCreatedDomainEvent(Id, categoryName, CategoryIcon));
+            AddDomainEvent(new NewCategoryCreatedDomainEvent(CategoryId, categoryName, CategoryIcon));
         }
 
-        internal Category(CategoryId categoryId, string categoryName, Picture categoryIcon) : base(categoryId)
+        internal Category(CategoryId categoryId, string categoryName, Picture categoryIcon)
         {
+            CategoryId = categoryId;
             CategoryName = ValidateCategoryName(categoryName);
             CategoryIcon = ValidateCategoryIcon(categoryIcon);
-            AddDomainEvent(new NewCategoryCreatedDomainEvent(Id, categoryName, categoryIcon));
+            AddDomainEvent(new NewCategoryCreatedDomainEvent(CategoryId, categoryName, categoryIcon));
         }
 
-        internal Category(CategoryId categoryId, string categoryName, string categoryDescription) : base(categoryId)
+        internal Category(CategoryId categoryId, string categoryName, string categoryDescription)
         {
+            CategoryId = categoryId;
             CategoryName = ValidateCategoryName(categoryName);
             CategoryDescription = ValidateCategoryDescription(categoryDescription);
             CategoryIcon = Picture.Empty;
-            AddDomainEvent(new NewCategoryCreatedDomainEvent(categoryId, categoryName, categoryDescription, CategoryIcon));
+            AddDomainEvent(
+                new NewCategoryCreatedDomainEvent(categoryId, categoryName, categoryDescription, CategoryIcon));
         }
 
         internal Category(CategoryId categoryId, string categoryName, string categoryDescription,
-            Picture categoryIcon) : base(categoryId)
+            Picture categoryIcon)
         {
+            CategoryId = categoryId;
             CategoryName = ValidateCategoryName(categoryName);
             CategoryDescription = ValidateCategoryDescription(categoryDescription);
             CategoryIcon = ValidateCategoryIcon(categoryIcon);
@@ -64,6 +69,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
                 new NewCategoryCreatedDomainEvent(categoryId, categoryName, categoryDescription, categoryIcon));
         }
 
+        public CategoryId CategoryId { get; }
         public string CategoryName { get; private set; }
         public string CategoryDescription { get; private set; }
         public Picture CategoryIcon { get; private set; }
@@ -85,7 +91,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 
             CategoryName = categoryName;
             SetUpdatedDate();
-            AddDomainEvent(new CategoryNameChangedDomainEvent(Id, categoryName));
+            AddDomainEvent(new CategoryNameChangedDomainEvent(CategoryId, categoryName));
             return true;
         }
 
@@ -100,7 +106,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 
             CategoryDescription = categoryDescription;
             SetUpdatedDate();
-            AddDomainEvent(new CategoryDescriptionChangedDomainEvent(Id, categoryDescription));
+            AddDomainEvent(new CategoryDescriptionChangedDomainEvent(CategoryId, categoryDescription));
             return true;
         }
 
@@ -115,7 +121,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 
             CategoryIcon = validateCategoryIcon;
             SetUpdatedDate();
-            AddDomainEvent(new CategoryIconAddedOrChangedDomainEvent(Id, validateCategoryIcon));
+            AddDomainEvent(new CategoryIconAddedOrChangedDomainEvent(CategoryId, validateCategoryIcon));
             return true;
         }
 

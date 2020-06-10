@@ -86,7 +86,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             creator.DomainEvents.Should().NotBeEmpty();
             newCreatorCreatedDomainEvent.Should().BeOfType<NewCreatorCreatedDomainEvent>();
             newCreatorCreatedDomainEvent.Should().NotBeNull();
-            newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.Id);
+            newCreatorCreatedDomainEvent.CreatorId.Should().Be(creator.CreatorId);
             newCreatorCreatedDomainEvent.CreatorName.Should().Be(creator.CreatorName);
             newCreatorCreatedDomainEvent.CreatorRole.Should().Be(creator.CreatorRole);
         }
@@ -122,7 +122,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             creator.DomainEvents.Should().NotBeEmpty();
             creatorNameChangedDomainEvent.Should().BeOfType<CreatorNameChangedDomainEvent>();
             creatorNameChangedDomainEvent.Should().NotBeNull();
-            creatorNameChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorNameChangedDomainEvent.CreatorId.Should().Be(creator.CreatorId);
             creatorNameChangedDomainEvent.CreatorName.Should().Be(creator.CreatorName);
         }
 
@@ -202,7 +202,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             creator.DomainEvents.Should().NotBeEmpty();
             creatorRoleChangedDomainEvent.Should().BeOfType<CreatorRoleChangedDomainEvent>();
             creatorRoleChangedDomainEvent.Should().NotBeNull();
-            creatorRoleChangedDomainEvent.CreatorId.Should().Be(creator.Id);
+            creatorRoleChangedDomainEvent.CreatorId.Should().Be(creator.CreatorId);
             creatorRoleChangedDomainEvent.CreatorRole.Should().Be(creator.CreatorRole);
         }
 

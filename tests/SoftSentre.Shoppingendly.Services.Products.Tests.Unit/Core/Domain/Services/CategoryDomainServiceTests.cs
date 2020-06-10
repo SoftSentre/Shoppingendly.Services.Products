@@ -140,7 +140,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             var testResult = await function.Invoke();
-            testResult.Value.Id.Should().Be(_categoryId);
+            testResult.Value.CategoryId.Should().Be(_categoryId);
             testResult.Value.CategoryName.Should().Be(CategoryName);
             testResult.Value.CategoryDescription.Should().Be(null);
             testResult.Value.CreatedAt.Should().NotBe(default);
@@ -199,7 +199,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
                 await categoryDomainService.CreateNewCategoryAsync(_categoryId, CategoryName, CategoryDescription);
 
             //Assert
-            testResult.Value.Id.Should().Be(_categoryId);
+            testResult.Value.CategoryId.Should().Be(_categoryId);
             testResult.Value.CategoryName.Should().Be(CategoryName);
             testResult.Value.CategoryDescription.Should().Be(CategoryDescription);
             testResult.Value.CreatedAt.Should().NotBe(default);

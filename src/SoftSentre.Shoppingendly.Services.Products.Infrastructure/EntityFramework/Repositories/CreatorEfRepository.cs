@@ -34,7 +34,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         public async Task<Maybe<Creator>> GetByIdAsync(CreatorId id)
         {
-            return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(id));
+            return await _productServiceDbContext.Creators.FirstOrDefaultAsync(p => p.CreatorId.Equals(id));
         }
 
         public async Task<Maybe<Creator>> GetByNameAsync(string name)
@@ -45,7 +45,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public async Task<Maybe<Creator>> GetWithIncludesAsync(CreatorId id)
         {
             return await _productServiceDbContext.Creators.Include(c => c.Products)
-                .FirstOrDefaultAsync(p => p.Id.Equals(id));
+                .FirstOrDefaultAsync(p => p.CreatorId.Equals(id));
         }
 
         public async Task AddAsync(Creator creator)

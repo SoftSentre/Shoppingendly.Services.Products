@@ -37,7 +37,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
 
         Task<bool> AddOrChangeProductPictureAsync(ProductId productId, Picture productPicture);
         Task<bool> ChangeProductNameAsync(ProductId productId, string name);
-        Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer producer);
+        Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer productProducer);
         Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromAllCategoriesAsync(ProductId productId);

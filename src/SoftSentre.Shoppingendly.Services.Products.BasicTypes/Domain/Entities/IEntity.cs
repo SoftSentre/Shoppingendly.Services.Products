@@ -14,8 +14,7 @@
 
 namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
 {
-    public interface IEntity<out TId>
+    public interface IEntity
     {
-        TId Id { get; }
     }
 }

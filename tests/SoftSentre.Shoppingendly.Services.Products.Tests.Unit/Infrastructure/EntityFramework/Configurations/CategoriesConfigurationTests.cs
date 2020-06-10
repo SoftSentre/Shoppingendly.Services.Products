@@ -57,7 +57,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string categoryId = nameof(Category.Id);
+            const string categoryId = nameof(Category.CategoryId);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
 

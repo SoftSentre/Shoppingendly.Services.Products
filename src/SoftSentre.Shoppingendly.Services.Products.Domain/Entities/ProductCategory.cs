@@ -18,7 +18,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 {
-    public class ProductCategory : AuditableDoubleKeyEntity<ProductId, CategoryId>
+    public class ProductCategory : EntityBase
     {
         // Required for EF
         private ProductCategory()
@@ -26,10 +26,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
         }
 
         internal ProductCategory(ProductId productId, CategoryId categoryId)
-            : base(productId, categoryId)
         {
+            ProductId = productId;
+            CategoryId = categoryId;
         }
 
+        public ProductId ProductId { get; private set; }
+        public CategoryId CategoryId { get; private set; }
+        
         // Navigation property
         public Product Product { get; set; }
 

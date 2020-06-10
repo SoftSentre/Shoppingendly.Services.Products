@@ -38,7 +38,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string categoryId = nameof(ProductCategory.SecondKey);
+            const string categoryId = nameof(ProductCategory.CategoryId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
 
             // Act
@@ -54,7 +54,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string productId = nameof(ProductCategory.FirstKey);
+            const string productId = nameof(ProductCategory.ProductId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
 
             // Act

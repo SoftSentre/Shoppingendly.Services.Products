@@ -19,7 +19,7 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
-    public class Picture : ValueObject<Picture>
+    public class Picture : ValueObject
     {
         private bool _isEmpty;
 
@@ -79,20 +79,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
         public static Picture Create(string name, string url)
         {
             return new Picture(name, url);
-        }
-
-        protected override bool EqualsCore(Picture other)
-        {
-            return Name.Equals(other.Name) && Url.Equals(other.Url);
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            var hash = 13;
-            hash = hash * 7 + Name.GetHashCode();
-            hash = hash * 7 + Url.GetHashCode();
-
-            return hash;
         }
     }
 }

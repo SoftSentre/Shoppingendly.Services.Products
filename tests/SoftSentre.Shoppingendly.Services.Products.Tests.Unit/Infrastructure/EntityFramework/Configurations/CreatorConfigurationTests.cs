@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCreatorIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string creatorId = nameof(Creator.Id);
+            const string creatorId = nameof(Creator.CreatorId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(creatorId);
 
             // Act

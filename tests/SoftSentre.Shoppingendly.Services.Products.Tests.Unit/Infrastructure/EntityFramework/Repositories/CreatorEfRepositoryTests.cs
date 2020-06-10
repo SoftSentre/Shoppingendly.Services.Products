@@ -70,7 +70,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Act
             await creatorRepository.AddAsync(creator);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id)) ?? It.IsAny<Creator>();
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.CreatorId.Equals(creator.CreatorId)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.CreatorName.Should().Be(creator.CreatorName);
@@ -105,7 +105,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             ICreatorRepository creatorRepository = new CreatorEfRepository(dbContext);
 
             // Act
-            var testResult = await creatorRepository.GetByIdAsync(_creator.Id);
+            var testResult = await creatorRepository.GetByIdAsync(_creator.CreatorId);
 
             // Arrange
             testResult.Value.CreatorName.Should().Be(_creator.CreatorName);
@@ -142,12 +142,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             const string name = "creatorName";
 
             // Act
-            var creatorFromDatabase = await dbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(_creator.Id));
+            var creatorFromDatabase = await dbContext.Creators.FirstOrDefaultAsync(p => p.CreatorId.Equals(_creator.CreatorId));
             creatorFromDatabase.SetCreatorName(name);
             creatorRepository.Update(creatorFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id)) ?? It.IsAny<Creator>();
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.CreatorId.Equals(_creator.CreatorId)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.CreatorName.Should().Be(name);

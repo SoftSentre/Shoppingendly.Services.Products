@@ -19,7 +19,7 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
-    public class ProductProducer : ValueObject<ProductProducer>
+    public class ProductProducer : ValueObject
     {
         private ProductProducer(string name)
         {
@@ -51,19 +51,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
         public static ProductProducer CreateProductProducer(string name)
         {
             return new ProductProducer(name);
-        }
-
-        protected override bool EqualsCore(ProductProducer other)
-        {
-            return Name.Equals(other.Name);
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            var hash = 13;
-            hash = hash * 7 + Name.GetHashCode();
-
-            return hash;
         }
     }
 }

@@ -12,21 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
+using System;
+
+namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Attributes
 {
-    public class DoubleKeyEntityBase<TFirstId, TSecondId> : IDoubleKeyEntity<TFirstId, TSecondId>
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+    public class IgnoreMemberAttribute : Attribute
     {
-        protected DoubleKeyEntityBase()
-        {
-        }
-
-        protected DoubleKeyEntityBase(TFirstId firstKey, TSecondId secondKey)
-        {
-            FirstKey = firstKey;
-            SecondKey = secondKey;
-        }
-
-        public TFirstId FirstKey { get; }
-        public TSecondId SecondKey { get; }
     }
 }

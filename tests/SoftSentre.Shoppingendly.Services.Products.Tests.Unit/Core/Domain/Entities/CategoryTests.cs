@@ -121,7 +121,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             category.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
+            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.CategoryId);
             newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.CategoryName);
             newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.CategoryDescription);
         }
@@ -142,7 +142,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             category.DomainEvents.Should().NotBeEmpty();
             newCategoryCreatedDomainEvent.Should().BeOfType<NewCategoryCreatedDomainEvent>();
             newCategoryCreatedDomainEvent.Should().NotBeNull();
-            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.Id);
+            newCategoryCreatedDomainEvent.CategoryId.Should().Be(category.CategoryId);
             newCategoryCreatedDomainEvent.CategoryName.Should().Be(category.CategoryName);
             newCategoryCreatedDomainEvent.CategoryDescription.Should().Be(category.CategoryDescription);
         }
@@ -177,7 +177,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             category.DomainEvents.Should().NotBeEmpty();
             categoryDescriptionChanged.Should().BeOfType<CategoryDescriptionChangedDomainEvent>();
             categoryDescriptionChanged.Should().NotBeNull();
-            categoryDescriptionChanged.CategoryId.Should().Be(category.Id);
+            categoryDescriptionChanged.CategoryId.Should().Be(category.CategoryId);
             categoryDescriptionChanged.CategoryDescription.Should().Be(category.CategoryDescription);
         }
 
@@ -273,7 +273,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Enti
             category.DomainEvents.Should().NotBeEmpty();
             categoryNameChangedDomainEvent.Should().BeOfType<CategoryNameChangedDomainEvent>();
             categoryNameChangedDomainEvent.Should().NotBeNull();
-            categoryNameChangedDomainEvent.CategoryId.Should().Be(category.Id);
+            categoryNameChangedDomainEvent.CategoryId.Should().Be(category.CategoryId);
             categoryNameChangedDomainEvent.CategoryName.Should().Be(category.CategoryName);
         }
 

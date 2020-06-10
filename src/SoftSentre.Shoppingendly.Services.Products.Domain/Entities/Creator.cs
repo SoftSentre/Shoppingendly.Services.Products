@@ -23,7 +23,7 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 {
-    public class Creator : AuditableAndEventSourcingEntity<CreatorId>
+    public class Creator : EventSourcingEntity
     {
         private HashSet<Product> _products = new HashSet<Product>();
 
@@ -32,14 +32,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
         {
         }
 
-        internal Creator(CreatorId creatorId, string creatorName, CreatorRole creatorRole) : base(creatorId)
+        internal Creator(CreatorId creatorId, string creatorName, CreatorRole creatorRole)
         {
+            CreatorId = creatorId;
             CreatorName = ValidateName(creatorName);
             CreatorRole = ValidateRole(creatorRole);
             AddDomainEvent(new NewCreatorCreatedDomainEvent(creatorId, creatorName, creatorRole));
         }
 
-        public int RoleId { get; private set; }
+        public CreatorId CreatorId { get; }
+        public int CreatorRoleId { get; private set; }
         public string CreatorName { get; private set; }
 
         // Navigation property
@@ -57,7 +59,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 
             CreatorName = creatorName;
             SetUpdatedDate();
-            AddDomainEvent(new CreatorNameChangedDomainEvent(Id, creatorName));
+            AddDomainEvent(new CreatorNameChangedDomainEvent(CreatorId, creatorName));
         }
 
         internal void SetCreatorRole(CreatorRole creatorRole)
@@ -66,7 +68,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 
             CreatorRole = creatorRole;
             SetUpdatedDate();
-            AddDomainEvent(new CreatorRoleChangedDomainEvent(Id, creatorRole));
+            AddDomainEvent(new CreatorRoleChangedDomainEvent(CreatorId, creatorRole));
         }
 
         internal static Creator Create(CreatorId creatorId, string creatorName, CreatorRole creatorRole)
