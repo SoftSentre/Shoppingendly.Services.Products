@@ -1,4 +1,4 @@
-// Copyright 2020 SoftSentre Contributors
+﻿// Copyright 2020 SoftSentre Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories
 {
-    internal class PictureCanNotBeNullOrEmptyException : DomainException
+    public class CategoryIconCanNotBeNullOrEmptyException : DomainException
     {
-        internal PictureCanNotBeNullOrEmptyException() : base("Picture can not be null or empty.")
+        internal CategoryIconCanNotBeNullOrEmptyException() : base("Category Icon can not be null or empty.")
         {
         }
 
-        public override string Code { get; } = ErrorCodes.PictureCanNotBeNullOrEmpty;
+        public override string Code { get; } = ErrorCodes.CategoryIconCanNotBeNullOrEmpty;
     }
 }

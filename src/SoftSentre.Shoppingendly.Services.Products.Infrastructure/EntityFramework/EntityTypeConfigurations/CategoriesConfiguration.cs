@@ -37,6 +37,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .HasMaxLength(CategoryDescriptionMaxLength)
                 .IsRequired(IsCategoryDescriptionRequired);
 
+            categoriesConfiguration.OwnsOne(
+                p => p.CategoryIcon,
+                pi =>
+                {
+                    pi.Property(pp => pp.Name)
+                        .HasColumnName("CategoryIconName")
+                        .HasMaxLength(PictureNameMaxLength);
+
+                    pi.Property(pp => pp.Url)
+                        .HasColumnName("CategoryIconUrl")
+                        .HasMaxLength(PictureUrlMaxLength);
+
+                    pi.Property(pp => pp.IsEmpty)
+                        .HasColumnName("IsCategoryIconEmpty");
+                });
+            
             categoriesConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
 

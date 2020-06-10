@@ -13,18 +13,16 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.Products
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products
 {
-    internal class ProductNotFoundException : DomainException
+    internal class ProductPictureCanNotBeNullOrEmptyException : DomainException
     {
-        internal ProductNotFoundException(ProductId productId) : base(
-            $"Unable to mutate product state, because product with id: {productId} not found.")
+        internal ProductPictureCanNotBeNullOrEmptyException() : base("Product picture can not be null or empty.")
         {
         }
 
-        public override string Code { get; } = ErrorCodes.ProductNotFound;
+        public override string Code { get; } = ErrorCodes.ProductPictureCanNotBeNullOrEmpty;
     }
 }

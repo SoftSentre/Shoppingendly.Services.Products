@@ -187,8 +187,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.AddAsync(It.IsAny<Product>()), Times.Never);
         }
-
-
+        
         [Fact]
         public async Task CheckIfAddOrChangeProductPictureMethodCreateValidObject()
         {
@@ -249,7 +248,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -317,7 +316,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -383,7 +382,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -450,7 +449,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -561,7 +560,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -583,7 +582,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
             productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
         }
@@ -641,7 +640,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
 
             //Assert
             func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
             productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(_productId), Times.Once);
         }
 
@@ -731,48 +730,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
             testResult.Should().Be(product);
             testResult.Value.ProductCategories.Should().HaveCount(2);
             productRepository.Verify(pr => pr.GetByIdWithIncludesAsync(product.Id), Times.Once);
-        }
-
-        [Fact]
-        public void CheckIfRemovePictureFromProductMethodThrowExceptionWhenProductHasNoValue()
-        {
-            // Arrange
-            var productRepository = new Mock<IProductRepository>();
-            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
-                .ReturnsAsync(new Maybe<Product>());
-
-            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
-
-            // Act
-            Func<Task> func = async () => await productDomainService.RemovePictureFromProductAsync(_productId);
-
-            //Assert
-            func.Should().Throw<ProductNotFoundException>()
-                .WithMessage($"Unable to mutate product state, because product with id: {_productId} is empty.");
-            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
-            productRepository.Verify(pr => pr.Update(It.IsAny<Product>()), Times.Never);
-        }
-
-        [Fact]
-        public async Task CheckIfRemoveProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
-        {
-            // Arrange
-            var productRepository = new Mock<IProductRepository>();
-            var product = new Product(new ProductId(), new CreatorId(), _productPicture, ProductName, _productProducer);
-            productRepository.Setup(pr => pr.GetByIdAsync(_productId))
-                .ReturnsAsync(product);
-
-            IProductDomainService productDomainService = new ProductDomainService(productRepository.Object);
-
-            // Act
-            await productDomainService.RemovePictureFromProductAsync(_productId);
-
-            //Assert
-            product.ProductPicture.IsEmpty.Should().BeTrue();
-            product.ProductPicture.Name.Should().Be(null);
-            product.ProductPicture.Url.Should().Be(null);
-            productRepository.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
-            productRepository.Verify(pr => pr.Update(product), Times.Once);
         }
     }
 }

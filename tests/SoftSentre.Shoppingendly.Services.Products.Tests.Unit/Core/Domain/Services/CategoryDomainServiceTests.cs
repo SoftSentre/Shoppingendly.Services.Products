@@ -33,6 +33,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         public CategoryDomainServiceTests()
         {
             _categoryId = new CategoryId();
+            _categoryIcon = Picture.Create("CategoryIconName", "CategoryIconUrl");
             _category = Category.Create(_categoryId, "defaultCategoryName");
         }
 
@@ -40,6 +41,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
         private const string CategoryDescription = "DefaultCategoryDescription";
 
         private readonly CategoryId _categoryId;
+        private readonly Picture _categoryIcon;
         private readonly Category _category;
 
         [Fact]
@@ -387,6 +389,71 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Serv
                 .WithMessage($"Unable to mutate category state, because category with id: {_categoryId} not found.");
             categoryRepository.Verify(cr => cr.GetByIdAsync(It.IsAny<CategoryId>()), Times.Once);
             categoryRepository.Verify(cr => cr.Update(null), Times.Never);
+        }
+
+        [Fact]
+        public async Task CheckIfAddOrChangeProductPictureMethodCreateValidObject()
+        {
+            // Arrange
+            var categoryRepository = new Mock<ICategoryRepository>();
+            var category = new Category(_categoryId, CategoryName);
+            categoryRepository.Setup(cr => cr.GetByIdAsync(_categoryId))
+                .ReturnsAsync(category);
+
+            ICategoryDomainService categoryDomainService = new CategoryDomainService(categoryRepository.Object);
+
+            // Act
+            var testResult = await categoryDomainService.AddOrChangeCategoryIconAsync(_categoryId, _categoryIcon);
+
+            //Assert
+            testResult.Should().BeTrue();
+            category.CategoryIcon.Should().Be(_categoryIcon);
+            category.CategoryIcon.IsEmpty.Should().BeFalse();
+            categoryRepository.Verify(pr => pr.GetByIdAsync(_categoryId), Times.Once);
+            categoryRepository.Verify(pr => pr.Update(category), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangeProductPictureMethodDoNotThrownWhenCorrectValuesAreProvided()
+        {
+            // Arrange
+            var categoryRepository = new Mock<ICategoryRepository>();
+            var category = new Category(_categoryId, CategoryName);
+            categoryRepository.Setup(cr => cr.GetByIdAsync(_categoryId))
+                .ReturnsAsync(category);
+            
+            ICategoryDomainService categoryDomainService = new CategoryDomainService(categoryRepository.Object);
+
+            // Act
+            Func<Task> func = async () =>
+                await categoryDomainService.AddOrChangeCategoryIconAsync(_categoryId, _categoryIcon);
+
+            //Assert
+            func.Should().NotThrow();
+            categoryRepository.Verify(pr => pr.GetByIdAsync(_categoryId), Times.Once);
+            categoryRepository.Verify(pr => pr.Update(category), Times.Once);
+        }
+
+        [Fact]
+        public void CheckIfAddOrChangeProductPictureMethodThrowExceptionWhenProductHasNoValue()
+        {
+            // Arrange
+            var categoryRepository = new Mock<ICategoryRepository>();
+
+            categoryRepository.Setup(pr => pr.GetByIdAsync(_categoryId))
+                .ReturnsAsync(new Maybe<Category>());
+
+            ICategoryDomainService categoryDomainService = new CategoryDomainService(categoryRepository.Object);
+
+            // Act
+            Func<Task> func = async () =>
+                await categoryDomainService.AddOrChangeCategoryIconAsync(_categoryId, Picture.Empty);
+
+            //Assert
+            func.Should().Throw<CategoryNotFoundException>()
+                .WithMessage($"Unable to mutate category state, because category with id: {_categoryId} not found.");
+            categoryRepository.Verify(pr => pr.GetByIdAsync(_categoryId), Times.Once);
+            categoryRepository.Verify(pr => pr.Update(It.IsAny<Category>()), Times.Never);
         }
     }
 }

@@ -17,9 +17,9 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
 {
-    public class PictureAddedOrChangedDomainEvent : DomainEventBase
+    public class ProductPictureAddedOrChangedDomainEvent : DomainEventBase
     {
-        internal PictureAddedOrChangedDomainEvent(ProductId productId, Picture productPicture)
+        internal ProductPictureAddedOrChangedDomainEvent(ProductId productId, Picture productPicture)
         {
             ProductId = productId;
             ProductPicture = productPicture;

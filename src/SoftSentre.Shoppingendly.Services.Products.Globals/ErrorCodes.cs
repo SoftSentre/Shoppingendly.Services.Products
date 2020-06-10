@@ -23,7 +23,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const string ProductIsAlreadyAssignedToCategory = "product_already_assigned_to_category";
         public const string ProductWithAssignedCategoryNotFound = "product_with_assigned_category_not_found";
         public const string ProductWithAssignedCategoriesNotFound = "product_with_assigned_categories_not_found";
-        public const string PictureCanNotBeNullOrEmpty = "picture_can_not_be_null_or_empty";
+        public const string ProductPictureCanNotBeNullOrEmpty = "product_picture_can_not_be_null_or_empty";
         public const string ProductAlreadyExists = "product_already_exist";
         public const string ProductNotFound = "product_not_found";
 
@@ -34,6 +34,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const string CategoryDescriptionCanNotBeEmpty = "category_description_can_not_be_empty";
         public const string CategoryDescriptionIsTooShort = "category_description_is_too_long";
         public const string CategoryDescriptionIsTooLong = "category_description_is_too_short";
+        public const string CategoryIconCanNotBeNullOrEmpty = "category_icon_can_not_be_null_or_empty";
         public const string CategoryAlreadyExists = "category_already_exists";
         public const string CategoryNotFound = "category_not_found";
 

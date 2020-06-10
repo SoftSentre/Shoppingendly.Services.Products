@@ -19,21 +19,25 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
 {
     public class NewCategoryCreatedDomainEvent : DomainEventBase
     {
-        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName)
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName, Picture categoryIcon)
         {
             CategoryId = categoryId;
             CategoryName = categoryName;
+            CategoryIcon = categoryIcon;
         }
 
-        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName, string categoryDescription)
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName, string categoryDescription,
+            Picture categoryIcon)
         {
             CategoryId = categoryId;
             CategoryName = categoryName;
             CategoryDescription = categoryDescription;
+            CategoryIcon = categoryIcon;
         }
 
         public CategoryId CategoryId { get; }
         public string CategoryName { get; }
         public string CategoryDescription { get; }
+        public Picture CategoryIcon { get; }
     }
 }

@@ -103,7 +103,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             // Arrange
             var domainEventPublisher = new Mock<IDomainEventPublisher>();
-            var categoryCreatedEvent = new NewCategoryCreatedDomainEvent(new CategoryId(), "Name");
+            var categoryCreatedEvent =
+                new NewCategoryCreatedDomainEvent(new CategoryId(), "Name", "ExampleDescription", Picture.Empty);
             var creatorCreatedEvent =
                 new NewCreatorCreatedDomainEvent(new CreatorId(), "Name", CreatorRole.Moderator);
             var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object, await CreateDbContext());

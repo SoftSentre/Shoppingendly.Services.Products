@@ -21,7 +21,6 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
@@ -117,12 +116,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             // Act
             product.AddOrChangeProductPicture(Picture.Create("ExamplePictureName", "ExamplePictureUrl"));
             var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as PictureAddedOrChangedDomainEvent ??
-                It.IsAny<PictureAddedOrChangedDomainEvent>();
+                product.GetUncommitted().LastOrDefault() as ProductPictureAddedOrChangedDomainEvent ??
+                It.IsAny<ProductPictureAddedOrChangedDomainEvent>();
 
             // Assert
             product.DomainEvents.Should().NotBeEmpty();
-            productNameChangedDomainEvent.Should().BeOfType<PictureAddedOrChangedDomainEvent>();
+            productNameChangedDomainEvent.Should().BeOfType<ProductPictureAddedOrChangedDomainEvent>();
             productNameChangedDomainEvent.Should().NotBeNull();
             productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
             productNameChangedDomainEvent.ProductPicture.Should().Be(product.ProductPicture);
@@ -140,8 +139,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             Func<bool> function = () => product.AddOrChangeProductPicture(picture);
 
             // Assert
-            function.Should().Throw<PictureCanNotBeNullOrEmptyException>()
-                .WithMessage("Picture can not be null or empty.");
+            function.Should().Throw<ProductPictureCanNotBeNullOrEmptyException>()
+                .WithMessage("Product picture can not be null or empty.");
         }
 
         [Fact]
@@ -409,61 +408,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Core.Domain.Aggr
             domainEvents.Should().NotBeNull();
             domainEvents.LastOrDefault().Should().BeOfType<NewProductCreatedDomainEvent>();
         }
-
-        [Fact]
-        public void CheckIfIsPossibleToRemovePictureIfItIsEmpty()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(), "ExampleProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
-
-            // Act
-            Action action = () => product.RemoveProductPicture();
-
-            // Assert
-            action.Should().Throw<PictureCanNotBeNullOrEmptyException>()
-                .WithMessage("Picture can not be null or empty.");
-        }
-
-        [Fact]
-        public void CheckIfRemovePictureMethodCanDeleteThePictureFromProductAndDoNotThrown()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
-
-            // Act
-            Action action = () => product.RemoveProductPicture();
-
-            // Assert
-            action.Should().NotThrow();
-            product.ProductPicture.Name.Should().Be(null);
-            product.ProductPicture.Url.Should().Be(null);
-            product.ProductPicture.IsEmpty.Should().BeTrue();
-        }
-
-        [Fact]
-        public void CheckIfRemovePictureMethodProduceDomainEventWithAppropriateTypeAndValues()
-        {
-            // Arrange
-            var product = new Product(new ProductId(), new CreatorId(),
-                Picture.Create("ExamplePictureName", "ExamplePictureUrl"), "ExampleProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
-
-            // Act
-            product.RemoveProductPicture();
-            var productNameChangedDomainEvent =
-                product.GetUncommitted().LastOrDefault() as PictureRemovedDomainEvent ??
-                It.IsAny<PictureRemovedDomainEvent>();
-
-            // Assert
-            product.DomainEvents.Should().NotBeEmpty();
-            productNameChangedDomainEvent.Should().BeOfType<PictureRemovedDomainEvent>();
-            productNameChangedDomainEvent.Should().NotBeNull();
-            productNameChangedDomainEvent.ProductId.Should().Be(product.Id);
-        }
-
+        
         [Fact]
         public void CheckIfSetCategoryDescriptionMethodProduceDomainEventWithAppropriateTypeAndValues()
         {

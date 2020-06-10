@@ -124,5 +124,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
 
             return isDescriptionChanged;
         }
+
+        public async Task<bool> AddOrChangeCategoryIconAsync(CategoryId categoryId, Picture categoryIcon)
+        {
+            var category = await _categoryRepository.GetByIdAsync(categoryId)
+                .UnwrapAsync(new CategoryNotFoundException(categoryId));
+            
+            var isCategoryIconChanged = category.AddOrChangeCategoryIcon(categoryIcon);
+
+            if (isCategoryIconChanged)
+            {
+                _categoryRepository.Update(category);
+            }
+
+            return isCategoryIconChanged;
+        }
     }
 }

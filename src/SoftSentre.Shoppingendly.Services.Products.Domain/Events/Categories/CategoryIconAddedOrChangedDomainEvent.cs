@@ -1,4 +1,4 @@
-// Copyright 2020 SoftSentre Contributors
+﻿// Copyright 2020 SoftSentre Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,15 +15,17 @@
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
 {
-    public class PictureRemovedDomainEvent : DomainEventBase
+    public class CategoryIconAddedOrChangedDomainEvent : DomainEventBase
     {
-        internal PictureRemovedDomainEvent(ProductId productId)
+        internal CategoryIconAddedOrChangedDomainEvent(CategoryId categoryId, Picture categoryIcon)
         {
-            ProductId = productId;
+            CategoryId = categoryId;
+            CategoryIcon = categoryIcon;
         }
 
-        public ProductId ProductId { get; }
+        public CategoryId CategoryId { get; }
+        public Picture CategoryIcon { get; }
     }
 }

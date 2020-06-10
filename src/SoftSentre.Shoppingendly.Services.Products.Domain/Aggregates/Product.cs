@@ -19,7 +19,6 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Pictures;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
@@ -106,7 +105,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
         internal bool AddOrChangeProductPicture(Maybe<Picture> productPicture)
         {
-            var validatedProductPicture = ValidatePicture(productPicture);
+            var validatedProductPicture = ValidateProductPicture(productPicture);
 
             if (!ProductPicture.IsEmpty && ProductPicture.Equals(validatedProductPicture))
             {
@@ -115,20 +114,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             ProductPicture = validatedProductPicture;
             SetUpdatedDate();
-            AddDomainEvent(new PictureAddedOrChangedDomainEvent(Id, validatedProductPicture));
+            AddDomainEvent(new ProductPictureAddedOrChangedDomainEvent(Id, validatedProductPicture));
             return true;
-        }
-
-        internal void RemoveProductPicture()
-        {
-            if (ProductPicture.IsEmpty)
-            {
-                throw new PictureCanNotBeNullOrEmptyException();
-            }
-
-            ProductPicture = Picture.Empty;
-            SetUpdatedDate();
-            AddDomainEvent(new PictureRemovedDomainEvent(Id));
         }
 
         internal void AssignCategory(CategoryId categoryId)
@@ -210,11 +197,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             return productName;
         }
 
-        private static Picture ValidatePicture(Maybe<Picture> productPicture)
+        private static Picture ValidateProductPicture(Maybe<Picture> productPicture)
         {
             if (productPicture.HasNoValue || productPicture.Value.IsEmpty)
             {
-                throw new PictureCanNotBeNullOrEmptyException();
+                throw new ProductPictureCanNotBeNullOrEmptyException();
             }
 
             return productPicture.Value;

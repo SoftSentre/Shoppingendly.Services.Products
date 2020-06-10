@@ -123,15 +123,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return isPictureChanged;
         }
 
-        public async Task RemovePictureFromProductAsync(ProductId productId)
-        {
-            var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(
-                new ProductNotFoundException(productId));
-
-            product.RemoveProductPicture();
-            _productRepository.Update(product);
-        }
-
         public async Task<bool> ChangeProductNameAsync(ProductId productId, string name)
         {
             var product = await _productRepository.GetByIdAsync(productId).UnwrapAsync(

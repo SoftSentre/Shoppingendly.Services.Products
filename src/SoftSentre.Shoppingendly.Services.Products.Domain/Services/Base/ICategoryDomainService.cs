@@ -34,5 +34,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
 
         Task<bool> SetCategoryNameAsync(CategoryId categoryId, string categoryName);
         Task<bool> SetCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription);
+        Task<bool> AddOrChangeCategoryIconAsync(CategoryId categoryId, Picture categoryIcon);
     }
 }
