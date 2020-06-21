@@ -48,7 +48,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
             return name;
         }
 
-        public static ProductProducer CreateProductProducer(string name)
+        public static ProductProducer Create(string name)
         {
             return new ProductProducer(name);
         }

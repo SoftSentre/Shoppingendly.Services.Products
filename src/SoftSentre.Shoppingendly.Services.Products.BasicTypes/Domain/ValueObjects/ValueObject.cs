@@ -20,7 +20,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Attributes;
 
 namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObjects
 {
-       public abstract class ValueObject : IEquatable<ValueObject>
+    public abstract class ValueObject : IEquatable<ValueObject>
     {
         private List<PropertyInfo> _properties;
         private List<FieldInfo> _fields;
@@ -95,7 +95,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObje
 
         public override int GetHashCode()
         {
-            unchecked 
+            unchecked
             {
                 int hash = 17;
                 foreach (var prop in GetProperties())
@@ -114,7 +114,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObje
             }
         }
 
-        private int HashValue(int seed, object value)
+        private static int HashValue(int seed, object value)
         {
             var currentHash = value != null
                 ? value.GetHashCode()

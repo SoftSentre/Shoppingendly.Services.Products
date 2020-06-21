@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
             // Required for EF
         }
 
-        internal Picture(string name, string url)
+        private Picture(string name, string url)
         {
             Name = ValidatePictureName(name);
             Url = ValidatePictureUrl(url);

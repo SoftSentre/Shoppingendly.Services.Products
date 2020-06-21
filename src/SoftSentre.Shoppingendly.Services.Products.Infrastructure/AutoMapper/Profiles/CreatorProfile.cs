@@ -16,7 +16,6 @@ using System.Linq;
 using AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles

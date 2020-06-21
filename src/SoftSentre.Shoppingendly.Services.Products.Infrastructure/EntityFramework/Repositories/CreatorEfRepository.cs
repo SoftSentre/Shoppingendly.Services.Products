@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;

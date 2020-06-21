@@ -50,14 +50,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObje
 
         public override bool Equals(object obj)
         {
-            var otherValue = obj as Enumeration;
-
-            if (otherValue == null)
+            if (!(obj is Enumeration otherValue))
             {
                 return false;
             }
 
-            var typeMatches = GetType().Equals(obj.GetType());
+            var typeMatches = GetType() == obj.GetType();
             var valueMatches = Id.Equals(otherValue.Id);
 
             return typeMatches && valueMatches;

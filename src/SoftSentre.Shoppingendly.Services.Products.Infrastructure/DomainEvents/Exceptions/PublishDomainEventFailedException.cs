@@ -25,6 +25,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
         {
         }
 
-        public override string Code { get; } = ErrorCodes.PublishDomainEventFailedException;
+        public override string Code { get; } = ErrorCodes.PublishDomainEventFailed;
     }
 }

@@ -18,12 +18,9 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Producers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 {
@@ -41,21 +38,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             ProductId = productId;
             CreatorId = creatorId;
             ProductPicture = Picture.Empty;
-            ProductName = ValidateProductName(productName);
+            ProductName = productName;
             ProductProducer = productProducer;
-            AddDomainEvent(new NewProductCreatedDomainEvent(productId, creatorId, productName, productProducer,
-                Picture.Empty));
         }
 
         internal Product(ProductId productId, CreatorId creatorId, Picture productPicture, string productName,
-            ProductProducer productProducer) 
+            ProductProducer productProducer)
         {
             ProductId = productId;
             CreatorId = creatorId;
             ProductPicture = productPicture;
-            ProductName = ValidateProductName(productName);
+            ProductName = productName;
             ProductProducer = productProducer;
-            AddDomainEvent(new NewProductCreatedDomainEvent(productId, creatorId, productName, productProducer, productPicture));
         }
 
         public ProductId ProductId { get; }
@@ -73,10 +67,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             set => _productCategories = new HashSet<ProductCategory>(value);
         }
 
-        internal bool SetProductName(string productName)
+        internal bool ChangeProductName(string productName)
         {
-            ValidateProductName(productName);
-
             if (ProductName.EqualsCaseInvariant(productName))
             {
                 return false;
@@ -84,17 +76,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             ProductName = productName;
             SetUpdatedDate();
-            AddDomainEvent(new ProductNameChangedDomainEvent(ProductId, productName));
             return true;
         }
 
-        internal bool SetProductProducer(ProductProducer productProducer)
+        internal bool ChangeProductProducer(ProductProducer productProducer)
         {
-            if (productProducer == null)
-            {
-                throw new ProductProducerCanNotBeNullException();
-            }
-
             if (ProductProducer.Name.EqualsCaseInvariant(productProducer.Name))
             {
                 return false;
@@ -102,22 +88,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             ProductProducer = productProducer;
             SetUpdatedDate();
-            AddDomainEvent(new ProductProducerChangedDomainEvent(ProductId, productProducer));
             return true;
         }
 
-        internal bool AddOrChangeProductPicture(Maybe<Picture> productPicture)
+        internal bool UploadProductPicture(Picture productPicture)
         {
-            var validatedProductPicture = ValidateProductPicture(productPicture);
-
-            if (!ProductPicture.IsEmpty && ProductPicture.Equals(validatedProductPicture))
+            if (ProductPicture.Equals(productPicture))
             {
                 return false;
             }
 
-            ProductPicture = validatedProductPicture;
+            ProductPicture = productPicture;
             SetUpdatedDate();
-            AddDomainEvent(new ProductPictureAddedOrChangedDomainEvent(ProductId, validatedProductPicture));
             return true;
         }
 
@@ -133,8 +115,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             var newAssignedCategory = new ProductCategory(ProductId, categoryId);
             _productCategories.Add(newAssignedCategory);
             SetUpdatedDate();
-            AddDomainEvent(new ProductAssignedToCategoryDomainEvent(newAssignedCategory.ProductId,
-                newAssignedCategory.CategoryId));
         }
 
         internal void DeallocateCategory(CategoryId categoryId)
@@ -148,8 +128,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 
             _productCategories.Remove(assignedCategory.Value);
             SetUpdatedDate();
-            AddDomainEvent(new ProductDeallocatedFromCategoryDomainEvent(assignedCategory.Value.ProductId,
-                assignedCategory.Value.CategoryId));
         }
 
         internal void DeallocateAllCategories()
@@ -159,55 +137,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
                 throw new ProductWithAssignedCategoriesNotFoundException();
             }
 
-            var categoriesIds = _productCategories.Select(pc => pc.CategoryId).ToList();
             _productCategories.Clear();
             SetUpdatedDate();
-            AddDomainEvent(new ProductDeallocatedFromAllCategoriesDomainEvent(ProductId, categoriesIds));
         }
 
         internal Maybe<IEnumerable<ProductCategory>> GetAllAssignedCategories()
         {
             return _productCategories;
-        }
-
-        internal Maybe<ProductCategory> GetAssignedCategory(CategoryId categoryId)
-        {
-            return GetProductCategory(categoryId);
-        }
-
-        internal static Product Create(ProductId id, CreatorId creatorId, string productName, ProductProducer producer)
-        {
-            return new Product(id, creatorId, productName, producer);
-        }
-
-        private static string ValidateProductName(string productName)
-        {
-            if (IsProductNameRequired && productName.IsEmpty())
-            {
-                throw new ProductNameCanNotBeEmptyException();
-            }
-
-            if (productName.IsLongerThan(ProductNameMaxLength))
-            {
-                throw new ProductNameIsTooLongException(ProductNameMaxLength);
-            }
-
-            if (productName.IsShorterThan(ProductNameMinLength))
-            {
-                throw new ProductNameIsTooShortException(ProductNameMinLength);
-            }
-
-            return productName;
-        }
-
-        private static Picture ValidateProductPicture(Maybe<Picture> productPicture)
-        {
-            if (productPicture.HasNoValue || productPicture.Value.IsEmpty)
-            {
-                throw new ProductPictureCanNotBeNullOrEmptyException();
-            }
-
-            return productPicture.Value;
         }
 
         private Maybe<ProductCategory> GetProductCategory(CategoryId categoryId)

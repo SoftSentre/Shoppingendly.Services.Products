@@ -59,10 +59,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             await productServiceDbContext.Products.AddRangeAsync(new Product(
                     new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")),
                     new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-                    "ExampleProductName", ProductProducer.CreateProductProducer("ExampleProducer")),
+                    "ExampleProductName", ProductProducer.Create("ExampleProducer")),
                 new Product(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")),
                     new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-                    "ExampleSomeProductName", ProductProducer.CreateProductProducer("ExampleSomeProducer")));
+                    "ExampleSomeProductName", ProductProducer.Create("ExampleSomeProducer")));
             await productServiceDbContext.ProductCategories.AddRangeAsync(
                 new ProductCategory(new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")), _category.CategoryId),
                 new ProductCategory(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")), _category.CategoryId));
@@ -134,7 +134,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Arrange
             var dbContext = await CreateDbContext();
             ICategoryRepository categoryRepository = new CategoryEfRepository(dbContext);
-            dbContext.AddRange(
+            await dbContext.AddRangeAsync(
                 new Category(new CategoryId(), "Name"),
                 new Category(new CategoryId(), "OtherName"));
             await dbContext.SaveChangesAsync();
@@ -217,7 +217,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Act
             var categoryFromDatabase = await dbContext.Categories.FirstOrDefaultAsync(p => p.CategoryId.Equals(_category.CategoryId));
-            categoryFromDatabase.SetCategoryName(newCategoryName);
+            categoryFromDatabase.ChangeCategoryName(newCategoryName);
             categoryRepository.Update(categoryFromDatabase);
             await dbContext.SaveChangesAsync();
 

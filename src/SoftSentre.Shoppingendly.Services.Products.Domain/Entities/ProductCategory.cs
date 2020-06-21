@@ -34,7 +34,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
         public ProductId ProductId { get; private set; }
         public CategoryId CategoryId { get; private set; }
         
-        // Navigation property
+        // Navigation property--
         public Product Product { get; set; }
 
         // Navigation property

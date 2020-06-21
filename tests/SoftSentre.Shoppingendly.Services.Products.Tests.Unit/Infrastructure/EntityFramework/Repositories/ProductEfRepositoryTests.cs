@@ -43,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
         private readonly Product _product = new Product(new ProductId(),
             new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")), "ExampleProductName",
-            ProductProducer.CreateProductProducer("ExampleProducer"));
+            ProductProducer.Create("ExampleProducer"));
 
         private async Task<ProductServiceDbContext> CreateDbContext()
         {
@@ -76,7 +76,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.CreatorId, "ExampleProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
+                ProductProducer.Create("ExampleProducer"));
             await productRepository.AddAsync(product);
             await dbContext.SaveChangesAsync();
 
@@ -102,7 +102,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             // Act
             var productFromDatabase = await dbContext.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(_product.ProductId));
-            productFromDatabase.SetProductName(newProductName);
+            productFromDatabase.ChangeProductName(newProductName);
             productRepository.Update(productFromDatabase);
             await dbContext.SaveChangesAsync();
 
@@ -178,7 +178,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.CreatorId, "OtherProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
+                ProductProducer.Create("ExampleProducer"));
             product.AssignCategory(_category.CategoryId);
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
@@ -206,7 +206,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.CreatorId, "OtherProductName",
-                ProductProducer.CreateProductProducer("ExampleProducer"));
+                ProductProducer.Create("ExampleProducer"));
             product.AssignCategory(_category.CategoryId);
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();

@@ -42,8 +42,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identific
             return Id.Equals(id.Id);
         }
 
-        public TId Id { get; protected set; }
+        public virtual TId Id { get; }
 
+        public abstract bool IsValid();
+        
         public override bool Equals(object anotherObject)
         {
             return Equals(anotherObject as Identity<TId>);

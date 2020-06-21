@@ -19,25 +19,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
 {
     public abstract class EventSourcingEntity : EntityBase, IEventSourcingEntity
     {
-        private List<IDomainEvent> _domainEvents;
-
-        public IEnumerable<IDomainEvent> DomainEvents
-            => _domainEvents.AsReadOnly();
-
-        public IEnumerable<IDomainEvent> GetUncommitted()
+        protected EventSourcingEntity()
         {
-            return _domainEvents ??= new List<IDomainEvent>();
+            DomainEvents = new List<IDomainEvent>();
         }
-
-        public void AddDomainEvent(IDomainEvent domainEvent)
-        {
-            _domainEvents ??= new List<IDomainEvent>();
-            _domainEvents.Add(domainEvent);
-        }
-
-        public void ClearDomainEvents()
-        {
-            _domainEvents?.Clear();
-        }
+        
+        public List<IDomainEvent> DomainEvents { get; }
     }
 }

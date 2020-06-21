@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Domain;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.Configuration.Extensions;
 using Xunit;
@@ -31,9 +31,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.C
             //Arrange
             var typesToCheck = new List<Type>
             {
-                typeof(IProductDomainService),
-                typeof(ICategoryDomainService),
-                typeof(ICreatorDomainService)
+                typeof(IProductDomainController),
+                typeof(ICategoryDomainController),
+                typeof(ICreatorDomainController)
             };
 
             var domainModule = new DomainModule();
