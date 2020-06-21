@@ -80,29 +80,29 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.Should().BeEmpty();
         }
 
-        [Fact]
-        public async void CheckIfGetEntriesMethodReturnDomainEvents()
-        {
-            // // Arrange
-            // var domainEventPublisher = new Mock<IDomainEventPublisher>();
-            // var domainEventsManager = new Mock<IDomainEventsManager>();
-            // var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object,
-            //     domainEventsManager.Object, await CreateDbContext());
-            //
-            // // Act
-            // var testEventsResult = domainEventsAccessor.GetUncommittedEvents();
-            //
-            // // Assert
-            // testEventsResult.Value.Should().NotBeNull();
-            // var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault() ??
-            //                       It.IsAny<NewCreatorCreatedDomainEvent>();
-            //
-            // testEventResult.Should().NotBeNull();
-            // testEventResult.Should().BeOfType<NewCreatorCreatedDomainEvent>();
-            // testEventResult.CreatorId.Id.Should().Be(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A"));
-            // testEventResult.CreatorName.Should().Be("Creator");
-            // testEventResult.CreatorRole.Should().Be(CreatorRole.Admin);
-        }
+        // [Fact]
+        // public async void CheckIfGetEntriesMethodReturnDomainEvents()
+        // {
+        //     // Arrange
+        //     var domainEventPublisher = new Mock<IDomainEventPublisher>();
+        //     var domainEventsManager = new Mock<IDomainEventsManager>();
+        //     var domainEventsAccessor = new DomainEventsEfAccessor(domainEventPublisher.Object,
+        //         domainEventsManager.Object, await CreateDbContext());
+        //     
+        //     // Act
+        //     var testEventsResult = domainEventsAccessor.GetUncommittedEvents();
+        //     
+        //     // Assert
+        //     testEventsResult.Value.Should().NotBeNull();
+        //     var testEventResult = (NewCreatorCreatedDomainEvent) testEventsResult.Value.FirstOrDefault() ??
+        //                           It.IsAny<NewCreatorCreatedDomainEvent>();
+        //     
+        //     testEventResult.Should().NotBeNull();
+        //     testEventResult.Should().BeOfType<NewCreatorCreatedDomainEvent>();
+        //     testEventResult.CreatorId.Id.Should().Be(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A"));
+        //     testEventResult.CreatorName.Should().Be("Creator");
+        //     testEventResult.CreatorRole.Should().Be(CreatorRole.Admin);
+        // }
 
         [Fact]
         public async void CheckIfThePublishMethodFromDomainEventPublisherWillBeMatchedOnce()
