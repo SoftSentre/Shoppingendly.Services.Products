@@ -24,37 +24,37 @@ using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controllers
 {
-    public class CategoryDomainControllerTests : IAsyncLifetime
+    public class CategoryDomainControllerTests //: IAsyncLifetime
     {
-        private Mock<ICategoryRepository> _categoryRepositoryMock;
-        private Mock<ICategoryBusinessRulesChecker> _categoryBusinessRulesCheckerMock;
-        private Mock<IDomainEventEmitter> _domainEventEmitterMock;
-        private CategoryFactory _categoryFactory;
-        private Category _category;
-        private CategoryId _categoryId;
-        private string _categoryName;
-        private string _newCategoryName;
-        private string _categoryDescription;
-        private string _newCategoryDescription;
-        private Picture _categoryIcon;
-
-        public async Task InitializeAsync()
-        {
-            _categoryRepositoryMock = new Mock<ICategoryRepository>();
-            _categoryBusinessRulesCheckerMock = new Mock<ICategoryBusinessRulesChecker>();
-            _domainEventEmitterMock = new Mock<IDomainEventEmitter>();
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-            _categoryId = new CategoryId(new Guid("F3CCBF64-8398-4359-80EF-64DCDF55D15B"));
-            _categoryName = "exampleCategoryName";
-            _newCategoryName = "newExampleCategoryName";
-            _categoryDescription = "exampleCategoryDescription";
-            _newCategoryDescription = "newExampleCategoryDescription";
-            _categoryIcon = Picture.Create("exampleCategoryIconName", "exampleCategoryIconUrl");
-            _category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-
-            await Task.CompletedTask;
-        }
+        // private Mock<ICategoryRepository> _categoryRepositoryMock;
+        // private Mock<ICategoryBusinessRulesChecker> _categoryBusinessRulesCheckerMock;
+        // private Mock<IDomainEventEmitter> _domainEventEmitterMock;
+        // private CategoryFactory _categoryFactory;
+        // private Category _category;
+        // private CategoryId _categoryId;
+        // private string _categoryName;
+        // private string _newCategoryName;
+        // private string _categoryDescription;
+        // private string _newCategoryDescription;
+        // private Picture _categoryIcon;
+        //
+        // public async Task InitializeAsync()
+        // {
+        //     _categoryRepositoryMock = new Mock<ICategoryRepository>();
+        //     _categoryBusinessRulesCheckerMock = new Mock<ICategoryBusinessRulesChecker>();
+        //     _domainEventEmitterMock = new Mock<IDomainEventEmitter>();
+        //     _categoryFactory =
+        //         new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+        //     _categoryId = new CategoryId(new Guid("F3CCBF64-8398-4359-80EF-64DCDF55D15B"));
+        //     _categoryName = "exampleCategoryName";
+        //     _newCategoryName = "newExampleCategoryName";
+        //     _categoryDescription = "exampleCategoryDescription";
+        //     _newCategoryDescription = "newExampleCategoryDescription";
+        //     _categoryIcon = Picture.Create("exampleCategoryIconName", "exampleCategoryIconUrl");
+        //     _category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+        //
+        //     await Task.CompletedTask;
+        // }
 
         // [Fact]
         // public void CheckIfChangeCategoryDescriptionMethodDoNotThrownAnyException()
@@ -468,21 +468,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         //     categoryRepository.Verify(pr => pr.Update(It.IsAny<Category>()), Times.Never);
         // }
 
-        public async Task DisposeAsync()
-        {
-            _categoryRepositoryMock = null;
-            _categoryBusinessRulesCheckerMock = null;
-            _domainEventEmitterMock = null;
-            _categoryFactory = null;
-            _categoryId = null;
-            _categoryName = null;
-            _newCategoryName = null;
-            _categoryDescription = null;
-            _newCategoryDescription = null;
-            _categoryIcon = null;
-            _category = null;
-
-            await Task.CompletedTask;
-        }
+        // public async Task DisposeAsync()
+        // {
+        //     _categoryRepositoryMock = null;
+        //     _categoryBusinessRulesCheckerMock = null;
+        //     _domainEventEmitterMock = null;
+        //     _categoryFactory = null;
+        //     _categoryId = null;
+        //     _categoryName = null;
+        //     _newCategoryName = null;
+        //     _categoryDescription = null;
+        //     _newCategoryDescription = null;
+        //     _categoryIcon = null;
+        //     _category = null;
+        //
+        //     await Task.CompletedTask;
+        // }
     }
 }
