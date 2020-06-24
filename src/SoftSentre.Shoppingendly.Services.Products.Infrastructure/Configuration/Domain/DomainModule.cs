@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using Autofac;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Controllers;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Domain
 {
@@ -22,16 +22,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ProductDomainService>()
-                .As<IProductDomainService>()
+            builder.RegisterType<ProductDomainController>()
+                .As<IProductDomainController>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<CategoryDomainService>()
-                .As<ICategoryDomainService>()
+            builder.RegisterType<CategoryDomainController>()
+                .As<ICategoryDomainController>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<CreatorDomainService>()
-                .As<ICreatorDomainService>()
+            builder.RegisterType<CreatorDomainController>()
+                .As<ICreatorDomainController>()
                 .InstancePerLifetimeScope();
         }
     }

@@ -16,7 +16,6 @@ using System.Linq;
 using AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles
 {
@@ -26,13 +25,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.P
         {
             CreateMap<Category, BasicCategoryDto>()
                 .ConstructUsing(c =>
-                    new BasicCategoryDto(c.Id.Id.ToString(), c.CategoryName));
+                    new BasicCategoryDto(c.CategoryId.Id.ToString(), c.CategoryName));
 
             CreateMap<Category, CategoryDto>()
-                .ConstructUsing(c => new CategoryDto(c.Id.Id.ToString(), c.CategoryName, c.CategoryDescription));
+                .ConstructUsing(c => new CategoryDto(c.CategoryId.Id.ToString(), c.CategoryName, c.CategoryDescription));
 
             CreateMap<Category, CategoryWithProductsDto>()
-                .ConstructUsing((c, context) => new CategoryWithProductsDto(c.Id.Id.ToString(), c.CategoryName,
+                .ConstructUsing((c, context) => new CategoryWithProductsDto(c.CategoryId.Id.ToString(), c.CategoryName,
                     c.CategoryDescription,
                     c.ProductCategories.Select(pc => context.Mapper.Map<Product, ProductDto>(pc.Product))));
         }

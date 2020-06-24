@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Moq;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
@@ -70,7 +70,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Act
             await creatorRepository.AddAsync(creator);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(creator.Id)) ?? It.IsAny<Creator>();
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.CreatorId.Equals(creator.CreatorId)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.CreatorName.Should().Be(creator.CreatorName);
@@ -105,7 +105,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             ICreatorRepository creatorRepository = new CreatorEfRepository(dbContext);
 
             // Act
-            var testResult = await creatorRepository.GetByIdAsync(_creator.Id);
+            var testResult = await creatorRepository.GetByIdAsync(_creator.CreatorId);
 
             // Arrange
             testResult.Value.CreatorName.Should().Be(_creator.CreatorName);
@@ -142,12 +142,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             const string name = "creatorName";
 
             // Act
-            var creatorFromDatabase = await dbContext.Creators.FirstOrDefaultAsync(p => p.Id.Equals(_creator.Id));
-            creatorFromDatabase.SetCreatorName(name);
+            var creatorFromDatabase = await dbContext.Creators.FirstOrDefaultAsync(p => p.CreatorId.Equals(_creator.CreatorId));
+            creatorFromDatabase.ChangeCreatorName(name);
             creatorRepository.Update(creatorFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Creators.FirstOrDefault(p => p.Id.Equals(_creator.Id)) ?? It.IsAny<Creator>();
+            var testResult = dbContext.Creators.FirstOrDefault(p => p.CreatorId.Equals(_creator.CreatorId)) ?? It.IsAny<Creator>();
 
             // Assert
             testResult.CreatorName.Should().Be(name);

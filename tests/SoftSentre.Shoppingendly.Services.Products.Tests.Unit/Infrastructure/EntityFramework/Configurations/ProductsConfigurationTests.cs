@@ -40,7 +40,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string productId = nameof(Product.Id);
+            const string productId = nameof(Product.ProductId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
 
             // Act
@@ -73,7 +73,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             // Arrange
             const string picture = nameof(Product.ProductPicture);
-            const string pictureName = nameof(ProductPicture.Name);
+            const string pictureName = nameof(Picture.Name);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(picture)
                 .GetTargetType()
@@ -83,7 +83,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var maxLength = dbProperty.GetMaxLength();
 
             // Assert
-            maxLength.Should().Be(ProductPictureNameMaxLength);
+            maxLength.Should().Be(PictureNameMaxLength);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         {
             // Arrange
             const string picture = nameof(Product.ProductPicture);
-            const string pictureUrl = nameof(ProductPicture.Url);
+            const string pictureUrl = nameof(Picture.Url);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(picture)
                 .GetTargetType()
@@ -101,15 +101,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var maxLength = dbProperty.GetMaxLength();
 
             // Assert
-            maxLength.Should().Be(ProductPictureUrlMaxLength);
+            maxLength.Should().Be(PictureUrlMaxLength);
         }
 
         [Fact]
         public void CheckIfProductProducerHasConfiguredValidValues()
         {
             // Arrange
-            const string producer = nameof(Product.Producer);
-            const string producerName = nameof(Product.Producer.Name);
+            const string producer = nameof(Product.ProductProducer);
+            const string producerName = nameof(Product.ProductProducer.Name);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(producer)
                 .GetTargetType()

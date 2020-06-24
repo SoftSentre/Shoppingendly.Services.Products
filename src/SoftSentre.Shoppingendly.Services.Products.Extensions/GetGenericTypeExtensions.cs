@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Extensions
 {
-    public static class GenericTypeExtensionsMethods
+    public static class GenericTypeExtensionMethods
     {
         public static string GetGenericTypeName(this object @object)
         {

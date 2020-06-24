@@ -25,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         {
             productsConfiguration.ToTable("Products", ProductServiceDbContext.DefaultSchema);
 
-            productsConfiguration.HasKey(p => p.Id);
+            productsConfiguration.HasKey(p => p.ProductId);
 
             productsConfiguration.Property(p => p.ProductName)
                 .HasColumnName("ProductName")
@@ -49,18 +49,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 {
                     pi.Property(pp => pp.Name)
                         .HasColumnName("ProductPictureName")
-                        .HasMaxLength(ProductPictureNameMaxLength);
+                        .HasMaxLength(PictureNameMaxLength);
 
                     pi.Property(pp => pp.Url)
                         .HasColumnName("ProductPictureUrl")
-                        .HasMaxLength(ProductPictureUrlMaxLength);
+                        .HasMaxLength(PictureUrlMaxLength);
 
                     pi.Property(pp => pp.IsEmpty)
                         .HasColumnName("IsProductPictureEmpty");
                 });
 
             productsConfiguration.OwnsOne(
-                p => p.Producer,
+                p => p.ProductProducer,
                 pp =>
                 {
                     pp.Property(ppp => ppp.Name)
@@ -71,7 +71,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             productsConfiguration.HasMany(p => p.ProductCategories)
                 .WithOne(pc => pc.Product)
-                .HasForeignKey(pc => pc.FirstKey);
+                .HasForeignKey(pc => pc.ProductId);
 
             productsConfiguration.Metadata.FindNavigation(nameof(Product.ProductCategories))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);

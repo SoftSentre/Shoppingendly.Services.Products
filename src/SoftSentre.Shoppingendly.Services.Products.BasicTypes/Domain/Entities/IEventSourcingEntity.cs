@@ -19,9 +19,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
 {
     public interface IEventSourcingEntity
     {
-        IEnumerable<IDomainEvent> DomainEvents { get; }
-        IEnumerable<IDomainEvent> GetUncommitted();
-        void AddDomainEvent(IDomainEvent domainEvent);
-        void ClearDomainEvents();
+        List<IDomainEvent> DomainEvents { get; }
     }
 }

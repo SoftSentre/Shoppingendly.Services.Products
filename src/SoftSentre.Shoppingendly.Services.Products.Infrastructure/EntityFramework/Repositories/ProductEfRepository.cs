@@ -36,13 +36,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         public async Task<Maybe<Product>> GetByIdAsync(ProductId id)
         {
-            return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.Id.Equals(id));
+            return await _productServiceDbContext.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(id));
         }
 
         public async Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId)
         {
             return await _productServiceDbContext.Products.Include(p => p.ProductCategories)
-                .FirstOrDefaultAsync(p => p.Id.Equals(productId));
+                .FirstOrDefaultAsync(p => p.ProductId.Equals(productId));
         }
 
         public async Task<Maybe<IEnumerable<Product>>> GetManyByNameAsync(string name)

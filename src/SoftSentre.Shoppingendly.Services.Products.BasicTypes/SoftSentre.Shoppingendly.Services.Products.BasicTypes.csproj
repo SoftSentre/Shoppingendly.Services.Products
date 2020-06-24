@@ -14,8 +14,4 @@
     <RepositoryUrl>https://github.com/SoftSentre/Shoppingendly.Services.Products</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain" />
-  </ItemGroup>
-
 </Project>

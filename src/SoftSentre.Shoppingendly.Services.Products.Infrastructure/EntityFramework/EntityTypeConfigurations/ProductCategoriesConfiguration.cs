@@ -24,7 +24,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         {
             productCategoriesConfiguration.ToTable("ProductCategories", ProductServiceDbContext.DefaultSchema);
 
-            productCategoriesConfiguration.HasKey(pc => new {pc.FirstKey, pc.SecondKey});
+            productCategoriesConfiguration.HasKey(pc => new {pc.ProductId, pc.CategoryId});
 
             productCategoriesConfiguration.Property(pc => pc.UpdatedDate)
                 .HasColumnName("UpdatedDate");

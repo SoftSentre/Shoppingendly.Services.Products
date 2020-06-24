@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
 {
-    public abstract class EntityBase<TId> : IEntity<TId>
+    public abstract class EntityBase : IEntity, IAuditAbleEntity
     {
+        public DateTime? UpdatedDate { get; private set; }
+        public DateTime CreatedAt { get; }
+
         protected EntityBase()
         {
+            CreatedAt = DateTime.UtcNow;
         }
-
-        protected EntityBase(TId id)
+        
+        protected void SetUpdatedDate()
         {
-            Id = id;
+            UpdatedDate = DateTime.UtcNow;
         }
-
-        public TId Id { get; }
     }
 }

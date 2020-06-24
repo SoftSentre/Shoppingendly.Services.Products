@@ -14,7 +14,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
@@ -25,14 +25,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         {
             creatorsConfiguration.ToTable("Creators", ProductServiceDbContext.DefaultSchema);
 
-            creatorsConfiguration.HasKey(c => c.Id);
+            creatorsConfiguration.HasKey(c => c.CreatorId);
 
             creatorsConfiguration.Property(c => c.CreatorName)
                 .HasColumnName("CreatorName")
                 .HasMaxLength(CreatorNameMaxLength)
                 .IsRequired();
 
-            creatorsConfiguration.Property(p => p.RoleId)
+            creatorsConfiguration.Property(p => p.CreatorRoleId)
                 .HasColumnName("CreatorRoleId")
                 .IsRequired();
 
@@ -45,7 +45,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             creatorsConfiguration.HasOne(c => c.CreatorRole)
                 .WithMany()
-                .HasForeignKey(c => c.RoleId);
+                .HasForeignKey(c => c.CreatorRoleId);
 
             creatorsConfiguration.HasMany(c => c.Products)
                 .WithOne(p => p.Creator)

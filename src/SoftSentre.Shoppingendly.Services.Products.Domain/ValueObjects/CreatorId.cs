@@ -14,18 +14,27 @@
 
 using System;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
     public class CreatorId : Identity<Guid>
     {
+        public override Guid Id { get; }
+
         internal CreatorId()
         {
             Id = Guid.NewGuid();
         }
 
-        internal CreatorId(Guid value) : base(value)
+        internal CreatorId(Guid id) : base(id)
         {
+            Id = id;
+        }
+
+        public override bool IsValid()
+        {
+            return Id.IsNotEmpty();
         }
     }
 }

@@ -37,7 +37,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.D
             var domainEventsAccessor = new Mock<IDomainEventAccessor>();
             var domainEvents = new List<IDomainEvent>
             {
-                new NewCategoryCreatedDomainEvent(new CategoryId(), "Name"),
+                new NewCategoryCreatedDomainEvent(new CategoryId(), "Name", Picture.Empty),
                 new CategoryDescriptionChangedDomainEvent(new CategoryId(), "Description")
             };
 

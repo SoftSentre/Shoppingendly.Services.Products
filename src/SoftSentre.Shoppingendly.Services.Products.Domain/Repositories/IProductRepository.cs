@@ -14,20 +14,17 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.SeedWork;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepository<Product, ProductId>
     {
-        Task<Maybe<Product>> GetByIdAsync(ProductId id);
         Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId);
         Task<Maybe<IEnumerable<Product>>> GetManyByNameAsync(string name);
         Task<Maybe<IEnumerable<Product>>> GetManyByNameWithIncludesAsync(string name);
-        Task AddAsync(Product product);
-        void Update(Product product);
-        void Delete(Product product);
     }
 }

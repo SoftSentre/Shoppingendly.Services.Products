@@ -14,6 +14,7 @@
 
 using System;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
@@ -24,8 +25,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
             Id = Guid.NewGuid();
         }
 
-        internal ProductId(Guid value) : base(value)
+        internal ProductId(Guid id) : base(id)
         {
+            Id = id;
+        }
+
+        public override Guid Id { get; }
+
+        public override bool IsValid()
+        {
+            return Id.IsNotEmpty();
         }
     }
 }

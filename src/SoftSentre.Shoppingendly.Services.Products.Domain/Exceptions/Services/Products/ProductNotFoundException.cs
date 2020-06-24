@@ -21,7 +21,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Services.
     internal class ProductNotFoundException : DomainException
     {
         internal ProductNotFoundException(ProductId productId) : base(
-            $"Unable to mutate product state, because product with id: {productId} is empty.")
+            $"Unable to mutate product state, because product with id: {productId} not found.")
         {
         }
 

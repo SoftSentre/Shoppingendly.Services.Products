@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
@@ -35,7 +35,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         public async Task<Maybe<Category>> GetByIdAsync(CategoryId id)
         {
-            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.Id.Equals(id));
+            return await _productServiceDbContext.Categories.FirstOrDefaultAsync(c => c.CategoryId.Equals(id));
         }
 
         public async Task<Maybe<Category>> GetByNameAsync(string name)

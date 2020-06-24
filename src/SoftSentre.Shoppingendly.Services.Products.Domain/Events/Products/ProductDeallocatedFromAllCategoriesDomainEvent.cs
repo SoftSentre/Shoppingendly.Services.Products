@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
@@ -20,14 +19,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
 {
     public class ProductDeallocatedFromAllCategoriesDomainEvent : DomainEventBase
     {
-        internal ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId,
-            IEnumerable<CategoryId> categoriesIds)
+        internal ProductDeallocatedFromAllCategoriesDomainEvent(ProductId productId)
         {
             ProductId = productId;
-            CategoriesIds = categoriesIds;
         }
 
         public ProductId ProductId { get; }
-        public IEnumerable<CategoryId> CategoriesIds { get; }
     }
 }

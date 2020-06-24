@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents.Exceptions;
 
@@ -28,13 +29,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
     public class DomainEventsEfAccessor : IDomainEventAccessor
     {
         private readonly IDomainEventPublisher _domainEventPublisher;
+        private readonly IDomainEventsManager _domainEventsManager;
         private readonly ProductServiceDbContext _productServiceDbContext;
 
         public DomainEventsEfAccessor(
             IDomainEventPublisher domainEventPublisher,
+            IDomainEventsManager domainEventsManager,
             ProductServiceDbContext productServiceDbContext)
         {
             _domainEventPublisher = domainEventPublisher.IfEmptyThenThrowAndReturnValue();
+            _domainEventsManager = domainEventsManager.IfEmptyThenThrowAndReturnValue();
             _productServiceDbContext = productServiceDbContext.IfEmptyThenThrowAndReturnValue();
         }
 
@@ -44,7 +48,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             var domainEvents = entities.HasNoValue || entities.Value.IsEmpty()
                 ? new List<IDomainEvent>()
-                : entities.Value.SelectMany(x => x.Entity.DomainEvents
+                : entities.Value.SelectMany(x => _domainEventsManager.GetUncommittedDomainEvents(x.Entity)
                     .OrderBy(de => de.OccuredAt));
 
             return domainEvents.ToList();
@@ -82,14 +86,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 return;
             }
 
-            entities.Value.ForEach(entity => entity.Entity.ClearDomainEvents());
+            entities.Value.ForEach(entity => _domainEventsManager.ClearAllDomainEvents(entity.Entity));
         }
 
         private Maybe<List<EntityEntry<IEventSourcingEntity>>> GetEntities()
         {
             return _productServiceDbContext.ChangeTracker
                 .Entries<IEventSourcingEntity>()
-                .Where(e => e.Entity.DomainEvents.IsNotEmpty())
+                .Where(e => _domainEventsManager.GetUncommittedDomainEvents(e.Entity).IsNotEmpty())
                 .ToList();
         }
     }

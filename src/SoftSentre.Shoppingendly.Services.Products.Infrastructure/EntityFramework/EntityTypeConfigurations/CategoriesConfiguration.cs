@@ -14,7 +14,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
@@ -25,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         {
             categoriesConfiguration.ToTable("Categories", ProductServiceDbContext.DefaultSchema);
 
-            categoriesConfiguration.HasKey(c => c.Id);
+            categoriesConfiguration.HasKey(c => c.CategoryId);
 
             categoriesConfiguration.Property(c => c.CategoryName)
                 .HasColumnName("CategoryName")
@@ -37,6 +37,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .HasMaxLength(CategoryDescriptionMaxLength)
                 .IsRequired(IsCategoryDescriptionRequired);
 
+            categoriesConfiguration.OwnsOne(
+                p => p.CategoryIcon,
+                pi =>
+                {
+                    pi.Property(pp => pp.Name)
+                        .HasColumnName("CategoryIconName")
+                        .HasMaxLength(PictureNameMaxLength);
+
+                    pi.Property(pp => pp.Url)
+                        .HasColumnName("CategoryIconUrl")
+                        .HasMaxLength(PictureUrlMaxLength);
+
+                    pi.Property(pp => pp.IsEmpty)
+                        .HasColumnName("IsCategoryIconEmpty");
+                });
+            
             categoriesConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
 
@@ -46,7 +62,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             categoriesConfiguration.HasMany(c => c.ProductCategories)
                 .WithOne(pc => pc.Category)
-                .HasForeignKey(pc => pc.SecondKey);
+                .HasForeignKey(pc => pc.CategoryId);
 
             categoriesConfiguration.Metadata.FindNavigation(nameof(Category.ProductCategories))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);

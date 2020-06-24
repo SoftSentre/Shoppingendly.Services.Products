@@ -13,19 +13,16 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.SeedWork;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
 {
-    public interface ICreatorRepository
+    public interface ICreatorRepository : IRepository<Creator, CreatorId>
     {
-        Task<Maybe<Creator>> GetByIdAsync(CreatorId id);
         Task<Maybe<Creator>> GetByNameAsync(string name);
         Task<Maybe<Creator>> GetWithIncludesAsync(CreatorId id);
-        Task AddAsync(Creator creator);
-        void Update(Creator creator);
-        void Delete(Creator creator);
     }
 }

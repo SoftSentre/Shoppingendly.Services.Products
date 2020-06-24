@@ -16,7 +16,6 @@ using System.Linq;
 using AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles
@@ -26,16 +25,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.P
         public CreatorProfile()
         {
             CreateMap<Creator, BasicCreatorDto>()
-                .ConstructUsing(c => new BasicCreatorDto(c.Id.Id.ToString(), c.CreatorName));
+                .ConstructUsing(c => new BasicCreatorDto(c.CreatorId.Id.ToString(), c.CreatorName));
 
             CreateMap<Creator, CreatorDto>()
                 .ConstructUsing((c, context)
-                    => new CreatorDto(c.Id.Id.ToString(), c.CreatorName,
+                    => new CreatorDto(c.CreatorId.Id.ToString(), c.CreatorName,
                         context.Mapper.Map<CreatorRole, RoleDto>(c.CreatorRole)));
 
             CreateMap<Creator, CreatorWithProductsDto>()
                 .ConstructUsing((c, context)
-                    => new CreatorWithProductsDto(c.Id.Id.ToString(), c.CreatorName,
+                    => new CreatorWithProductsDto(c.CreatorId.Id.ToString(), c.CreatorName,
                         context.Mapper.Map<CreatorRole, RoleDto>(c.CreatorRole),
                         c.Products.Select(p => context.Mapper.Map<Product, ProductDto>(p))));
         }

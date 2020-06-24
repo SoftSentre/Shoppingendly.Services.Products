@@ -14,21 +14,18 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.SeedWork;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
 {
-    public interface ICategoryRepository
+    public interface ICategoryRepository : IRepository<Category, CategoryId>
     {
-        Task<Maybe<Category>> GetByIdAsync(CategoryId id);
         Task<Maybe<Category>> GetByNameAsync(string name);
         Task<Maybe<Category>> GetByNameWithIncludesAsync(string name);
         Task<Maybe<IEnumerable<Category>>> GetAllAsync();
         Task<Maybe<IEnumerable<Category>>> GetAllWithIncludesAsync();
-        Task AddAsync(Category category);
-        void Update(Category category);
-        void Delete(Category category);
     }
 }

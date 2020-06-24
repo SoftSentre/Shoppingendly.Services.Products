@@ -15,7 +15,8 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;
@@ -55,7 +56,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string categoryId = nameof(Category.Id);
+            const string categoryId = nameof(Category.CategoryId);
 
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
 
@@ -82,6 +83,42 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Assert
             maxLength.Should().Be(CategoryNameMaxLength);
             isRequired.Should().Be(IsCategoryNameRequired);
+        }
+        
+        [Fact]
+        public void CheckIfProductPictureNameHasConfiguredValidValues()
+        {
+            // Arrange
+            const string categoryIcon = nameof(Category.CategoryIcon);
+            const string categoryIconName = nameof(Picture.Name);
+
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(categoryIcon)
+                .GetTargetType()
+                .FindDeclaredProperty(categoryIconName);
+
+            // Act
+            var maxLength = dbProperty.GetMaxLength();
+
+            // Assert
+            maxLength.Should().Be(PictureNameMaxLength);
+        }
+
+        [Fact]
+        public void CheckIfProductPictureUrlHasConfiguredValidValues()
+        {
+            // Arrange
+            const string categoryIcon = nameof(Category.CategoryIcon);
+            const string categoryIconUrl = nameof(Picture.Url);
+
+            var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredNavigation(categoryIcon)
+                .GetTargetType()
+                .FindDeclaredProperty(categoryIconUrl);
+
+            // Act
+            var maxLength = dbProperty.GetMaxLength();
+
+            // Assert
+            maxLength.Should().Be(PictureUrlMaxLength);
         }
 
         [Fact]

@@ -15,7 +15,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Extensions;
 using Xunit;
@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfCreatorIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string creatorId = nameof(Creator.Id);
+            const string creatorId = nameof(Creator.CreatorId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(creatorId);
 
             // Act
