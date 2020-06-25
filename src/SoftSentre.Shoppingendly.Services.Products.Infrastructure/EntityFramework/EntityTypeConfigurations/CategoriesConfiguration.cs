@@ -27,6 +27,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             categoriesConfiguration.HasKey(c => c.CategoryId);
 
+            categoriesConfiguration.Property(c => c.ParentCategoryId)
+                .HasColumnName("ParentCategoryId")
+                .IsRequired(false);
+
             categoriesConfiguration.Property(c => c.CategoryName)
                 .HasColumnName("CategoryName")
                 .HasMaxLength(CategoryNameMaxLength)

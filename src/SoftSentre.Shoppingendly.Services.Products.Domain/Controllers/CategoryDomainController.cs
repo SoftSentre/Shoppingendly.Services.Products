@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
@@ -64,33 +65,69 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
             return category;
         }
 
+        public async Task<Maybe<IEnumerable<Category>>> FindCategoriesByParent(CategoryId parentCategoryId)
+        {
+            var categories = await _categoryRepository.FindAsync(c => c.ParentCategoryId.Equals(parentCategoryId));
+            return categories;
+        }
+
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName)
         {
-            return await CreateCategoryAsync(categoryId, categoryName);
+            return await CreateCategoryAsync(categoryId, () => _categoryFactory.Create(categoryId, categoryName));
+        }
+
+        public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
+            string categoryName)
+        {
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, parentCategoryId, categoryName));
         }
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
             Picture categoryIcon)
         {
-            return await CreateCategoryAsync(categoryId, categoryName, categoryIcon: categoryIcon);
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, categoryName, categoryIcon: categoryIcon));
+        }
+
+        public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
+            string categoryName, Picture categoryIcon)
+        {
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryIcon: categoryIcon));
         }
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
             string categoryDescription)
         {
-            return await CreateCategoryAsync(categoryId, categoryName, categoryDescription);
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, categoryName, categoryDescription));
+        }
+
+        public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
+            string categoryName, string categoryDescription)
+        {
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryDescription));
         }
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
             string categoryDescription, Picture categoryIcon)
         {
-            return await CreateCategoryAsync(categoryId, categoryName, categoryDescription, categoryIcon);
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, categoryName, categoryDescription, categoryIcon));
+        }
+
+        public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
+            string categoryName, string categoryDescription, Picture categoryIcon)
+        {
+            return await CreateCategoryAsync(categoryId,
+                () => _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryDescription,
+                    categoryIcon));
         }
 
         public async Task<bool> ChangeCategoryNameAsync(CategoryId categoryId, string categoryName)
         {
-            var category = await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId, new CategoryNotFoundException(categoryId));
-
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeEmptyRuleIsBroken(categoryName))
                 throw new CategoryNameCanNotBeEmptyException();
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeShorterThanRuleIsBroken(categoryName))
@@ -98,12 +135,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeLongerThanRuleIsBroken(categoryName))
                 throw new CategoryNameIsTooLongException(GlobalValidationVariables.CategoryNameMaxLength);
 
-            var isNameChanged = category.ChangeCategoryName(categoryName);
+            var category =
+                await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,
+                    new CategoryNotFoundException(categoryId));
 
-            _domainEventEmitter.Emit(category, new CategoryNameChangedDomainEvent(categoryId, categoryName));
+            var isNameChanged = category.ChangeCategoryName(categoryName);
 
             if (isNameChanged)
             {
+                _domainEventEmitter.Emit(category, new CategoryNameChangedDomainEvent(categoryId, categoryName));
                 _categoryRepository.Update(category);
             }
 
@@ -112,8 +152,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
         public async Task<bool> ChangeCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription)
         {
-            var category = await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId, new CategoryNotFoundException(categoryId));
-
             if (_categoryBusinessRulesChecker.CategoryDescriptionCanNotBeEmptyRuleIsBroken(categoryDescription))
                 throw new CategoryDescriptionCanNotBeEmptyException();
             if (_categoryBusinessRulesChecker.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(categoryDescription))
@@ -122,14 +160,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
             if (_categoryBusinessRulesChecker.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(categoryDescription))
                 throw new CategoryDescriptionIsTooLongException(GlobalValidationVariables.CategoryDescriptionMaxLength);
 
+            var category =
+                await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,
+                    new CategoryNotFoundException(categoryId));
+
             var isDescriptionChanged =
                 category.SetCategoryDescription(categoryDescription);
 
-            _domainEventEmitter.Emit(category,
-                new CategoryDescriptionChangedDomainEvent(categoryId, categoryDescription));
-
             if (isDescriptionChanged)
             {
+                _domainEventEmitter.Emit(category,
+                    new CategoryDescriptionChangedDomainEvent(categoryId, categoryDescription));
                 _categoryRepository.Update(category);
             }
 
@@ -138,40 +179,44 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
         public async Task<bool> UploadCategoryIconAsync(CategoryId categoryId, Picture categoryIcon)
         {
-            var category = await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId, new CategoryNotFoundException(categoryId));
+            var category =
+                await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,
+                    new CategoryNotFoundException(categoryId));
 
             if (_categoryBusinessRulesChecker.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(categoryIcon))
                 throw new CategoryIconCanNotBeNullOrEmptyException();
 
             var isCategoryIconChanged = category.UploadCategoryIcon(categoryIcon);
 
-            _domainEventEmitter.Emit(category, new CategoryIconUploadedDomainEvent(categoryId, categoryIcon));
-
             if (isCategoryIconChanged)
             {
+                _domainEventEmitter.Emit(category, new CategoryIconUploadedDomainEvent(categoryId, categoryIcon));
                 _categoryRepository.Update(category);
             }
 
             return isCategoryIconChanged;
         }
 
-        private async Task<Maybe<Category>> CreateCategoryAsync(CategoryId categoryId, string categoryName,
-            string categoryDescription = null, Picture categoryIcon = null)
+        public async Task RemoveCategoryAsync(CategoryId categoryId)
+        {
+            if (_categoryBusinessRulesChecker.CategoryIdCanNotBeEmptyRuleIsBroken(categoryId))
+                throw new InvalidCategoryIdException(categoryId);
+
+            var category =
+                await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,
+                    new CategoryNotFoundException(categoryId));
+
+            _domainEventEmitter.Emit(category,
+                new CategoryDeletedDomainEvent(category.CategoryId, category.ParentCategoryId));
+            _categoryRepository.Delete(category);
+        }
+
+        private async Task<Maybe<Category>> CreateCategoryAsync(CategoryId categoryId, Func<Category> createCategory)
         {
             await _categoryRepository.GetByIdAndThrowIfEntityAlreadyExists(categoryId,
                 new CategoryAlreadyExistsException(categoryId));
-            
-            Category newCategory;
 
-            if (categoryDescription.IsEmpty() && categoryIcon == null)
-                newCategory = _categoryFactory.Create(categoryId, categoryName);
-            else if (categoryDescription.IsEmpty() && categoryIcon != null)
-                newCategory = _categoryFactory.Create(categoryId, categoryName, categoryIcon);
-            else if (categoryIcon == null && categoryDescription.IsNotEmpty())
-                newCategory = _categoryFactory.Create(categoryId, categoryName, categoryDescription);
-            else
-                newCategory =
-                    _categoryFactory.Create(categoryId, categoryName, categoryDescription, categoryIcon);
+            var newCategory = createCategory.Invoke();
 
             await _categoryRepository.AddAsync(newCategory);
 

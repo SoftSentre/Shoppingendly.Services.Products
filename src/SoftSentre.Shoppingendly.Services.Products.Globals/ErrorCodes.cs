@@ -25,7 +25,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const string ProductWithAssignedCategoriesNotFound = "product_with_assigned_categories_not_found";
         public const string ProductPictureCanNotBeNullOrEmpty = "product_picture_can_not_be_null_or_empty";
         public const string InvalidProductId = "invalid_product_id";
-        public const string CreateProductFailed = "create_product_failed";
         public const string ProductAlreadyExists = "product_already_exist";
         public const string ProductNotFound = "product_not_found";
 
@@ -38,7 +37,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const string CategoryDescriptionIsTooLong = "category_description_is_too_short";
         public const string CategoryIconCanNotBeNullOrEmpty = "category_icon_can_not_be_null_or_empty";
         public const string InvalidCategoryId = "invalid_category_id";
-        public const string CreateCategoryFailed = "create_category_failed";
+        public const string InvalidParentCategoryId = "invalid_parent_category_id";
         public const string CategoryAlreadyExists = "category_already_exists";
         public const string CategoryNotFound = "category_not_found";
 
@@ -46,9 +45,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Globals
         public const string CreatorNameCanNotBeEmpty = "creator_name_can_not_be_empty";
         public const string CreatorNameIsTooShort = "creator_name_is_too_short";
         public const string CreatorNameIsTooLong = "creator_name_is_too_long";
-        public const string RoleIsTooLong = "role_is_too_long";
         public const string CreatorAlreadyExists = "creator_already_exist";
-        public const string CreateCreatorFailed = "create_creator_failed";
         public const string InvalidCreatorId = "invalid_creator_id";
         public const string CreatorNotFound = "creator_not_found";
 

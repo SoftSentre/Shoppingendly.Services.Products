@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.SeedWork;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
@@ -27,5 +29,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Repositories
         Task<Maybe<Category>> GetByNameWithIncludesAsync(string name);
         Task<Maybe<IEnumerable<Category>>> GetAllAsync();
         Task<Maybe<IEnumerable<Category>>> GetAllWithIncludesAsync();
+        Task<Maybe<IEnumerable<Category>>> FindAsync(Expression<Func<Category, bool>> predicate);
+        void DeleteMany(IEnumerable<Category> categories);
     }
 }

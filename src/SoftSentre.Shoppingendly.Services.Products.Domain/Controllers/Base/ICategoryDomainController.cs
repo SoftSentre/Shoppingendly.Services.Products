@@ -25,18 +25,33 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base
         Task<Maybe<Category>> GetCategoryByIdAsync(CategoryId categoryId);
         Task<Maybe<IEnumerable<Category>>> GetAllCategoriesAsync();
         Task<Maybe<IEnumerable<Category>>> GetAllCategoriesWithProductsAsync();
+        Task<Maybe<IEnumerable<Category>>> FindCategoriesByParent(CategoryId parentCategoryId);
         Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName);
+
+        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
+            string categoryName);
+
         Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName, Picture categoryIcon);
 
-        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId,
+        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
+            string categoryName, Picture categoryIcon);
+
+        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
+            string categoryDescription);
+
+        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
             string categoryName, string categoryDescription);
 
-        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId,
+        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
+            string categoryDescription, Picture categoryIcon);
+
+        Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
             string categoryName, string categoryDescription, Picture categoryIcon);
 
 
         Task<bool> ChangeCategoryNameAsync(CategoryId categoryId, string categoryName);
         Task<bool> ChangeCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription);
         Task<bool> UploadCategoryIconAsync(CategoryId categoryId, Picture categoryIcon);
+        Task RemoveCategoryAsync(CategoryId categoryId);
     }
 }
