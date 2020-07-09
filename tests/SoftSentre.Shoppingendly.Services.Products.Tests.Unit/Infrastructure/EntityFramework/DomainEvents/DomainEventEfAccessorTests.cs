@@ -46,9 +46,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                 .Options;
 
             var loggerFactory = new Mock<ILoggerFactory>();
-            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
             var productServiceDbContext =
-                new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher, new SqlSettings(),
+                new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(),
                     dbContextOptions);
 
             await productServiceDbContext.Database.EnsureDeletedAsync();

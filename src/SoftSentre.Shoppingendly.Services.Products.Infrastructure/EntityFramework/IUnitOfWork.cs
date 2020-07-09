@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Storage;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
@@ -21,7 +22,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
     {
         IDbContextTransaction GetCurrentTransaction();
         Task<IDbContextTransaction> BeginTransactionAsync();
-        Task CommitTransactionAsync(IDbContextTransaction transaction);
+
+        Task CommitTransactionAsync(IDbContextTransaction transaction,
+            IDomainEventsDispatcher domainEventsDispatcher);
+        
         void RollbackTransaction();
         Task<bool> SaveAsync();
     }

@@ -17,6 +17,7 @@ using AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles
 {
@@ -36,7 +37,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.P
                 .ConstructUsing((c, context)
                     => new CreatorWithProductsDto(c.CreatorId.Id.ToString(), c.CreatorName,
                         context.Mapper.Map<CreatorRole, RoleDto>(c.CreatorRole),
-                        c.Products.Select(p => context.Mapper.Map<Product, ProductDto>(p))));
+                        c.Products.Select(p => context.Mapper.Map<Product, ProductDto>(p)).Paginate()));
         }
     }
 }

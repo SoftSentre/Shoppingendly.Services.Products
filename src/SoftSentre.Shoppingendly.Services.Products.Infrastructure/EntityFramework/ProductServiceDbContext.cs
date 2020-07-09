@@ -34,20 +34,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
     public class ProductServiceDbContext : DbContext, IUnitOfWork
     {
         public const string DefaultSchema = "products";
-        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
 
         private readonly ILoggerFactory _loggerFactory;
         private readonly SqlSettings _sqlSettings;
 
         private Maybe<IDbContextTransaction> _currentTransaction;
-
-        public ProductServiceDbContext(ILoggerFactory loggerFactory,
-            IDomainEventsDispatcher domainEventsDispatcher, SqlSettings sqlSettings,
+        
+        public ProductServiceDbContext(ILoggerFactory loggerFactory, SqlSettings sqlSettings,
             DbContextOptions options) : base(options)
         {
-            _domainEventsDispatcher = domainEventsDispatcher
-                .IfEmptyThenThrowAndReturnValue();
-
             _sqlSettings = sqlSettings
                 .IfEmptyThenThrowAndReturnValue();
 
@@ -80,7 +75,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             return _currentTransaction.Value;
         }
 
-        public async Task CommitTransactionAsync(IDbContextTransaction transaction)
+        public async Task CommitTransactionAsync(IDbContextTransaction transaction,
+            IDomainEventsDispatcher domainEventsDispatcher)
         {
             if (transaction == null)
             {
@@ -94,8 +90,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
             try
             {
-                await _domainEventsDispatcher.DispatchAsync();
+                await domainEventsDispatcher.DispatchAsync();
                 await SaveChangesAsync();
+                
                 transaction.Commit();
             }
             catch

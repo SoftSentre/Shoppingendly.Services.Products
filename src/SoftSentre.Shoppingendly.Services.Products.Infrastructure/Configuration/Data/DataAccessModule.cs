@@ -16,7 +16,6 @@ using Autofac;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
@@ -60,11 +59,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
 
             builder.Register(context =>
                 {
-                    var domainEventsDispatcher = context.Resolve<IDomainEventsDispatcher>();
                     var sqlSettings = context.Resolve<SqlSettings>();
                     var dbContextOptions = new DbContextOptionsBuilder();
 
-                    return new ProductServiceDbContext(_loggerFactory, domainEventsDispatcher, sqlSettings,
+                    return new ProductServiceDbContext(_loggerFactory, sqlSettings,
                         dbContextOptions.Options);
                 })
                 .AsSelf()

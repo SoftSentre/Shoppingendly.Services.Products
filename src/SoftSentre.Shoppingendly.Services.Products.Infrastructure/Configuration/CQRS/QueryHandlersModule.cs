@@ -14,6 +14,7 @@
 
 using System.Reflection;
 using Autofac;
+using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using Module = Autofac.Module;
@@ -24,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
     {
         protected override void Load(ContainerBuilder builder)
         {
-            var queryAssembly = typeof(IQuery)
+            var queryAssembly = typeof(CreatorWithProductsDto)
                 .GetTypeInfo()
                 .Assembly;
 

@@ -38,8 +38,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
             var handlerType = typeof(IQueryHandler<,>)
                 .MakeGenericType(query.GetType(), typeof(TResult));
 
-            dynamic queryHandler = scope.ResolveOptional(handlerType);
-
+            dynamic queryHandler = scope.Resolve(handlerType);
+            
             if (queryHandler == null)
             {
                 throw new SendingQueryFailedException(query);

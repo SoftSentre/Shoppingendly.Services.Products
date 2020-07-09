@@ -154,7 +154,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             testResult.Name.Should().Be(creator.CreatorName);
             testResult.Role.Id.Should().Be(creator.CreatorRole.Id.ToString());
             testResult.Role.Role.Should().Be(creator.CreatorRole.Name);
-            testResult.Products.Should().Contain(p =>
+            testResult.Products.Items.Should().Contain(p =>
                 p.Id == product.ProductId.Id.ToString() && p.Name == product.ProductName &&
                 p.Producer == product.ProductProducer.Name &&
                 p.Icon.Url == product.ProductPicture.Url);
