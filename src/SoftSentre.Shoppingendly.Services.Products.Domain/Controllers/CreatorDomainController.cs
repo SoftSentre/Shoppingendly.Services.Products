@@ -66,16 +66,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
         public async Task ChangeCreatorNameAsync(CreatorId creatorId, string creatorName)
         {
-            var creator =
-                await _creatorRepository.GetByIdAndThrowIfEntityNotFound(creatorId,
-                    new CreatorNotFoundException(creatorId));
-
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeEmptyRuleIsBroken(creatorName))
                 throw new CreatorNameCanNotBeEmptyException();
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeShorterThanRuleIsBroken(creatorName))
                 throw new CreatorNameIsTooShortException(GlobalValidationVariables.CreatorNameMinLength);
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeLongerThanRuleIsBroken(creatorName))
                 throw new CreatorNameIsTooLongException(GlobalValidationVariables.CreatorNameMaxLength);
+            
+            var creator =
+                await _creatorRepository.GetByIdAndThrowIfEntityNotFound(creatorId,
+                    new CreatorNotFoundException(creatorId));
 
             creator.ChangeCreatorName(creatorName);
             _creatorRepository.Update(creator);

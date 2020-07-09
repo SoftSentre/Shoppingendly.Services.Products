@@ -45,5 +45,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base
         Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromAllCategoriesAsync(ProductId productId);
+        Task RemoveProductAsync(ProductId productId);
     }
 }

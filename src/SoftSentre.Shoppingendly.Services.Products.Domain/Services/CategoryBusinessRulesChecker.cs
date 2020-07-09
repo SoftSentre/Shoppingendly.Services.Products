@@ -27,6 +27,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return !categoryId.IsValid();
         }
 
+        public bool ParentCategoryIdMustBeValidWhenProvidedRuleIsBroken(CategoryId parentCategoryId)
+        {
+            return !parentCategoryId.IsValid();
+        }
+
         public bool CategoryNameCanNotBeEmptyRuleIsBroken(string categoryName)
         {
             return GlobalValidationVariables.IsCategoryNameRequired && categoryName.IsEmpty();

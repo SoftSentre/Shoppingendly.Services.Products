@@ -20,6 +20,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
     public interface ICategoryBusinessRulesChecker
     {
         bool CategoryIdCanNotBeEmptyRuleIsBroken(CategoryId categoryId);
+        bool ParentCategoryIdMustBeValidWhenProvidedRuleIsBroken(CategoryId parentCategoryId);
         bool CategoryNameCanNotBeEmptyRuleIsBroken(string categoryName);
         bool CategoryNameCanNotBeShorterThanRuleIsBroken(string categoryName);
         bool CategoryNameCanNotBeLongerThanRuleIsBroken(string categoryName);

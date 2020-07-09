@@ -285,7 +285,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
                 .Where(e => e.Code == errorCode)
                 .WithMessage(exceptionMessage);
 
-            _creatorRepositoryMock.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Once);
+            _creatorRepositoryMock.Verify(cr => cr.GetByIdAsync(It.IsAny<CreatorId>()), Times.Never);
             _creatorRepositoryMock.Verify(cr => cr.Update(null), Times.Never);
         }
 
