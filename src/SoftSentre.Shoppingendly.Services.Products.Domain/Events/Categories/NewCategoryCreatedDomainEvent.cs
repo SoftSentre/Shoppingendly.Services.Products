@@ -25,6 +25,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
             CategoryName = categoryName;
             CategoryIcon = categoryIcon;
         }
+        
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, Picture categoryIcon)
+        {
+            CategoryId = categoryId;
+            ParentCategoryId = parentCategoryId;
+            CategoryName = categoryName;
+            CategoryIcon = categoryIcon;
+        }
 
         internal NewCategoryCreatedDomainEvent(CategoryId categoryId, string categoryName, string categoryDescription,
             Picture categoryIcon)
@@ -34,8 +42,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
             CategoryDescription = categoryDescription;
             CategoryIcon = categoryIcon;
         }
+        
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, string categoryDescription,
+            Picture categoryIcon)
+        {
+            CategoryId = categoryId;
+            ParentCategoryId = parentCategoryId;
+            CategoryName = categoryName;
+            CategoryDescription = categoryDescription;
+            CategoryIcon = categoryIcon;
+        }
 
         public CategoryId CategoryId { get; }
+        public CategoryId ParentCategoryId { get; set; }
         public string CategoryName { get; }
         public string CategoryDescription { get; }
         public Picture CategoryIcon { get; }

@@ -36,6 +36,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryName = categoryName;
             CategoryIcon = Picture.Empty;
         }
+        
+        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName)
+        {
+            CategoryId = categoryId;
+            ParentCategoryId = parentCategoryId;
+            CategoryName = categoryName;
+            CategoryIcon = Picture.Empty;
+        }
 
         internal Category(CategoryId categoryId, string categoryName, Picture categoryIcon)
         {
@@ -43,10 +51,27 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryName = categoryName;
             CategoryIcon = categoryIcon;
         }
+        
+        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, Picture categoryIcon)
+        {
+            CategoryId = categoryId;
+            ParentCategoryId = parentCategoryId;
+            CategoryName = categoryName;
+            CategoryIcon = categoryIcon;
+        }
 
         internal Category(CategoryId categoryId, string categoryName, string categoryDescription)
         {
             CategoryId = categoryId;
+            CategoryName = categoryName;
+            CategoryDescription = categoryDescription;
+            CategoryIcon = Picture.Empty;
+        }
+        
+        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, string categoryDescription)
+        {
+            CategoryId = categoryId;
+            ParentCategoryId = parentCategoryId;
             CategoryName = categoryName;
             CategoryDescription = categoryDescription;
             CategoryIcon = Picture.Empty;
@@ -60,8 +85,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryDescription = categoryDescription;
             CategoryIcon = categoryIcon;
         }
+        
+        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, string categoryDescription,
+            Picture categoryIcon)
+        {
+            CategoryId = categoryId;
+            ParentCategoryId = parentCategoryId;
+            CategoryName = categoryName;
+            CategoryDescription = categoryDescription;
+            CategoryIcon = categoryIcon;
+        }
 
         public CategoryId CategoryId { get; }
+        public CategoryId ParentCategoryId { get; }
         public string CategoryName { get; private set; }
         public string CategoryDescription { get; private set; }
         public Picture CategoryIcon { get; private set; }
@@ -78,7 +114,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             {
                 return false;
             }
-
+            
             CategoryName = categoryName;
             SetUpdatedDate();
             return true;

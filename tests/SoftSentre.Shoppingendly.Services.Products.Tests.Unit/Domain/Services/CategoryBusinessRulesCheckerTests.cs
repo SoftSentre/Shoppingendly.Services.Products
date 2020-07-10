@@ -79,6 +79,33 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
         }
 
         [Fact]
+        public void FalseWhenParentCategoryIdCanNotBeEmptyRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var categoryIdCanNotBeEmptyRuleIsBroken =
+                _categoryBusinessRulesChecker.ParentCategoryIdMustBeValidWhenProvidedRuleIsBroken(_categoryId);
+
+            // Assert
+            categoryIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void TrueWhenParentCategoryIdCanNotBeEmptyRuleIsBroken()
+        {
+            // Arrange
+            _categoryId = new CategoryId(Guid.Empty);
+
+            // Act
+            var categoryIdCanNotBeEmptyRuleIsBroken =
+                _categoryBusinessRulesChecker.ParentCategoryIdMustBeValidWhenProvidedRuleIsBroken(_categoryId);
+
+            // Assert
+            categoryIdCanNotBeEmptyRuleIsBroken.Should().BeTrue();
+        }
+        
+        [Fact]
         public void FalseWhenCategoryNameCanNotBeEmptyRuleIsNotBroken()
         {
             // Arrange

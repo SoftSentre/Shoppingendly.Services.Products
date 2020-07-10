@@ -44,6 +44,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
             return category;
         }
 
+        internal Category Create(CategoryId categoryId, CategoryId parentCategoryId, string categoryName)
+        {
+            CheckBusinessRules(categoryId, categoryName, parentCategoryId: parentCategoryId);
+
+            var category = new Category(categoryId, parentCategoryId, categoryName);
+            _domainEventEmitter.Emit(category,
+                new NewCategoryCreatedDomainEvent(categoryId, parentCategoryId, categoryName, Picture.Empty));
+            return category;
+        }
+
         internal Category Create(CategoryId categoryId, string categoryName, Picture categoryIcon)
         {
             CheckBusinessRules(categoryId, categoryName, categoryIcon: categoryIcon);
@@ -54,12 +64,36 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
             return category;
         }
 
+        internal Category Create(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            Picture categoryIcon)
+        {
+            CheckBusinessRules(categoryId, categoryName, categoryIcon: categoryIcon,
+                parentCategoryId: parentCategoryId);
+
+            var category = new Category(categoryId, parentCategoryId, categoryName, categoryIcon);
+            _domainEventEmitter.Emit(category,
+                new NewCategoryCreatedDomainEvent(categoryId, parentCategoryId, categoryName, categoryIcon));
+            return category;
+        }
+
         internal Category Create(CategoryId categoryId, string categoryName, string categoryDescription)
         {
             CheckBusinessRules(categoryId, categoryName, categoryDescription);
 
             var category = new Category(categoryId, categoryName, categoryDescription);
             _domainEventEmitter.Emit(category, new NewCategoryCreatedDomainEvent(categoryId, categoryName,
+                categoryDescription, Picture.Empty));
+            return category;
+        }
+
+        internal Category Create(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            string categoryDescription)
+        {
+            CheckBusinessRules(categoryId, categoryName, categoryDescription, parentCategoryId: parentCategoryId);
+
+            var category = new Category(categoryId, parentCategoryId, categoryName, categoryDescription);
+            _domainEventEmitter.Emit(category, new NewCategoryCreatedDomainEvent(categoryId, parentCategoryId,
+                categoryName,
                 categoryDescription, Picture.Empty));
             return category;
         }
@@ -75,11 +109,27 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
             return category;
         }
 
+        internal Category Create(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            string categoryDescription,
+            Picture categoryIcon)
+        {
+            CheckBusinessRules(categoryId, categoryName, categoryDescription, categoryIcon, parentCategoryId);
+
+            var category = new Category(categoryId, parentCategoryId, categoryName, categoryDescription, categoryIcon);
+            _domainEventEmitter.Emit(category,
+                new NewCategoryCreatedDomainEvent(categoryId, parentCategoryId, categoryName, categoryDescription,
+                    categoryIcon));
+            return category;
+        }
+
         private void CheckBusinessRules(CategoryId categoryId, string categoryName, string categoryDescription = null,
-            Picture categoryIcon = null)
+            Picture categoryIcon = null, CategoryId parentCategoryId = null)
         {
             if (_categoryBusinessRulesChecker.CategoryIdCanNotBeEmptyRuleIsBroken(categoryId))
                 throw new InvalidCategoryIdException(categoryId);
+            if (parentCategoryId != null &&
+                _categoryBusinessRulesChecker.ParentCategoryIdMustBeValidWhenProvidedRuleIsBroken(parentCategoryId))
+                throw new InvalidParentCategoryIdException(parentCategoryId);
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeEmptyRuleIsBroken(categoryName))
                 throw new CategoryNameCanNotBeEmptyException();
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeShorterThanRuleIsBroken(categoryName))

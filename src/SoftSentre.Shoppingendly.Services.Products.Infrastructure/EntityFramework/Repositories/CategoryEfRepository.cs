@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
@@ -57,6 +60,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public async Task<Maybe<IEnumerable<Category>>> GetAllWithIncludesAsync()
         {
             return await _productServiceDbContext.Categories.Include(c => c.ProductCategories).ToListAsync();
+        }
+
+        public async Task<Maybe<IEnumerable<Category>>> FindAsync(Expression<Func<Category, bool>> predicate)
+        {
+            return await _productServiceDbContext.Categories.Where(predicate).ToListAsync();
+        }
+
+        public void DeleteMany(IEnumerable<Category> categories)
+        {
+            _productServiceDbContext.Categories.RemoveRange(categories);
         }
 
         public async Task AddAsync(Category category)

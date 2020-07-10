@@ -1155,7 +1155,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
         
         [Fact]
-        public void DeallocatedProductFromCategoryShouldBeFailedWhenProductNotFound()
+        public void DeallocateProductFromCategoryShouldBeFailedWhenProductNotFound()
         {
             // Arrange
             _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
@@ -1189,7 +1189,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
 
         [Fact]
-        public void DeallocatedProductFromCategoryShouldBeFailedWhenProductIdIsNull()
+        public void DeallocateProductFromCategoryShouldBeFailedWhenProductIdIsNull()
         {
             // Arrange
             _product.ProductCategories.Add(ProductCategory.Create(_product.ProductId, _categoryId));
@@ -1227,7 +1227,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
 
         [Fact]
-        public void DeallocatedProductFromCategoryShouldBeFailedWhenCategoryIdIsNull()
+        public void DeallocateProductFromCategoryShouldBeFailedWhenCategoryIdIsNull()
         {
             // Arrange
             _product.ProductCategories.Add(ProductCategory.Create(_product.ProductId, _categoryId));
@@ -1265,7 +1265,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
 
         [Fact]
-        public void DeallocatedProductFromCategoryShouldBeFailedWhenNotFoundInCategoryList()
+        public void DeallocateProductFromCategoryShouldBeFailedWhenNotFoundInCategoryList()
         {
             // Arrange
             _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
@@ -1328,7 +1328,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
         
         [Fact]
-        public void DeallocatedProductFromCategoriesShouldBeFailedWhenProductNotFound()
+        public void DeallocateProductFromCategoriesShouldBeFailedWhenProductNotFound()
         {
             // Arrange
             _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
@@ -1339,11 +1339,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
                 _productRepositoryMock.Object, _productFactory, _domainEventEmitterMock.Object);
 
             // Act
-            Func<Task> changeProductProducer = async () =>
+            Func<Task> deallocateProductFromAllCategories = async () =>
                 await productDomainController.DeallocateProductFromAllCategoriesAsync(_productId);
 
             //Assert
-            changeProductProducer.Should().Throw<ProductNotFoundException>()
+            deallocateProductFromAllCategories.Should().Throw<ProductNotFoundException>()
                 .Where(e => e.Code == ErrorCodes.ProductNotFound)
                 .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
 
@@ -1360,7 +1360,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
 
         [Fact]
-        public void DeallocatedProductFromCategoriesShouldBeFailedWhenProductIdIsNull()
+        public void DeallocateProductFromCategoriesShouldBeFailedWhenProductIdIsNull()
         {
             // Arrange
             _product.ProductCategories.Add(ProductCategory.Create(_product.ProductId, _categoryId));
@@ -1396,7 +1396,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         }
 
         [Fact]
-        public void DeallocatedProductFromAllCategoriesShouldBeFailedWhenProductNotFoundInCategoryList()
+        public void DeallocateProductFromAllCategoriesShouldBeFailedWhenProductNotFoundInCategoryList()
         {
             // Arrange
             _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
@@ -1407,11 +1407,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
                 _productRepositoryMock.Object, _productFactory, _domainEventEmitterMock.Object);
 
             // Act
-            Func<Task> deallocateProductFromCategory = async () =>
+            Func<Task> deallocateProductFromAllCategories = async () =>
                 await productDomainController.DeallocateProductFromAllCategoriesAsync(_productId);
 
             //Assert
-            deallocateProductFromCategory.Should().Throw<ProductWithAssignedCategoriesNotFoundException>()
+            deallocateProductFromAllCategories.Should().Throw<ProductWithAssignedCategoriesNotFoundException>()
                 .Where(e => e.Code == ErrorCodes.ProductWithAssignedCategoriesNotFound)
                 .WithMessage("Unable to find any product with assigned categories.");
 
@@ -1427,6 +1427,100 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
                         de.ProductId.Equals(_product.ProductId))), Times.Never);
         }
 
+        [Fact]
+        public async Task ProductShouldBeRemoved()
+        {
+            // Arrange
+            _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+
+            IProductDomainController productDomainController = new ProductDomainController(
+                _productBusinessRulesCheckerMock.Object, _categoryBusinessRulesCheckMock.Object,
+                _productRepositoryMock.Object, _productFactory, _domainEventEmitterMock.Object);
+
+            // Act
+            await productDomainController.RemoveProductAsync(_productId);
+
+            //Assert
+            _productRepositoryMock.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            _productRepositoryMock.Verify(pr => pr.Delete(_product), Times.Once);
+
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
+                Times.Once);
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(_product,
+                    It.Is<ProductRemovedDomainEvent>(de =>
+                        de.ProductId.Equals(_product.ProductId))), Times.Once);
+        }
+
+        [Fact]
+        public void RemoveProductShouldBeFailedWhenProductIdIsNull()
+        {
+            // Arrange
+            _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(_product);
+
+            _productBusinessRulesCheckerMock.Setup(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId))
+                .Returns(true);
+
+            IProductDomainController productDomainController = new ProductDomainController(
+                _productBusinessRulesCheckerMock.Object, _categoryBusinessRulesCheckMock.Object,
+                _productRepositoryMock.Object, _productFactory, _domainEventEmitterMock.Object);
+
+            // Act
+            Func<Task> removeProduct = async () =>
+                await productDomainController.RemoveProductAsync(_productId);
+
+            //Assert
+            removeProduct.Should().Throw<InvalidProductIdException>()
+                .Where(e => e.Code == ErrorCodes.InvalidProductId)
+                .WithMessage($"Invalid product id. {_productId}");
+
+            _productRepositoryMock.Verify(pr => pr.GetByIdAsync(_productId), Times.Never);
+            _productRepositoryMock.Verify(pr => pr.Delete(_product), Times.Never);
+
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
+                Times.Once);
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(_product,
+                    It.Is<ProductRemovedDomainEvent>(de =>
+                        de.ProductId.Equals(_product.ProductId))), Times.Never);
+        }
+        
+        [Fact]
+        public void RemoveProductShouldBeFailedWhenProductNotFound()
+        {
+            // Arrange
+            _productRepositoryMock.Setup(pr => pr.GetByIdAsync(_productId))
+                .ReturnsAsync(new Maybe<Product>());
+
+            IProductDomainController productDomainController = new ProductDomainController(
+                _productBusinessRulesCheckerMock.Object, _categoryBusinessRulesCheckMock.Object,
+                _productRepositoryMock.Object, _productFactory, _domainEventEmitterMock.Object);
+
+            // Act
+            Func<Task> removeProduct = async () =>
+                await productDomainController.RemoveProductAsync(_productId);
+
+            //Assert
+            removeProduct.Should().Throw<ProductNotFoundException>()
+                .Where(e => e.Code == ErrorCodes.ProductNotFound)
+                .WithMessage($"Unable to mutate product state, because product with id: {_productId} not found.");
+
+            _productRepositoryMock.Verify(pr => pr.GetByIdAsync(_productId), Times.Once);
+            _productRepositoryMock.Verify(pr => pr.Delete(_product), Times.Never);
+
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
+                Times.Once);
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(_product,
+                    It.Is<ProductRemovedDomainEvent>(de =>
+                        de.ProductId.Equals(_product.ProductId))), Times.Never);
+        }
+        
         public async Task DisposeAsync()
         {
             _productRepositoryMock = null;

@@ -112,7 +112,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
             if (isPictureChanged)
             {
-                _domainEventEmitter.Emit(product, new ProductPictureUploadedDomainEvent(productId, productPicture));
+                _domainEventEmitter.Emit(product, new ProductPictureUploadedDomainEvent(product.ProductId, product.ProductPicture));
                 _productRepository.Update(product);
             }
 
@@ -138,7 +138,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
             if (isNameChanged)
             {
-                _domainEventEmitter.Emit(product, new ProductNameChangedDomainEvent(productId, productName));
+                _domainEventEmitter.Emit(product, new ProductNameChangedDomainEvent(product.ProductId, product.ProductName));
                 _productRepository.Update(product);
             }
             
@@ -160,7 +160,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
             if (isProducerChanged)
             {
-                _domainEventEmitter.Emit(product, new ProductProducerChangedDomainEvent(productId, productProducer));
+                _domainEventEmitter.Emit(product, new ProductProducerChangedDomainEvent(product.ProductId, product.ProductProducer));
                 _productRepository.Update(product);
             }
             
@@ -210,8 +210,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
                     new ProductNotFoundException(productId));
 
             product.DeallocateAllCategories();
-            _domainEventEmitter.Emit(product, new ProductDeallocatedFromAllCategoriesDomainEvent(productId));
+            _domainEventEmitter.Emit(product, new ProductDeallocatedFromAllCategoriesDomainEvent(product.ProductId));
             _productRepository.Update(product);
+        }
+
+        public async Task RemoveProductAsync(ProductId productId)
+        {
+            if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+                throw new InvalidProductIdException(productId);
+            
+            var product =
+                await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
+                    new ProductNotFoundException(productId));
+            
+            _domainEventEmitter.Emit(product, new ProductRemovedDomainEvent(product.ProductId));
+            _productRepository.Delete(product);
         }
 
         private async Task<Product> CreateProductAsync(ProductId productId, CreatorId creatorId, string productName,
