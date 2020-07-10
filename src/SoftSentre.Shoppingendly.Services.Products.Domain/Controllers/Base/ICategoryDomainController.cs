@@ -47,8 +47,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base
 
         Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
             string categoryName, string categoryDescription, Picture categoryIcon);
-
-
+        
         Task<bool> ChangeCategoryNameAsync(CategoryId categoryId, string categoryName);
         Task<bool> ChangeCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription);
         Task<bool> UploadCategoryIconAsync(CategoryId categoryId, Picture categoryIcon);
