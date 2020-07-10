@@ -21,9 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.BasicTypes\SoftSentre.Shoppingendly.Services.Products.BasicTypes.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Extensions\SoftSentre.Shoppingendly.Services.Products.Extensions.csproj" PrivateAssets="All" />
-        <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Globals\SoftSentre.Shoppingendly.Services.Products.Globals.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\BasicTypes\SoftSentre.Shoppingendly.Services.Products.BasicTypes.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\Extensions\SoftSentre.Shoppingendly.Services.Products.Extensions.csproj" PrivateAssets="All" />
+        <ProjectReference Include="..\Globals\SoftSentre.Shoppingendly.Services.Products.Globals.csproj" PrivateAssets="All" />
     </ItemGroup>
 
 </Project>

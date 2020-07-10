@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.BasicTypes\SoftSentre.Shoppingendly.Services.Products.BasicTypes.csproj" />
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Domain\SoftSentre.Shoppingendly.Services.Products.Domain.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Extensions\SoftSentre.Shoppingendly.Services.Products.Extensions.csproj" />
+    <ProjectReference Include="..\BasicTypes\SoftSentre.Shoppingendly.Services.Products.BasicTypes.csproj" />
+    <ProjectReference Include="..\Domain\SoftSentre.Shoppingendly.Services.Products.Domain.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\Extensions\SoftSentre.Shoppingendly.Services.Products.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

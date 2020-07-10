@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Application\SoftSentre.Shoppingendly.Services.Products.Application.csproj" />
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Domain\SoftSentre.Shoppingendly.Services.Products.Domain.csproj" />
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Globals\SoftSentre.Shoppingendly.Services.Products.Globals.csproj" />
-    <ProjectReference Include="..\SoftSentre.Shoppingendly.Services.Products.Infrastructure\SoftSentre.Shoppingendly.Services.Products.Infrastructure.csproj" />
+    <ProjectReference Include="..\Application\SoftSentre.Shoppingendly.Services.Products.Application.csproj" />
+    <ProjectReference Include="..\Domain\SoftSentre.Shoppingendly.Services.Products.Domain.csproj" />
+    <ProjectReference Include="..\Globals\SoftSentre.Shoppingendly.Services.Products.Globals.csproj" />
+    <ProjectReference Include="..\Infrastructure\SoftSentre.Shoppingendly.Services.Products.Infrastructure.csproj" />
   </ItemGroup>
 
 
