@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Commands;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Results;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 
@@ -24,13 +25,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
         where TCommand : class, ICommand
     {
         private readonly ICommandHandler<TCommand> _decorated;
+        private readonly IDomainEventsDispatcher _domainEventsDispatcher;
         private readonly IUnitOfWork _unitOfWork;
 
         public UnitOfWorkCommandHandlerDecorator(
             ICommandHandler<TCommand> decorated,
+            IDomainEventsDispatcher domainEventsDispatcher,
             IUnitOfWork unitOfWork)
         {
             _decorated = decorated.IfEmptyThenThrowAndReturnValue();
+            _domainEventsDispatcher = domainEventsDispatcher.IfEmptyThenThrowAndReturnValue();
             _unitOfWork = unitOfWork.IfEmptyThenThrowAndReturnValue();
         }
 
@@ -40,7 +44,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
 
             var result = await _decorated.SendAsync(command);
 
-            await _unitOfWork.CommitTransactionAsync(transaction);
+            await _unitOfWork.CommitTransactionAsync(transaction, _domainEventsDispatcher);
 
             return result;
         }

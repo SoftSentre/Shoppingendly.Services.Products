@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SoftSentre.Shoppingendly.Services.Products.Application.Mapper;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using Xunit;
@@ -23,18 +24,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
 {
     public class QueryHandlerTestsStartUp<TQuery, TResult> : IAsyncLifetime where TQuery : class, IQuery<TResult>
     {
-        protected Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>> Logger;
-
-        public async Task InitializeAsync()
+        protected Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>> LoggerMock;
+        protected Mock<IMapperWrapper> MapperWrapperMock;
+        
+        public virtual async Task InitializeAsync()
         {
-            Logger = new Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>>();
-
+            LoggerMock = new Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>>();
+            MapperWrapperMock = new Mock<IMapperWrapper>();
+            
             await Task.CompletedTask;
         }
 
-        public async Task DisposeAsync()
+        public virtual async Task DisposeAsync()
         {
-            Logger = null;
+            LoggerMock = null;
+            MapperWrapperMock = null;
 
             await Task.CompletedTask;
         }

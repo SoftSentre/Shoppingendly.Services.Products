@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Autofac;
+using SoftSentre.Shoppingendly.Services.Products.WebApi.Endpoints;
 
-namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
+namespace SoftSentre.Shoppingendly.Services.Products.WebApi.Modules
 {
-    public class DomainException : InternalException
+    public class EndpointInvokersModule : Module
     {
-        public DomainException()
+        protected override void Load(ContainerBuilder builder)
         {
-        }
-
-        protected DomainException(string message) : base(message)
-        {
-        }
-
-        protected DomainException(string message, Exception innerException) : base(message, innerException)
-        {
+            builder.RegisterType<CreatorEndpointsInvoker>()
+                .AsSelf()
+                .InstancePerLifetimeScope();
         }
     }
 }

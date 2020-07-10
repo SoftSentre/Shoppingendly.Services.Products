@@ -19,7 +19,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
@@ -37,11 +36,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
-
-            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
+            
             var loggerFactory = new Mock<ILoggerFactory>();
-            var dbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
-                new SqlSettings(), options);
+            var dbContext = new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), options);
             var conventionSet = ConventionSet.CreateConventionSet(dbContext);
             var modelBuilder = new ModelBuilder(conventionSet);
             var entityTypeBuilder = modelBuilder.Entity<TEntity>();

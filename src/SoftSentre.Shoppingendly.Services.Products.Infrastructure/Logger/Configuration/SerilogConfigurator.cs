@@ -26,8 +26,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
     public class SerilogConfigurator : ISerilogConfigurator
     {
         public LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration,
-            LoggerSettings loggerSettings,
-            AppOptions appOptions, string environmentName)
+            LoggerSettings loggerSettings, AppOptions appOptions, string environmentName)
         {
             loggerConfiguration
                 .Enrich

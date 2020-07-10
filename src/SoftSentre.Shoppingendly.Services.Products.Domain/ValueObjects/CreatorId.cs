@@ -22,12 +22,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
     {
         public override Guid Id { get; }
 
-        internal CreatorId()
+        public CreatorId()
         {
             Id = Guid.NewGuid();
         }
 
-        internal CreatorId(Guid id) : base(id)
+        public CreatorId(Guid id) : base(id)
         {
             Id = id;
         }

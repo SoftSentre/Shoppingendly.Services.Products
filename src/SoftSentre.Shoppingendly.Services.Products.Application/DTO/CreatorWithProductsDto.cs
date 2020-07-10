@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Pagination.Results;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Application.DTO
 {
     public class CreatorWithProductsDto : CreatorDto
     {
-        public CreatorWithProductsDto(string id, string name, RoleDto role, IEnumerable<ProductDto> products)
+        public CreatorWithProductsDto(string id, string name, RoleDto role, PagedResult<ProductDto> products)
             : base(id, name, role)
         {
             Products = products;
         }
 
-        public IEnumerable<ProductDto> Products { get; }
+        public PagedResult<ProductDto> Products { get; }
     }
 }

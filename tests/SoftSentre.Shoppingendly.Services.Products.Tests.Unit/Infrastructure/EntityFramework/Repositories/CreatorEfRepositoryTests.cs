@@ -20,7 +20,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Moq;
-using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
@@ -47,9 +46,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                 .Options;
 
             var loggerFactory = new Mock<ILoggerFactory>();
-            var domainEventDispatcher = new Mock<IDomainEventsDispatcher>().Object;
-            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, domainEventDispatcher,
-                new SqlSettings(), dbContextOptions);
+            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), dbContextOptions);
 
             await productServiceDbContext.Database.EnsureDeletedAsync();
             await productServiceDbContext.Database.EnsureCreatedAsync();

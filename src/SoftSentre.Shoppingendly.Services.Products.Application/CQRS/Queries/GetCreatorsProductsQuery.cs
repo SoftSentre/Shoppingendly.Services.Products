@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
 
-namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions
+namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Queries
 {
-    public class DomainException : InternalException
+    public class GetCreatorsProductsQuery : IQuery<CreatorWithProductsDto>
     {
-        public DomainException()
-        {
-        }
+        public CreatorId CreatorId { get; }
 
-        protected DomainException(string message) : base(message)
+        public GetCreatorsProductsQuery(CreatorId creatorId)
         {
+            CreatorId = creatorId;
         }
-
-        protected DomainException(string message, Exception innerException) : base(message, innerException)
+        
+        public override string ToString()
         {
+            return $"CreatorId: '{CreatorId}'";
         }
     }
 }

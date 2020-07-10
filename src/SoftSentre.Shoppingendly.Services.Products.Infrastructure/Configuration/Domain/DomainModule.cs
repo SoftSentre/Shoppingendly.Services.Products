@@ -15,13 +15,20 @@
 using Autofac;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Controllers;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
+using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Domain
 {
     public class DomainModule : Module
     {
+        private AllConstructorFinder _allConstructorFinder;
+        
         protected override void Load(ContainerBuilder builder)
         {
+            _allConstructorFinder = new AllConstructorFinder();
+            
             builder.RegisterType<ProductDomainController>()
                 .As<IProductDomainController>()
                 .InstancePerLifetimeScope();
@@ -33,6 +40,41 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
             builder.RegisterType<CreatorDomainController>()
                 .As<ICreatorDomainController>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<CategoryBusinessRulesChecker>()
+                .As<ICategoryBusinessRulesChecker>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<CreatorBusinessRulesChecker>()
+                .As<ICreatorBusinessRulesChecker>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<ProductBusinessRulesChecker>()
+                .As<IProductBusinessRulesChecker>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<DomainEventsEmitter>()
+                .As<IDomainEventEmitter>()
+                .InstancePerLifetimeScope();
+            
+            builder.RegisterType<DomainEventsManager>()
+                .As<IDomainEventsManager>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CreatorFactory>()
+                .AsSelf()
+                .InstancePerLifetimeScope()
+                .FindConstructorsWith(_allConstructorFinder);
+            
+            builder.RegisterType<CategoryFactory>()
+                .AsSelf()
+                .InstancePerLifetimeScope()
+                .FindConstructorsWith(_allConstructorFinder);
+            
+            builder.RegisterType<ProductFactory>()
+                .AsSelf()
+                .InstancePerLifetimeScope()
+                .FindConstructorsWith(_allConstructorFinder);
         }
     }
 }

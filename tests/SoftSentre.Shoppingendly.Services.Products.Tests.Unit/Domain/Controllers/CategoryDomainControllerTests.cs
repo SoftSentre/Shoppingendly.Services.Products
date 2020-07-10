@@ -12,16 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading.Tasks;
-using Moq;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
-using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
-using Xunit;
-
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controllers
 {
     public class CategoryDomainControllerTests //: IAsyncLifetime
