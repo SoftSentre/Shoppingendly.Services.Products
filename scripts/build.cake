@@ -32,7 +32,7 @@ Task("run-xunit-tests")
             Configuration = configuration
         };
     
-        DotNetCoreTest("../tests/SoftSentre.Shoppingendly.Services.Products.Tests.Unit/SoftSentre.Shoppingendly.Services.Products.Tests.Unit.csproj", settings);
+        DotNetCoreTest("../tests/Unit/SoftSentre.Shoppingendly.Services.Products.Tests.Unit.csproj", settings);
     });	
 
 Task("Default")
