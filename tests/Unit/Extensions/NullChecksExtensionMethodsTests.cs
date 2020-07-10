@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             const string testValue = "Not empty value";
 
             // Act
-            Func<bool> func = () => testValue.IfEmptyThenThrowAndReturnBool();
+            Func<bool> func = () => testValue.IfEmptyThenThrowOrReturnBool();
             var testResult = func.Invoke();
 
             // Assert
@@ -42,7 +42,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             // Arrange
 
             // Act
-            Func<bool> func = () => ((string) null).IfEmptyThenThrowAndReturnBool();
+            Func<bool> func = () => ((string) null).IfEmptyThenThrowOrReturnBool();
 
             // Assert
             func.Should().Throw<ArgumentNullException>();
@@ -54,7 +54,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             // Arrange
 
             // Act
-            Func<bool> func = () => ((string) null).IfEmptyThenThrowAndReturnBool("Test value can not be null.");
+            Func<bool> func = () => ((string) null).IfEmptyThenThrowOrReturnBool("Test value can not be null.");
 
             // Assert
             func.Should().Throw<ArgumentNullException>()
@@ -106,7 +106,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             const string testValue = "Not empty value";
 
             // Act
-            Func<string> func = () => testValue.IfEmptyThenThrowAndReturnValue();
+            Func<string> func = () => testValue.IfEmptyThenThrowOrReturnValue();
             var testResult = func.Invoke();
 
             // Assert
@@ -120,7 +120,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             // Arrange
 
             // Act
-            Func<string> func = () => ((string) null).IfEmptyThenThrowAndReturnValue();
+            Func<string> func = () => ((string) null).IfEmptyThenThrowOrReturnValue();
 
             // Assert
             func.Should().Throw<ArgumentNullException>();
@@ -132,7 +132,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             // Arrange
 
             // Act
-            Func<string> func = () => ((string) null).IfEmptyThenThrowAndReturnValue("Test value can not be null.");
+            Func<string> func = () => ((string) null).IfEmptyThenThrowOrReturnValue("Test value can not be null.");
 
             // Assert
             func.Should().Throw<ArgumentNullException>()

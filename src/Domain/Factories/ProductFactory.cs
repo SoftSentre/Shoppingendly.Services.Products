@@ -32,9 +32,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         internal ProductFactory(IProductBusinessRulesChecker productBusinessRulesChecker,
             ICreatorBusinessRulesChecker creatorBusinessRulesChecker, IDomainEventEmitter domainEventEmitter)
         {
-            _productBusinessRulesChecker = productBusinessRulesChecker.IfEmptyThenThrowAndReturnValue();
-            _creatorBusinessRulesChecker = creatorBusinessRulesChecker.IfEmptyThenThrowAndReturnValue();
-            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowAndReturnValue();
+            _productBusinessRulesChecker = productBusinessRulesChecker.IfEmptyThenThrowOrReturnValue();
+            _creatorBusinessRulesChecker = creatorBusinessRulesChecker.IfEmptyThenThrowOrReturnValue();
+            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowOrReturnValue();
         }
 
         internal Product Create(ProductId productId, CreatorId creatorId, string productName,

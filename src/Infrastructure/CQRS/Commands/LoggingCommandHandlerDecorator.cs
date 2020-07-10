@@ -33,8 +33,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
             ICommandHandler<TCommand> decorated,
             ILogger<LoggingCommandHandlerDecorator<TCommand>> logger)
         {
-            _decorated = decorated.IfEmptyThenThrowAndReturnValue();
-            _logger = logger.IfEmptyThenThrowAndReturnValue();
+            _decorated = decorated.IfEmptyThenThrowOrReturnValue();
+            _logger = logger.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<ICommandResult> SendAsync(TCommand command)

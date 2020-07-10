@@ -31,7 +31,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi.Endpoints
 
         public CreatorEndpointsInvoker(IQueryBus queryBus)
         {
-            _queryBus = queryBus.IfEmptyThenThrowAndReturnValue();
+            _queryBus = queryBus.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task GetCreatorProducts(HttpContext context)

@@ -30,8 +30,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
             ILogger<DomainEventsDispatcher> logger,
             IDomainEventAccessor domainEventAccessor)
         {
-            _logger = logger.IfEmptyThenThrowAndReturnValue();
-            _domainEventAccessor = domainEventAccessor.IfEmptyThenThrowAndReturnValue();
+            _logger = logger.IfEmptyThenThrowOrReturnValue();
+            _domainEventAccessor = domainEventAccessor.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task DispatchAsync()

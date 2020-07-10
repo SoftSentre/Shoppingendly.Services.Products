@@ -41,10 +41,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
             ICategoryBusinessRulesChecker categoryBusinessRulesChecker, CategoryFactory categoryFactory,
             IDomainEventEmitter domainEventEmitter)
         {
-            _categoryRepository = categoryRepository.IfEmptyThenThrowAndReturnValue();
-            _categoryBusinessRulesChecker = categoryBusinessRulesChecker.IfEmptyThenThrowAndReturnValue();
-            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowAndReturnValue();
-            _categoryFactory = categoryFactory.IfEmptyThenThrowAndReturnValue();
+            _categoryRepository = categoryRepository.IfEmptyThenThrowOrReturnValue();
+            _categoryBusinessRulesChecker = categoryBusinessRulesChecker.IfEmptyThenThrowOrReturnValue();
+            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowOrReturnValue();
+            _categoryFactory = categoryFactory.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<Maybe<Category>> GetCategoryByIdAsync(CategoryId categoryId)

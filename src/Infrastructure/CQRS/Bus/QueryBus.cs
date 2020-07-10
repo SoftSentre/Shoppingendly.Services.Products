@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
         public QueryBus(ILifetimeScope lifetimeScope)
         {
-            _lifetimeScope = lifetimeScope.IfEmptyThenThrowAndReturnValue();
+            _lifetimeScope = lifetimeScope.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<IQueryResult<TResult>> QueryAsync<TResult>(IQuery<TResult> query)

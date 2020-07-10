@@ -30,8 +30,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         internal CategoryFactory(ICategoryBusinessRulesChecker categoryBusinessRulesChecker,
             IDomainEventEmitter domainEventEmitter)
         {
-            _categoryBusinessRulesChecker = categoryBusinessRulesChecker.IfEmptyThenThrowAndReturnValue();
-            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowAndReturnValue();
+            _categoryBusinessRulesChecker = categoryBusinessRulesChecker.IfEmptyThenThrowOrReturnValue();
+            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowOrReturnValue();
         }
 
         internal Category Create(CategoryId categoryId, string categoryName)

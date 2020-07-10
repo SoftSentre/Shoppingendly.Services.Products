@@ -31,7 +31,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public ProductEfRepository(ProductServiceDbContext productServiceDbContext)
         {
             _productServiceDbContext = productServiceDbContext
-                .IfEmptyThenThrowAndReturnValue();
+                .IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<Maybe<Product>> GetByIdAsync(ProductId id)

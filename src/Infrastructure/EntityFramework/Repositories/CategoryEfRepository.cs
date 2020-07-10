@@ -33,7 +33,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public CategoryEfRepository(ProductServiceDbContext productServiceDbContext)
         {
             _productServiceDbContext = productServiceDbContext
-                .IfEmptyThenThrowAndReturnValue();
+                .IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<Maybe<Category>> GetByIdAsync(CategoryId id)

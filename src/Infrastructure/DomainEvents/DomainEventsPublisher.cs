@@ -26,7 +26,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
 
         public DomainEventPublisher(ILifetimeScope lifetimeScope)
         {
-            _lifetimeScope = lifetimeScope.IfEmptyThenThrowAndReturnValue();
+            _lifetimeScope = lifetimeScope.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task PublishAsync<TEvent>(TEvent @event)

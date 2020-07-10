@@ -29,7 +29,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public CreatorEfRepository(ProductServiceDbContext productServiceDbContext)
         {
             _productServiceDbContext = productServiceDbContext
-                .IfEmptyThenThrowAndReturnValue();
+                .IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<Maybe<Creator>> GetByIdAsync(CreatorId id)

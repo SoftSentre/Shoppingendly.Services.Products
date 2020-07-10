@@ -27,7 +27,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper
 
         public MapperWrapper(IMapper mapper)
         {
-            _mapper = mapper.IfEmptyThenThrowAndReturnValue();
+            _mapper = mapper.IfEmptyThenThrowOrReturnValue();
         }
 
         public BasicCategoryDto MapCategoryToBasicCategoryDto(Category category)

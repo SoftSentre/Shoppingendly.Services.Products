@@ -44,10 +44,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             DbContextOptions options) : base(options)
         {
             _sqlSettings = sqlSettings
-                .IfEmptyThenThrowAndReturnValue();
+                .IfEmptyThenThrowOrReturnValue();
 
             _loggerFactory = loggerFactory
-                .IfEmptyThenThrowAndReturnValue();
+                .IfEmptyThenThrowOrReturnValue();
         }
 
         public bool HasActiveTransaction => _currentTransaction.HasValue;

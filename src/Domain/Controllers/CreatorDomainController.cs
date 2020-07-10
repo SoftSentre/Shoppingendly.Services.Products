@@ -36,9 +36,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public CreatorDomainController(ICreatorBusinessRulesChecker creatorBusinessRulesChecker,
             ICreatorRepository creatorRepository, CreatorFactory creatorFactory)
         {
-            _creatorBusinessRulesChecker = creatorBusinessRulesChecker.IfEmptyThenThrowAndReturnValue();
-            _creatorRepository = creatorRepository.IfEmptyThenThrowAndReturnValue();
-            _creatorFactory = creatorFactory.IfEmptyThenThrowAndReturnValue();
+            _creatorBusinessRulesChecker = creatorBusinessRulesChecker.IfEmptyThenThrowOrReturnValue();
+            _creatorRepository = creatorRepository.IfEmptyThenThrowOrReturnValue();
+            _creatorFactory = creatorFactory.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<Maybe<Creator>> GetCreatorByIdAsync(CreatorId creatorId)

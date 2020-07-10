@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
 
         public CommandBus(ILifetimeScope lifetimeScope)
         {
-            _lifetimeScope = lifetimeScope.IfEmptyThenThrowAndReturnValue();
+            _lifetimeScope = lifetimeScope.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<ICommandResult> SendAsync<TCommand>(TCommand command)

@@ -30,8 +30,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         internal CreatorFactory(ICreatorBusinessRulesChecker creatorBusinessRulesChecker,
             IDomainEventEmitter domainEventEmitter)
         {
-            _creatorBusinessRulesChecker = creatorBusinessRulesChecker.IfEmptyThenThrowAndReturnValue();
-            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowAndReturnValue();
+            _creatorBusinessRulesChecker = creatorBusinessRulesChecker.IfEmptyThenThrowOrReturnValue();
+            _domainEventEmitter = domainEventEmitter.IfEmptyThenThrowOrReturnValue();
         }
 
         internal Creator Create(CreatorId creatorId, string creatorName, CreatorRole creatorRole)

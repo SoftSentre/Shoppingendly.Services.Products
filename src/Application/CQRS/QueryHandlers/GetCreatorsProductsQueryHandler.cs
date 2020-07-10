@@ -32,7 +32,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.QueryHandl
             IMapperWrapper mapperWrapper)
         {
             _creatorDomainController = creatorDomainController;
-            _mapperWrapper = mapperWrapper.IfEmptyThenThrowAndReturnValue();
+            _mapperWrapper = mapperWrapper.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<IQueryResult<CreatorWithProductsDto>> QueryAsync(GetCreatorsProductsQuery query)

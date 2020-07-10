@@ -34,8 +34,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
             ICommandHandler<TCommand> decorated,
             IList<IValidator<TCommand>> validators)
         {
-            _decorated = decorated.IfEmptyThenThrowAndReturnValue();
-            _validators = validators.IfEmptyThenThrowAndReturnValue();
+            _decorated = decorated.IfEmptyThenThrowOrReturnValue();
+            _validators = validators.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<ICommandResult> SendAsync(TCommand command)

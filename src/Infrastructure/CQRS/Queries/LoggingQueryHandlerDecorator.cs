@@ -32,8 +32,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries
             IQueryHandler<TQuery, TResult> decorated,
             ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>> logger)
         {
-            _decorated = decorated.IfEmptyThenThrowAndReturnValue();
-            _logger = logger.IfEmptyThenThrowAndReturnValue();
+            _decorated = decorated.IfEmptyThenThrowOrReturnValue();
+            _logger = logger.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<IQueryResult<TResult>> QueryAsync(TQuery query)

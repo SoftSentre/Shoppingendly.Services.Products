@@ -34,7 +34,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
             }
         }
 
-        public static bool IfEmptyThenThrowAndReturnBool<T>(this T value)
+        public static bool IfEmptyThenThrowOrReturnBool<T>(this T value)
         {
             if (value == null)
             {
@@ -44,7 +44,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
             return true;
         }
 
-        public static bool IfEmptyThenThrowAndReturnBool<T>(this T value, string message)
+        public static bool IfEmptyThenThrowOrReturnBool<T>(this T value, string message)
         {
             if (value == null)
             {
@@ -54,7 +54,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
             return true;
         }
 
-        public static T IfEmptyThenThrowAndReturnValue<T>(this T value)
+        public static T IfEmptyThenThrowOrReturnValue<T>(this T value)
         {
             if (value == null)
             {
@@ -64,7 +64,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
             return value;
         }
 
-        public static T IfEmptyThenThrowAndReturnValue<T>(this T value, string message)
+        public static T IfEmptyThenThrowOrReturnValue<T>(this T value, string message)
         {
             if (value == null)
             {

@@ -31,7 +31,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
         public DataAccessModule(ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory
-                .IfEmptyThenThrowAndReturnValue();
+                .IfEmptyThenThrowOrReturnValue();
         }
 
         protected override void Load(ContainerBuilder builder)

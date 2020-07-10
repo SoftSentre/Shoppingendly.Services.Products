@@ -31,8 +31,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.DomainEvents
             IDomainEventHandler<TEvent> decorated,
             ILogger<LoggingDomainEventHandlerDecorator<TEvent>> logger)
         {
-            _decorated = decorated.IfEmptyThenThrowAndReturnValue();
-            _logger = logger.IfEmptyThenThrowAndReturnValue();
+            _decorated = decorated.IfEmptyThenThrowOrReturnValue();
+            _logger = logger.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task HandleAsync(TEvent @event)

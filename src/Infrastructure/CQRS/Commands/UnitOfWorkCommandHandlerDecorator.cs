@@ -33,9 +33,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Command
             IDomainEventsDispatcher domainEventsDispatcher,
             IUnitOfWork unitOfWork)
         {
-            _decorated = decorated.IfEmptyThenThrowAndReturnValue();
-            _domainEventsDispatcher = domainEventsDispatcher.IfEmptyThenThrowAndReturnValue();
-            _unitOfWork = unitOfWork.IfEmptyThenThrowAndReturnValue();
+            _decorated = decorated.IfEmptyThenThrowOrReturnValue();
+            _domainEventsDispatcher = domainEventsDispatcher.IfEmptyThenThrowOrReturnValue();
+            _unitOfWork = unitOfWork.IfEmptyThenThrowOrReturnValue();
         }
 
         public async Task<ICommandResult> SendAsync(TCommand command)

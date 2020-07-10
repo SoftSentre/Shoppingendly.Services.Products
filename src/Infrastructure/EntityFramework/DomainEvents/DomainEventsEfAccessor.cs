@@ -37,9 +37,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             IDomainEventsManager domainEventsManager,
             ProductServiceDbContext productServiceDbContext)
         {
-            _domainEventPublisher = domainEventPublisher.IfEmptyThenThrowAndReturnValue();
-            _domainEventsManager = domainEventsManager.IfEmptyThenThrowAndReturnValue();
-            _productServiceDbContext = productServiceDbContext.IfEmptyThenThrowAndReturnValue();
+            _domainEventPublisher = domainEventPublisher.IfEmptyThenThrowOrReturnValue();
+            _domainEventsManager = domainEventsManager.IfEmptyThenThrowOrReturnValue();
+            _productServiceDbContext = productServiceDbContext.IfEmptyThenThrowOrReturnValue();
         }
 
         public Maybe<IEnumerable<IDomainEvent>> GetUncommittedEvents()
