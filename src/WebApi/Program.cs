@@ -13,27 +13,26 @@
 // limitations under the License.
 
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Extensions.Logging;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure;
+using SoftSentre.Shoppingendly.Services.Products.Infrastructure.App;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.CQRS;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Data;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Domain;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Logging;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration.Mappings;
-using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger;
+using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration;
 using SoftSentre.Shoppingendly.Services.Products.WebApi.Endpoints;
 using SoftSentre.Shoppingendly.Services.Products.WebApi.Modules;
@@ -44,24 +43,40 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
     public class Program
     {
         private static ILogger _logger;
-        private static string _appName;
+        private static IApplicationService _applicationService;
 
         public static async Task<int> Main(string[] args)
         {
-            var configuration = GetConfiguration();
-            var environment = GetEnvironment();
+            _applicationService = new ApplicationService();
+
+            var environment = _applicationService.GetEnvironmentName();
+            var appName = _applicationService.GetAppName();
             
             try
             {
-                CreateSerilogLogger(configuration, environment);
+                CreateSerilogLogger(environment);
                 
-                await CreateHostBuilder(args).Build().RunAsync();
+                _logger.Information("Configuring web host ({Application})...", appName);
+                
+                var host = CreateHostBuilder(args).Build();
+                host.MigrateDatabase<ProductServiceDbContext>((context, provider) =>
+                {
+                    var logger = provider.GetService<ILogger<ProductServiceDbContextSeed>>();
+                
+                    new ProductServiceDbContextSeed()
+                        .SeedAsync(context, logger)
+                        .Wait();
+                });
+                
+                _logger.Information("Applying migrations ({Application})...", appName);
 
+                await host.RunAsync();
+                
                 return 0;
             }
             catch (Exception ex)
             {
-                _logger.Fatal(ex, "Program terminated unexpectedly ({ApplicationContext})!", _appName);
+                _logger.Fatal(ex, "Program terminated unexpectedly ({Application})!", appName);
                 return 1;
             }
         }
@@ -122,39 +137,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
                 });
         }
 
-        private static void CreateSerilogLogger(IConfiguration configuration, string environment)
+        private static void CreateSerilogLogger(string environment)
         {
-            var loggerSettings = configuration.GetOptions<LoggerSettings>("logger") ?? new LoggerSettings();
-            var appOptions = configuration.GetOptions<AppOptions>("app") ?? new AppOptions();
-            _appName = appOptions.Name;
+            ISerilogConfigurator serilogConfigurator = new SerilogConfigurator(_applicationService);
+            var logger = serilogConfigurator.CreateSerilogLogger(environment);
 
-            ISerilogConfigurator loggerConfigurator = new SerilogConfigurator();
-            var loggerConfiguration = new LoggerConfiguration();
-            var filledConfiguration =
-                loggerConfigurator.ConfigureLogger(loggerConfiguration, loggerSettings, appOptions, environment);
-
-            _logger = filledConfiguration.CreateLogger();
-        }
-
-        private static string GetEnvironment()
-        {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-            if (environment.IsEmpty())
-                throw new ArgumentNullException(nameof(environment),
-                    "Unable to run application without specified environment.");
-
-            return environment;
-        }
-        
-        private static IConfiguration GetConfiguration()
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
-
-            return builder.Build();
+            _logger = logger;
         }
     }
 }

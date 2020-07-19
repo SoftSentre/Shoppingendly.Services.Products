@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Serilog;
+using Microsoft.Extensions.Configuration;
+using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Settings;
+using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
+namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.App
 {
-    public interface ISerilogConfigurator
+    public interface IApplicationService
     {
-        ILogger CreateSerilogLogger(string environment);
+        IConfiguration GetConfiguration();
         
-        LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
-            AppOptions appOptions, string environmentName);
+        string GetEnvironmentName();
+        string GetAppName();
+        
+        AppOptions GetAppSettings();
+        LoggerSettings GetLoggerSettings();
+        SqlSettings GetSqlSettings();
     }
 }

@@ -21,6 +21,7 @@ using Serilog.Core;
 using Serilog.Core.Enrichers;
 using Serilog.Events;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure;
+using SoftSentre.Shoppingendly.Services.Products.Infrastructure.App;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Settings;
@@ -83,19 +84,22 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.L
         private static string GetPropertyEnricherName(IReadOnlyList<ILogEventEnricher> enrichers, int index)
         {
             return enrichers[index].GetType().GetField("_name", BindingFlags.Instance | BindingFlags.NonPublic)
-                ?.GetValue(enrichers[index]).ToString();
+                ?.GetValue(enrichers[index])
+                ?.ToString();
         }
 
         private static string GetPropertyEnricherValue(IReadOnlyList<ILogEventEnricher> enrichers, int index)
         {
             return enrichers[index].GetType().GetField("_value", BindingFlags.Instance | BindingFlags.NonPublic)
-                ?.GetValue(enrichers[index]).ToString();
+                ?.GetValue(enrichers[index])
+                ?.ToString();
         }
 
         private static string GetSinkFullName(IReadOnlyList<ILogEventSink> sinks, int index)
         {
             return sinks[index].GetType().GetField("_sink", BindingFlags.Instance | BindingFlags.NonPublic)
-                ?.GetValue(sinks[index]).GetType().FullName;
+                ?.GetValue(sinks[index])
+                ?.GetType().FullName;
         }
 
         private static LoggingLevelSwitch GetLoggingLevel(IReadOnlyList<ILogEventSink> sinks, int index)
@@ -109,7 +113,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.L
             IEnumerable<string> excludePaths = null, IEnumerable<string> excludeProperties = null,
             string interval = "day")
         {
-            ISerilogConfigurator serilogConfigurator = new SerilogConfigurator();
+            ISerilogConfigurator serilogConfigurator = new SerilogConfigurator(new ApplicationService());
             var loggerConfiguration = new LoggerConfiguration();
             const string environment = "development";
 

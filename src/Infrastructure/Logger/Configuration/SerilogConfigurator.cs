@@ -19,12 +19,31 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Filters;
 using Serilog.Sinks.Elasticsearch;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
+using SoftSentre.Shoppingendly.Services.Products.Infrastructure.App;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Settings;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration
 {
     public class SerilogConfigurator : ISerilogConfigurator
     {
+        private readonly IApplicationService _applicationService;
+
+        public SerilogConfigurator(IApplicationService applicationService)
+        {
+            _applicationService = applicationService.IfEmptyThenThrowOrReturnValue();
+        }
+
+        public ILogger CreateSerilogLogger(string environment)
+        {
+            var loggerSettings = _applicationService.GetLoggerSettings();
+            var appOptions = _applicationService.GetAppSettings();
+            var loggerConfiguration = new LoggerConfiguration();
+            var filledConfiguration = ConfigureLogger(loggerConfiguration, loggerSettings, appOptions, environment);
+
+            return filledConfiguration.CreateLogger();
+        }
+
         public LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration,
             LoggerSettings loggerSettings, AppOptions appOptions, string environmentName)
         {

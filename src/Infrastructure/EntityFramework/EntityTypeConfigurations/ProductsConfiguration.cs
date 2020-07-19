@@ -64,7 +64,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 pp =>
                 {
                     pp.Property(ppp => ppp.Name)
-                        .HasColumnName("ProductProducer")
+                        .HasColumnName("ProductProducerName")
                         .HasMaxLength(ProductProducerMaxLength)
                         .IsRequired();
                 });
