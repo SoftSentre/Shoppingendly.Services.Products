@@ -14,19 +14,19 @@
 
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Queries;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Queries
 {
     public class GetCreatorsProductsQuery : IQuery<CreatorWithProductsDto>
     {
-        public CreatorId CreatorId { get; }
-
         public GetCreatorsProductsQuery(CreatorId creatorId)
         {
             CreatorId = creatorId;
         }
-        
+
+        public CreatorId CreatorId { get; }
+
         public override string ToString()
         {
             return $"CreatorId: '{CreatorId}'";

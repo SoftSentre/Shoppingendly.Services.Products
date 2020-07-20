@@ -26,14 +26,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.App
         private const string AppSectionName = "app";
         private const string LoggerSectionName = "logger";
         private const string SqlSectionName = "sqlSettings";
-        
+
         private IConfiguration Configuration { get; set; }
-        
+
         public IConfiguration GetConfiguration()
         {
-            Configuration =  new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(Path.Combine(Directory.GetCurrentDirectory()))
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", false, true)
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -45,7 +45,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.App
             var environment = GetEnvironment();
 
             if (environment.IsEmpty())
+            {
                 throw new ArgumentException("Environment hasn't been specified.");
+            }
 
             return environment;
         }
@@ -70,7 +72,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.App
 
             return loggerSettings;
         }
-        
+
         public SqlSettings GetSqlSettings()
         {
             var sqlSettings = GetSettings<SqlSettings>(SqlSectionName) ?? new SqlSettings();
@@ -82,7 +84,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.App
         {
             return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         }
-        
+
         private TSettings GetSettings<TSettings>(string settingName) where TSettings : new()
         {
             var configuration = Configuration ?? GetConfiguration();

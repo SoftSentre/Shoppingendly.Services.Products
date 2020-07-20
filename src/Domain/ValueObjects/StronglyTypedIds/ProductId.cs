@@ -16,25 +16,25 @@ using System;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds
 {
-    public class CategoryId : Identity<Guid>
+    public class ProductId : Identity<Guid>
     {
-        public override Guid Id { get; }
-        
-        public override bool IsValid()
-        {
-            return Id.IsNotEmpty();
-        }
-
-        internal CategoryId()
+        internal ProductId()
         {
             Id = Guid.NewGuid();
         }
 
-        internal CategoryId(Guid id) : base(id)
+        internal ProductId(Guid id) : base(id)
         {
             Id = id;
+        }
+
+        public override Guid Id { get; }
+
+        public bool IsValid()
+        {
+            return Id.IsNotEmpty();
         }
     }
 }

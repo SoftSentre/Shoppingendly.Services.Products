@@ -14,18 +14,19 @@
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
 {
     public class ProductProducerChangedDomainEvent : DomainEventBase
     {
-        internal ProductProducerChangedDomainEvent(ProductId productId, ProductProducer productProducer)
+        internal ProductProducerChangedDomainEvent(ProductId productId, Producer productProducer)
         {
             ProductId = productId;
             ProductProducer = productProducer;
         }
 
         public ProductId ProductId { get; }
-        public ProductProducer ProductProducer { get; }
+        public Producer ProductProducer { get; }
     }
 }

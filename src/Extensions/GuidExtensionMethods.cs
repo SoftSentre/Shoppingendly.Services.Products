@@ -22,7 +22,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
         {
             return target == Guid.Empty;
         }
-        
+
         public static bool IsNotEmpty(this Guid target)
         {
             return !IsEmpty(target);

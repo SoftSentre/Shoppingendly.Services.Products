@@ -12,10 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
+using System;
+using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
+using SoftSentre.Shoppingendly.Services.Products.Extensions;
+
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds
 {
-    public class RepositoryExtensionsMethodsTests
+    public class CategoryId : Identity<Guid>
     {
-        
+        internal CategoryId()
+        {
+            Id = Guid.NewGuid();
+        }
+
+        internal CategoryId(Guid id) : base(id)
+        {
+            Id = id;
+        }
+
+        public override Guid Id { get; }
+
+        public bool IsValid()
+        {
+            return Id.IsNotEmpty();
+        }
     }
 }

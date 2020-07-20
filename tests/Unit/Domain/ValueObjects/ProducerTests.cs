@@ -33,18 +33,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
             await Task.CompletedTask;
         }
 
-        [Fact]
-        public void SuccessToCreateProducerWhenNameIsCorrect()
-        {
-            // Arrange
-
-            // Act
-            var productProducer = ProductProducer.Create(_producerName);
-
-            // Assert
-            productProducer.Name.Should().BeEquivalentTo(_producerName);
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -53,7 +41,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
             // Arrange
 
             // Act
-            Action action = () => ProductProducer.Create(producerName);
+            Action action = () => Producer.Create(producerName);
 
             // Assert
             action.Should().Throw<ProductProducerNameCanNotBeEmptyException>()
@@ -61,19 +49,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
                 .WithMessage("Product producer can not be empty.");
         }
 
-        [Fact]
-        public void AppropriateExceptionHasBeenThrownWhenProductProducerIsTooShort()
+        public async Task DisposeAsync()
         {
-            // Arrange
-            _producerName = new string('a', GlobalValidationVariables.ProductProducerMinLength - 1);
+            _producerName = null;
 
-            // Act
-            Action action = () => ProductProducer.Create(_producerName);
-
-            // Assert
-            action.Should().Throw<ProductProducerNameIsTooShortException>()
-                .Where(e => e.Code == ErrorCodes.ProductProducerNameIsTooShort)
-                .WithMessage("Product producer can not be shorter than 2 characters.");
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -83,7 +63,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
             _producerName = new string('a', GlobalValidationVariables.ProductProducerMaxLength + 1);
 
             // Act
-            Action action = () => ProductProducer.Create(_producerName);
+            Action action = () => Producer.Create(_producerName);
 
             // Assert
             action.Should().Throw<ProductProducerNameIsTooLongException>()
@@ -91,11 +71,31 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
                 .WithMessage("Product producer can not be longer than 50 characters.");
         }
 
-        public async Task DisposeAsync()
+        [Fact]
+        public void AppropriateExceptionHasBeenThrownWhenProductProducerIsTooShort()
         {
-            _producerName = null;
+            // Arrange
+            _producerName = new string('a', GlobalValidationVariables.ProductProducerMinLength - 1);
 
-            await Task.CompletedTask;
+            // Act
+            Action action = () => Producer.Create(_producerName);
+
+            // Assert
+            action.Should().Throw<ProductProducerNameIsTooShortException>()
+                .Where(e => e.Code == ErrorCodes.ProductProducerNameIsTooShort)
+                .WithMessage("Product producer can not be shorter than 2 characters.");
+        }
+
+        [Fact]
+        public void SuccessToCreateProducerWhenNameIsCorrect()
+        {
+            // Arrange
+
+            // Act
+            var productProducer = Producer.Create(_producerName);
+
+            // Assert
+            productProducer.Name.Should().BeEquivalentTo(_producerName);
         }
     }
 }

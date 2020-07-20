@@ -21,10 +21,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.App
     public interface IApplicationService
     {
         IConfiguration GetConfiguration();
-        
+
         string GetEnvironmentName();
         string GetAppName();
-        
+
         AppOptions GetAppSettings();
         LoggerSettings GetLoggerSettings();
         SqlSettings GetSqlSettings();

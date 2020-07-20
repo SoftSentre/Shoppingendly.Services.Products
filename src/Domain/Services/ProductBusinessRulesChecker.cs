@@ -15,6 +15,7 @@
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidationVariables;
 
@@ -42,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             return productName.IsLongerThan(ProductNameMaxLength);
         }
 
-        public bool ProductProducerCanNotBeNullRuleIsBroken(Maybe<ProductProducer> productProducer)
+        public bool ProductProducerCanNotBeNullRuleIsBroken(Maybe<Producer> productProducer)
         {
             return productProducer.HasNoValue;
         }

@@ -28,7 +28,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
             Action<TContext, IServiceProvider> seeder) where TContext : DbContext
         {
             using var scope = host.Services.CreateScope();
-            
+
             var services = scope.ServiceProvider;
             var logger = services.GetRequiredService<ILogger<TContext>>();
             var context = services.GetService<TContext>();
@@ -39,11 +39,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
                     typeof(TContext).Name);
 
                 var retry = Policy.Handle<SqlException>()
-                    .WaitAndRetry(new TimeSpan[]
+                    .WaitAndRetry(new[]
                     {
                         TimeSpan.FromSeconds(3),
                         TimeSpan.FromSeconds(5),
-                        TimeSpan.FromSeconds(8),
+                        TimeSpan.FromSeconds(8)
                     });
 
                 retry.Execute(() =>

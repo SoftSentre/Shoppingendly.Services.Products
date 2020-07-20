@@ -24,6 +24,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
@@ -42,7 +43,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
         private readonly Product _product = new Product(new ProductId(),
             new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")), "ExampleProductName",
-            ProductProducer.Create("ExampleProducer"));
+            Producer.Create("ExampleProducer"));
 
         private async Task<ProductServiceDbContext> CreateDbContext()
         {
@@ -54,7 +55,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                 .Options;
 
             var loggerFactory = new Mock<ILoggerFactory>();
-            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), dbContextOptions);
+            var productServiceDbContext =
+                new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), dbContextOptions);
 
             await productServiceDbContext.Database.EnsureDeletedAsync();
             await productServiceDbContext.Database.EnsureCreatedAsync();
@@ -73,12 +75,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.CreatorId, "ExampleProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             await productRepository.AddAsync(product);
             await dbContext.SaveChangesAsync();
 
             // Act
-            var testResult = dbContext.Products.FirstOrDefault(p => p.ProductId.Equals(product.ProductId)) ?? It.IsAny<Product>();
+            var testResult = dbContext.Products.FirstOrDefault(p => p.ProductId.Equals(product.ProductId)) ??
+                             It.IsAny<Product>();
 
             // Assert
             testResult.ProductName.Should().Be(product.ProductName);
@@ -98,12 +101,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             const string newProductName = "NewProductName";
 
             // Act
-            var productFromDatabase = await dbContext.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(_product.ProductId));
+            var productFromDatabase =
+                await dbContext.Products.FirstOrDefaultAsync(p => p.ProductId.Equals(_product.ProductId));
             productFromDatabase.ChangeProductName(newProductName);
             productRepository.Update(productFromDatabase);
             await dbContext.SaveChangesAsync();
 
-            var testResult = dbContext.Products.FirstOrDefault(p => p.ProductId.Equals(_product.ProductId)) ?? It.IsAny<Product>();
+            var testResult = dbContext.Products.FirstOrDefault(p => p.ProductId.Equals(_product.ProductId)) ??
+                             It.IsAny<Product>();
 
             // Assert
             testResult.ProductName.Should().Be(newProductName);
@@ -175,7 +180,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.CreatorId, "OtherProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             product.AssignCategory(_category.CategoryId);
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
@@ -189,7 +194,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.CreatorId.Should().Be(product.CreatorId);
             testResult.Value.CreatedAt.Should().Be(product.CreatedAt);
 
-            var firstChild = testResult.Value.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            var firstChild = testResult.Value.AssignedCategories.FirstOrDefault() ?? It.IsAny<Categorization>();
             firstChild.ProductId.Should().Be(product.ProductId);
             firstChild.CategoryId.Should().Be(_category.CategoryId);
 
@@ -203,7 +208,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             var dbContext = await CreateDbContext();
             IProductRepository productRepository = new ProductEfRepository(dbContext);
             var product = new Product(new ProductId(), _creator.CreatorId, "OtherProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             product.AssignCategory(_category.CategoryId);
             await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
@@ -220,7 +225,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             firstItem.CreatorId.Should().Be(product.CreatorId);
             firstItem.CreatedAt.Should().Be(product.CreatedAt);
 
-            var firstChild = firstItem.ProductCategories.FirstOrDefault() ?? It.IsAny<ProductCategory>();
+            var firstChild = firstItem.AssignedCategories.FirstOrDefault() ?? It.IsAny<Categorization>();
             firstChild.ProductId.Should().Be(product.ProductId);
             firstChild.CategoryId.Should().Be(_category.CategoryId);
 

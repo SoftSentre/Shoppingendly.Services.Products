@@ -14,9 +14,9 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Serilog.Extensions.Logging;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.App;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Configuration;
-using SerilogLoggerFactory = Serilog.Extensions.Logging.SerilogLoggerFactory;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework
 {
@@ -25,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public ProductServiceDbContext CreateDbContext(string[] args)
         {
             IApplicationService applicationService = new ApplicationService();
-            
+
             var environment = applicationService.GetEnvironmentName();
             var sqlSettings = applicationService.GetSqlSettings();
             var optionsBuilder = new DbContextOptionsBuilder<ProductServiceDbContext>();

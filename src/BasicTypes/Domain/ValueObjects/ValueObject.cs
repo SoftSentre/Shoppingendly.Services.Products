@@ -22,8 +22,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObje
 {
     public abstract class ValueObject : IEquatable<ValueObject>
     {
-        private List<PropertyInfo> _properties;
         private List<FieldInfo> _fields;
+        private List<PropertyInfo> _properties;
+
+        public bool Equals(ValueObject obj)
+        {
+            return Equals(obj as object);
+        }
 
         public static bool operator ==(ValueObject obj1, ValueObject obj2)
         {
@@ -45,14 +50,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObje
             return !(obj1 == obj2);
         }
 
-        public bool Equals(ValueObject obj)
-        {
-            return Equals(obj as object);
-        }
-
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType()) return false;
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
 
             return GetProperties().All(p => PropertiesAreEqual(obj, p))
                    && GetFields().All(f => FieldsAreEqual(obj, f));
@@ -97,7 +100,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.ValueObje
         {
             unchecked
             {
-                int hash = 17;
+                var hash = 17;
                 foreach (var prop in GetProperties())
                 {
                     var value = prop.GetValue(this, null);

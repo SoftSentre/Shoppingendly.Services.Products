@@ -19,11 +19,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.DomainEve
 {
     public class GetUncommittedDomainEventsFailedException : DomainException
     {
-        public override string Code { get; } = ErrorCodes.GetUncommittedDomainEventsFailed;
-
         public GetUncommittedDomainEventsFailedException() : base(
             "Unable to get uncommitted domain events, because entity is null or domain events list are not initialized.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.GetUncommittedDomainEventsFailed;
     }
 }

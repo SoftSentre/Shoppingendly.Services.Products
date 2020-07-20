@@ -16,12 +16,10 @@ using System;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Identification;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
+namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds
 {
     public class CreatorId : Identity<Guid>
     {
-        public override Guid Id { get; }
-
         public CreatorId()
         {
             Id = Guid.NewGuid();
@@ -32,7 +30,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
             Id = id;
         }
 
-        public override bool IsValid()
+        public override Guid Id { get; }
+
+        public bool IsValid()
         {
             return Id.IsNotEmpty();
         }

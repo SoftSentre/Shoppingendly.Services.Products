@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
 
@@ -39,46 +39,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             await Task.CompletedTask;
         }
 
-        [Fact]
-        public void FalseWhenCreatorIdCanNotBeEmptyRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var creatorIdCanNotBeEmptyRuleIsBroken =
-                _creatorBusinessRulesChecker.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId);
-
-            // Assert
-            creatorIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TrueWhenCreatorIdCanNotBeEmptyRuleIsBroken()
-        {
-            // Arrange
-            _creatorId = new CreatorId(Guid.Empty);
-
-            // Act
-            var creatorIdCanNotBeEmptyRuleIsBroken =
-                _creatorBusinessRulesChecker.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId);
-
-            // Assert
-            creatorIdCanNotBeEmptyRuleIsBroken.Should().BeTrue();
-        }
-
-        [Fact]
-        public void FalseWhenCreatorNameCanNotBeEmptyRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var creatorIdCanNotBeEmptyRuleIsBroken =
-                _creatorBusinessRulesChecker.CreatorNameCanNotBeEmptyRuleIsBroken(_creatorName);
-
-            // Assert
-            creatorIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -95,6 +55,28 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             creatorNameCanNotBeEmptyRuleIsBroken.Should().BeTrue();
         }
 
+        public async Task DisposeAsync()
+        {
+            _creatorBusinessRulesChecker = null;
+            _creatorId = null;
+            _creatorName = null;
+
+            await Task.CompletedTask;
+        }
+
+        [Fact]
+        public void FalseCreatorNameCanNotBeLongerThanRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var creatorNameCanNotBeLongerThanRuleIsBroken =
+                _creatorBusinessRulesChecker.CreatorNameCanNotBeLongerThanRuleIsBroken(_creatorName);
+
+            // Assert
+            creatorNameCanNotBeLongerThanRuleIsBroken.Should().BeFalse();
+        }
+
         [Fact]
         public void FalseCreatorNameCanNotBeShorterThanRuleIsNotBroken()
         {
@@ -107,40 +89,39 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             // Assert
             creatorNameCanNotBeShorterThanRuleIsBroken.Should().BeFalse();
         }
-        
-        [Fact]
-        public void TrueCreatorNameCanNotBeShorterThanRuleIsBroken()
-        {
-            // Arrange
-            _creatorName = new string('a', GlobalValidationVariables.CreatorNameMinLength - 1);
-            
-            // Act
-            var creatorNameCanNotBeShorterThanRuleIsBroken =
-                _creatorBusinessRulesChecker.CreatorNameCanNotBeShorterThanRuleIsBroken(_creatorName);
 
-            // Assert
-            creatorNameCanNotBeShorterThanRuleIsBroken.Should().BeTrue();
-        }
-        
         [Fact]
-        public void FalseCreatorNameCanNotBeLongerThanRuleIsNotBroken()
+        public void FalseWhenCreatorIdCanNotBeEmptyRuleIsNotBroken()
         {
             // Arrange
 
             // Act
-            var creatorNameCanNotBeLongerThanRuleIsBroken =
-                _creatorBusinessRulesChecker.CreatorNameCanNotBeLongerThanRuleIsBroken(_creatorName);
-            
+            var creatorIdCanNotBeEmptyRuleIsBroken =
+                _creatorBusinessRulesChecker.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId);
+
             // Assert
-            creatorNameCanNotBeLongerThanRuleIsBroken.Should().BeFalse();
+            creatorIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
         }
-        
+
+        [Fact]
+        public void FalseWhenCreatorNameCanNotBeEmptyRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var creatorIdCanNotBeEmptyRuleIsBroken =
+                _creatorBusinessRulesChecker.CreatorNameCanNotBeEmptyRuleIsBroken(_creatorName);
+
+            // Assert
+            creatorIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
+        }
+
         [Fact]
         public void TrueCreatorNameCanNotBeLongerThanRuleIsBroken()
         {
             // Arrange
             _creatorName = new string('a', GlobalValidationVariables.CreatorNameMaxLength + 1);
-            
+
             // Act
             var creatorNameCanNotBeLongerThanRuleIsBroken =
                 _creatorBusinessRulesChecker.CreatorNameCanNotBeLongerThanRuleIsBroken(_creatorName);
@@ -148,14 +129,33 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             // Assert
             creatorNameCanNotBeLongerThanRuleIsBroken.Should().BeTrue();
         }
-        
-        public async Task DisposeAsync()
-        {
-            _creatorBusinessRulesChecker = null;
-            _creatorId = null;
-            _creatorName = null;
 
-            await Task.CompletedTask;
+        [Fact]
+        public void TrueCreatorNameCanNotBeShorterThanRuleIsBroken()
+        {
+            // Arrange
+            _creatorName = new string('a', GlobalValidationVariables.CreatorNameMinLength - 1);
+
+            // Act
+            var creatorNameCanNotBeShorterThanRuleIsBroken =
+                _creatorBusinessRulesChecker.CreatorNameCanNotBeShorterThanRuleIsBroken(_creatorName);
+
+            // Assert
+            creatorNameCanNotBeShorterThanRuleIsBroken.Should().BeTrue();
+        }
+
+        [Fact]
+        public void TrueWhenCreatorIdCanNotBeEmptyRuleIsBroken()
+        {
+            // Arrange
+            _creatorId = new CreatorId(Guid.Empty);
+
+            // Act
+            var creatorIdCanNotBeEmptyRuleIsBroken =
+                _creatorBusinessRulesChecker.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId);
+
+            // Assert
+            creatorIdCanNotBeEmptyRuleIsBroken.Should().BeTrue();
         }
     }
 }

@@ -22,23 +22,23 @@ using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.EntityFramework.Configurations
 {
-    public class ProductCategoriesConfigurationTests
+    public class CategorizationConfigurationTests
     {
-        public ProductCategoriesConfigurationTests()
+        public CategorizationConfigurationTests()
         {
             _entityTypeBuilder =
                 ConfigurationMetadataTestsExtensions
-                    .GetCustomerEntityConfigurationMetadata<ProductCategory, ProductCategoriesConfiguration>(
-                        new ProductCategoriesConfiguration());
+                    .GetCustomerEntityConfigurationMetadata<Categorization, CategorizationConfiguration>(
+                        new CategorizationConfiguration());
         }
 
-        private readonly EntityTypeBuilder<ProductCategory> _entityTypeBuilder;
+        private readonly EntityTypeBuilder<Categorization> _entityTypeBuilder;
 
         [Fact]
         public void CheckIfCategoryIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string categoryId = nameof(ProductCategory.CategoryId);
+            const string categoryId = nameof(Categorization.CategoryId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(categoryId);
 
             // Act
@@ -54,7 +54,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
         public void CheckIfProductIdHasIsConfiguredAsKeyAndIsRequired()
         {
             // Arrange
-            const string productId = nameof(ProductCategory.ProductId);
+            const string productId = nameof(Categorization.ProductId);
             var dbProperty = _entityTypeBuilder.Metadata.FindDeclaredProperty(productId);
 
             // Act

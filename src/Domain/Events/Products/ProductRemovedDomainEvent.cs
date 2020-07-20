@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
 {
     public class ProductRemovedDomainEvent : DomainEventBase
     {
-        public ProductId ProductId { get; }
-
         internal ProductRemovedDomainEvent(ProductId productId)
         {
             ProductId = productId;
         }
+
+        public ProductId ProductId { get; }
     }
 }

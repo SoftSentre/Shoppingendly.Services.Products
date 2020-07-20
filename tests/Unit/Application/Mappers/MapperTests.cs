@@ -19,6 +19,7 @@ using SoftSentre.Shoppingendly.Services.Products.Application.Mapper;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.Profiles;
 using Xunit;
@@ -82,10 +83,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Arrange
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             product.UploadProductPicture(Picture.Create("name", "picture.jpg"));
-            var productCategory = new ProductCategory(product.ProductId, category.CategoryId) {Product = product};
-            category.ProductCategories.Add(productCategory);
+            var categorization = new Categorization(product.ProductId, category.CategoryId) {Product = product};
+            category.AssignedProducts.Add(categorization);
 
             // Act
             var testResult = _mapperWrapper.MapCategoryToCategoryWithProductsDto(category);
@@ -140,7 +141,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
             // Arrange
             var creator = new Creator(new CreatorId(), "Creator", CreatorRole.Admin);
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             var picture = Picture.Create("Example", "picture.jpg");
             product.UploadProductPicture(picture);
             creator.Products.Add(product);
@@ -179,17 +180,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             var picture = Picture.Create("Name", "picture.jpg");
             product.UploadProductPicture(picture);
             var category = new Category(new CategoryId(), "ExampleCategory", "Other correct description");
             var secondCategory = new Category(new CategoryId(), "SecondExampleCategory", "Other correct description");
-            var productCategory = ProductCategory.Create(product.ProductId, category.CategoryId);
-            productCategory.Category = category;
-            var secondProductCategory = ProductCategory.Create(product.ProductId, secondCategory.CategoryId);
-            secondProductCategory.Category = secondCategory;
-            product.ProductCategories.Add(productCategory);
-            product.ProductCategories.Add(secondProductCategory);
+            var assignedCategory = Categorization.Create(product.ProductId, category.CategoryId);
+            assignedCategory.Category = category;
+            var secondAssignedCategory = Categorization.Create(product.ProductId, secondCategory.CategoryId);
+            secondAssignedCategory.Category = secondCategory;
+            product.AssignedCategories.Add(assignedCategory);
+            product.AssignedCategories.Add(secondAssignedCategory);
 
             // Act
             var testResult = _mapperWrapper.MapProductToProductDetailsDto(product);
@@ -209,7 +210,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.Mapp
         {
             // Arrange
             var product = new Product(new ProductId(), new CreatorId(), "OtherExampleProductName",
-                ProductProducer.Create("ExampleProducer"));
+                Producer.Create("ExampleProducer"));
             var picture = Picture.Create("Name", "picture.jpg");
             product.UploadProductPicture(picture);
 

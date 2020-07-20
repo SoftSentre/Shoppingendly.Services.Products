@@ -26,12 +26,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
     {
         protected Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>> LoggerMock;
         protected Mock<IMapperWrapper> MapperWrapperMock;
-        
+
         public virtual async Task InitializeAsync()
         {
             LoggerMock = new Mock<ILogger<LoggingQueryHandlerDecorator<TQuery, TResult>>>();
             MapperWrapperMock = new Mock<IMapperWrapper>();
-            
+
             await Task.CompletedTask;
         }
 

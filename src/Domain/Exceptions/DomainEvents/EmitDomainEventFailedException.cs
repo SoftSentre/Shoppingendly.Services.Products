@@ -19,10 +19,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.DomainEve
 {
     public class EmitDomainEventFailedException : DomainException
     {
-        public override string Code { get; } = ErrorCodes.EmitDomainEventFailed;
-
         public EmitDomainEventFailedException(string message) : base(message)
         {
         }
+
+        public override string Code { get; } = ErrorCodes.EmitDomainEventFailed;
     }
 }

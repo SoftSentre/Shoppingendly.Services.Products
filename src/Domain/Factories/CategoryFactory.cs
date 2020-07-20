@@ -17,6 +17,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
@@ -126,29 +127,55 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
             Picture categoryIcon = null, CategoryId parentCategoryId = null)
         {
             if (_categoryBusinessRulesChecker.CategoryIdCanNotBeEmptyRuleIsBroken(categoryId))
+            {
                 throw new InvalidCategoryIdException(categoryId);
+            }
+
             if (parentCategoryId != null &&
                 _categoryBusinessRulesChecker.ParentCategoryIdMustBeValidWhenProvidedRuleIsBroken(parentCategoryId))
+            {
                 throw new InvalidParentCategoryIdException(parentCategoryId);
+            }
+
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeEmptyRuleIsBroken(categoryName))
+            {
                 throw new CategoryNameCanNotBeEmptyException();
+            }
+
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeShorterThanRuleIsBroken(categoryName))
+            {
                 throw new CategoryNameIsTooShortException(GlobalValidationVariables.CategoryNameMinLength);
+            }
+
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeLongerThanRuleIsBroken(categoryName))
+            {
                 throw new CategoryNameIsTooLongException(GlobalValidationVariables.CategoryNameMaxLength);
+            }
+
             if (categoryDescription.IsNotEmpty() &&
                 _categoryBusinessRulesChecker.CategoryDescriptionCanNotBeEmptyRuleIsBroken(categoryDescription))
+            {
                 throw new CategoryDescriptionCanNotBeEmptyException();
+            }
+
             if (categoryDescription.IsNotEmpty() &&
                 _categoryBusinessRulesChecker.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(categoryDescription))
+            {
                 throw new CategoryDescriptionIsTooShortException(GlobalValidationVariables
                     .CategoryDescriptionMinLength);
+            }
+
             if (categoryDescription.IsNotEmpty() &&
                 _categoryBusinessRulesChecker.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(categoryDescription))
+            {
                 throw new CategoryDescriptionIsTooLongException(GlobalValidationVariables.CategoryDescriptionMaxLength);
+            }
+
             if (categoryIcon != null &&
                 _categoryBusinessRulesChecker.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(categoryIcon))
+            {
                 throw new CategoryIconCanNotBeNullOrEmptyException();
+            }
         }
     }
 }

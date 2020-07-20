@@ -26,6 +26,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Exceptions;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Queries;
 using SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS.Base;
@@ -64,7 +65,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
                     new ProductDto(new Guid("E844A9F5-22E8-4D73-98F1-96BD3CEDA6A3").ToString("N"),
                         new PictureDto(string.Empty), "someStuff", "company"),
                     new ProductDto(new Guid("009053DE-5B9B-4E51-BD6B-E754436F162B").ToString("N"),
-                        new PictureDto(string.Empty), "niceItem", "firm"),
+                        new PictureDto(string.Empty), "niceItem", "firm")
                 }.Paginate());
 
             _creatorDomainControllerMock = new Mock<ICreatorDomainController>();
@@ -72,33 +73,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
             await Task.CompletedTask;
         }
 
-        [Fact]
-        public async Task HandleAsyncShouldReturnCreatorWithProductsInPositiveScenario()
+        public override async Task DisposeAsync()
         {
-            // Arrange
-            _creatorDomainControllerMock
-                .Setup(cdc => cdc.GetCreatorWithProductsByIdAsync(_getCreatorsProductsQuery.CreatorId))
-                .ReturnsAsync(_creator);
+            await base.DisposeAsync();
+            _creatorDomainControllerMock = null;
 
-            MapperWrapperMock.Setup(mm => mm.MapCreatorToCreatorWithProductsDto(It.IsAny<Creator>()))
-                .Returns(_creatorWithProductsDto);
-
-            _queryHandler = new LoggingQueryHandlerDecorator<GetCreatorsProductsQuery, CreatorWithProductsDto>(
-                new GetCreatorsProductsQueryHandler(_creatorDomainControllerMock.Object, MapperWrapperMock.Object),
-                LoggerMock.Object);
-
-            // Act
-            var queryResult = await _queryHandler.QueryAsync(_getCreatorsProductsQuery);
-
-            // Assert
-            queryResult.Ok.Should().BeTrue();
-            queryResult.Errors.Should().BeNull();
-            queryResult.Data.Should().Be(_creatorWithProductsDto);
-
-            LoggerMock.Verify(LogLevel.Information, Times.Exactly(2));
-            _creatorDomainControllerMock.Verify(cdc =>
-                cdc.GetCreatorWithProductsByIdAsync(_getCreatorsProductsQuery.CreatorId), Times.Once);
-            MapperWrapperMock.Verify(mw => mw.MapCreatorToCreatorWithProductsDto(It.IsAny<Creator>()), Times.Once);
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -155,12 +135,33 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Application.CQRS
             MapperWrapperMock.Verify(mw => mw.MapCreatorToCreatorWithProductsDto(It.IsAny<Creator>()), Times.Never);
         }
 
-        public override async Task DisposeAsync()
+        [Fact]
+        public async Task HandleAsyncShouldReturnCreatorWithProductsInPositiveScenario()
         {
-            await base.DisposeAsync();
-            _creatorDomainControllerMock = null;
+            // Arrange
+            _creatorDomainControllerMock
+                .Setup(cdc => cdc.GetCreatorWithProductsByIdAsync(_getCreatorsProductsQuery.CreatorId))
+                .ReturnsAsync(_creator);
 
-            await Task.CompletedTask;
+            MapperWrapperMock.Setup(mm => mm.MapCreatorToCreatorWithProductsDto(It.IsAny<Creator>()))
+                .Returns(_creatorWithProductsDto);
+
+            _queryHandler = new LoggingQueryHandlerDecorator<GetCreatorsProductsQuery, CreatorWithProductsDto>(
+                new GetCreatorsProductsQueryHandler(_creatorDomainControllerMock.Object, MapperWrapperMock.Object),
+                LoggerMock.Object);
+
+            // Act
+            var queryResult = await _queryHandler.QueryAsync(_getCreatorsProductsQuery);
+
+            // Assert
+            queryResult.Ok.Should().BeTrue();
+            queryResult.Errors.Should().BeNull();
+            queryResult.Data.Should().Be(_creatorWithProductsDto);
+
+            LoggerMock.Verify(LogLevel.Information, Times.Exactly(2));
+            _creatorDomainControllerMock.Verify(cdc =>
+                cdc.GetCreatorWithProductsByIdAsync(_getCreatorsProductsQuery.CreatorId), Times.Once);
+            MapperWrapperMock.Verify(mw => mw.MapCreatorToCreatorWithProductsDto(It.IsAny<Creator>()), Times.Once);
         }
     }
 }

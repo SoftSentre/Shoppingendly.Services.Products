@@ -18,6 +18,7 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base
 {
@@ -25,23 +26,23 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers.Base
     {
         Task<Maybe<Product>> GetProductAsync(ProductId productId);
         Task<Maybe<Product>> GetProductWithCategoriesAsync(ProductId productId);
-        Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId);
+        Task<Maybe<IEnumerable<Categorization>>> GetAssignedCategoriesAsync(ProductId productId);
 
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer producer);
+            Producer producer);
 
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer producer, Picture productPicture);
+            Producer producer, Picture productPicture);
 
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer producer, IEnumerable<CategoryId> categoryIds);
+            Producer producer, IEnumerable<CategoryId> categoryIds);
 
         Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer producer, Picture productPicture, IEnumerable<CategoryId> categoryIds);
+            Producer producer, Picture productPicture, IEnumerable<CategoryId> categoryIds);
 
         Task<bool> UploadProductPictureAsync(ProductId productId, Picture productPicture);
         Task<bool> ChangeProductNameAsync(ProductId productId, string productName);
-        Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer productProducer);
+        Task<bool> ChangeProductProducerAsync(ProductId productId, Producer productProducer);
         Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId);
         Task DeallocateProductFromAllCategoriesAsync(ProductId productId);

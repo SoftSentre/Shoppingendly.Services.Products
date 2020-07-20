@@ -20,8 +20,8 @@ using Autofac.Core.Activators.Reflection;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuration
 {
-    internal class AllConstructorFinder : IConstructorFinder 
-    { 
+    internal class AllConstructorFinder : IConstructorFinder
+    {
         private static readonly ConcurrentDictionary<Type, ConstructorInfo[]> Cache =
             new ConcurrentDictionary<Type, ConstructorInfo[]>();
 
@@ -32,6 +32,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
                 t => t.GetTypeInfo().DeclaredConstructors.ToArray());
 
             return result.Length > 0 ? result : throw new NoConstructorsFoundException(targetType);
-        } 
-    } 
+        }
+    }
 }

@@ -92,23 +92,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
             // Assert
             testResult.Count().Should().Be(10);
         }
-        
-        [Fact]
-        public void CheckIfPaginateMethodAssignCorrectValueWithoutParameters()
-        {
-            // Arrange
-            var testCollection = Enumerable.Range(0, 50).ToList();
-
-            // Act
-            var testResult = testCollection.Paginate();
-
-            // Assert
-            testResult.IsNotEmpty.Should().BeTrue();
-            testResult.CurrentPage.Should().Be(1);
-            testResult.ResultsPerPage.Should().Be(10);
-            testResult.TotalResults.Should().Be(testCollection.Count);
-            testResult.TotalPages.Should().Be(5);
-        }
 
         private class PagedResultTestDataGenerator
         {
@@ -134,6 +117,23 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
                     new object[] {new List<object>()},
                     new object[] {null}
                 };
+        }
+
+        [Fact]
+        public void CheckIfPaginateMethodAssignCorrectValueWithoutParameters()
+        {
+            // Arrange
+            var testCollection = Enumerable.Range(0, 50).ToList();
+
+            // Act
+            var testResult = testCollection.Paginate();
+
+            // Assert
+            testResult.IsNotEmpty.Should().BeTrue();
+            testResult.CurrentPage.Should().Be(1);
+            testResult.ResultsPerPage.Should().Be(10);
+            testResult.TotalResults.Should().Be(testCollection.Count);
+            testResult.TotalPages.Should().Be(5);
         }
     }
 }

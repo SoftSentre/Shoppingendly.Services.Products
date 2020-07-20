@@ -24,6 +24,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
     public class CreatorRoleTests
     {
         [Fact]
+        public void AbsoluteDifferenceShouldReturnCorrectNumber()
+        {
+            // Assert
+
+            // Act
+            var difference = Enumeration.AbsoluteDifference(CreatorRole.Admin, CreatorRole.User);
+
+            // Arrange
+            difference.Should().Be(2);
+        }
+
+        [Fact]
         public void ComparisonBetweenTheSameRolesShouldBeTrue()
         {
             // Assert
@@ -37,67 +49,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
             theSame.Should().Be(0);
             notTheSame.Should().Be(-1);
             otherNotTheSame.Should().Be(1);
-        }
-
-        [Fact]
-        public void ToStringShouldReturnAValueAsString()
-        {
-            // Assert
-
-            // Act
-            var name = CreatorRole.Admin.ToString();
-
-            // Arrange
-            name.Should().Be("Admin");
-        }
-
-        [Fact]
-        public void GetAllShouldReturnAllRoles()
-        {
-            // Assert
-
-            // Act
-            var creatorRoles = Enumeration.GetAll<CreatorRole>();
-
-            // Arrange
-            creatorRoles.Should().BeEquivalentTo(new List<CreatorRole>
-                {CreatorRole.User, CreatorRole.Moderator, CreatorRole.Admin});
-        }
-
-        [Fact]
-        public void AbsoluteDifferenceShouldReturnCorrectNumber()
-        {
-            // Assert
-
-            // Act
-            var difference = Enumeration.AbsoluteDifference(CreatorRole.Admin, CreatorRole.User);
-
-            // Arrange
-            difference.Should().Be(2);
-        }
-
-        [Fact]
-        public void FromValueShouldReturnValueBasedOnTheId()
-        {
-            // Assert
-
-            // Act
-            var creatorRole = Enumeration.FromValue<CreatorRole>(3);
-
-            // Arrange
-            creatorRole.Should().Be(CreatorRole.User);
-        }
-
-        [Fact]
-        public void FromDisplayNameShouldReturnIdBasedOnName()
-        {
-            // Assert
-
-            // Act
-            var creatorRole = Enumeration.FromDisplayName<CreatorRole>("Admin");
-
-            // Arrange
-            creatorRole.Should().Be(CreatorRole.Admin);
         }
 
         [Fact]
@@ -120,6 +71,57 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
         }
 
         [Fact]
+        public void FromDisplayNameShouldReturnIdBasedOnName()
+        {
+            // Assert
+
+            // Act
+            var creatorRole = Enumeration.FromDisplayName<CreatorRole>("Admin");
+
+            // Arrange
+            creatorRole.Should().Be(CreatorRole.Admin);
+        }
+
+        [Fact]
+        public void FromDisplayNameShouldThrowWhenNameIsInvalid()
+        {
+            // Assert
+            const string displayName = "not exists";
+
+            // Act
+            Action fromDisplayName = () => Enumeration.FromDisplayName<CreatorRole>(displayName);
+
+            // Arrange
+            fromDisplayName.Should().ThrowExactly<InvalidOperationException>()
+                .WithMessage($"'{displayName}' is not a valid display name in {typeof(CreatorRole)}");
+        }
+
+        [Fact]
+        public void FromValueShouldReturnValueBasedOnTheId()
+        {
+            // Assert
+
+            // Act
+            var creatorRole = Enumeration.FromValue<CreatorRole>(3);
+
+            // Arrange
+            creatorRole.Should().Be(CreatorRole.User);
+        }
+
+        [Fact]
+        public void GetAllShouldReturnAllRoles()
+        {
+            // Assert
+
+            // Act
+            var creatorRoles = Enumeration.GetAll<CreatorRole>();
+
+            // Arrange
+            creatorRoles.Should().BeEquivalentTo(new List<CreatorRole>
+                {CreatorRole.User, CreatorRole.Moderator, CreatorRole.Admin});
+        }
+
+        [Fact]
         public void GetHashCodeShouldReturnTrueWhenObjectAreTheSame()
         {
             // Assert
@@ -137,17 +139,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
         }
 
         [Fact]
-        public void FromDisplayNameShouldThrowWhenNameIsInvalid()
+        public void ToStringShouldReturnAValueAsString()
         {
             // Assert
-            const string displayName = "not exists";
-            
+
             // Act
-            Action fromDisplayName = () => Enumeration.FromDisplayName<CreatorRole>(displayName);
+            var name = CreatorRole.Admin.ToString();
 
             // Arrange
-            fromDisplayName.Should().ThrowExactly<InvalidOperationException>()
-                .WithMessage($"'{displayName}' is not a valid display name in {typeof(CreatorRole)}");
+            name.Should().Be("Admin");
         }
     }
 }

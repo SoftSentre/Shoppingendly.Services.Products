@@ -28,12 +28,13 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.AutoMapper.P
                     new BasicCategoryDto(c.CategoryId.Id.ToString(), c.CategoryName));
 
             CreateMap<Category, CategoryDto>()
-                .ConstructUsing(c => new CategoryDto(c.CategoryId.Id.ToString(), c.CategoryName, c.CategoryDescription));
+                .ConstructUsing(c =>
+                    new CategoryDto(c.CategoryId.Id.ToString(), c.CategoryName, c.CategoryDescription));
 
             CreateMap<Category, CategoryWithProductsDto>()
                 .ConstructUsing((c, context) => new CategoryWithProductsDto(c.CategoryId.Id.ToString(), c.CategoryName,
                     c.CategoryDescription,
-                    c.ProductCategories.Select(pc => context.Mapper.Map<Product, ProductDto>(pc.Product))));
+                    c.AssignedProducts.Select(pc => context.Mapper.Map<Product, ProductDto>(pc.Product))));
         }
     }
 }

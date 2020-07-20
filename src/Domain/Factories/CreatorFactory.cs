@@ -17,6 +17,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
@@ -37,13 +38,24 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         internal Creator Create(CreatorId creatorId, string creatorName, CreatorRole creatorRole)
         {
             if (_creatorBusinessRulesChecker.CreatorIdCanNotBeEmptyRuleIsBroken(creatorId))
+            {
                 throw new InvalidCreatorIdException(creatorId);
+            }
+
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeEmptyRuleIsBroken(creatorName))
+            {
                 throw new CreatorNameCanNotBeEmptyException();
+            }
+
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeShorterThanRuleIsBroken(creatorName))
+            {
                 throw new CreatorNameIsTooShortException(GlobalValidationVariables.CreatorNameMinLength);
+            }
+
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeLongerThanRuleIsBroken(creatorName))
+            {
                 throw new CreatorNameIsTooLongException(GlobalValidationVariables.CreatorNameMaxLength);
+            }
 
             var creator = new Creator(creatorId, creatorName, creatorRole);
             _domainEventEmitter.Emit(creator, new NewCreatorCreatedDomainEvent(creatorId, creatorName, creatorRole));

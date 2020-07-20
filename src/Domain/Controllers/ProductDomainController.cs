@@ -27,6 +27,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
@@ -34,11 +35,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 {
     public class ProductDomainController : IProductDomainController
     {
-        private readonly IProductBusinessRulesChecker _productBusinessRulesChecker;
         private readonly ICategoryBusinessRulesChecker _categoryBusinessRulesChecker;
         private readonly IDomainEventEmitter _domainEventEmitter;
-        private readonly IProductRepository _productRepository;
+        private readonly IProductBusinessRulesChecker _productBusinessRulesChecker;
         private readonly ProductFactory _productFactory;
+        private readonly IProductRepository _productRepository;
 
         public ProductDomainController(IProductBusinessRulesChecker productBusinessRulesChecker,
             ICategoryBusinessRulesChecker categoryBusinessRulesChecker, IProductRepository productRepository,
@@ -63,7 +64,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
             return product;
         }
 
-        public async Task<Maybe<IEnumerable<ProductCategory>>> GetAssignedCategoriesAsync(ProductId productId)
+        public async Task<Maybe<IEnumerable<Categorization>>> GetAssignedCategoriesAsync(ProductId productId)
         {
             var product = await _productRepository.GetByIdWithIncludesAsync(productId).UnwrapAsync(
                 new ProductNotFoundException(productId));
@@ -74,25 +75,25 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         }
 
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId,
-            string productName, ProductProducer producer)
+            string productName, Producer producer)
         {
             return await CreateProductAsync(productId, creatorId, productName, producer);
         }
 
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId,
-            string productName, ProductProducer producer, Picture productPicture)
+            string productName, Producer producer, Picture productPicture)
         {
             return await CreateProductAsync(productId, creatorId, productName, producer, productPicture);
         }
 
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId,
-            string productName, ProductProducer producer, IEnumerable<CategoryId> categoryIds)
+            string productName, Producer producer, IEnumerable<CategoryId> categoryIds)
         {
             return await CreateProductAsync(productId, creatorId, productName, producer, categoryIds: categoryIds);
         }
 
         public async Task<Maybe<Product>> AddNewProductAsync(ProductId productId, CreatorId creatorId,
-            string productName, ProductProducer producer, Picture productPicture, IEnumerable<CategoryId> categoryIds)
+            string productName, Producer producer, Picture productPicture, IEnumerable<CategoryId> categoryIds)
         {
             return await CreateProductAsync(productId, creatorId, productName, producer, productPicture, categoryIds);
         }
@@ -100,9 +101,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task<bool> UploadProductPictureAsync(ProductId productId, Picture productPicture)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
+
             if (_productBusinessRulesChecker.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(productPicture))
+            {
                 throw new ProductPictureCanNotBeNullOrEmptyException();
+            }
 
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
@@ -112,7 +118,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
             if (isPictureChanged)
             {
-                _domainEventEmitter.Emit(product, new ProductPictureUploadedDomainEvent(product.ProductId, product.ProductPicture));
+                _domainEventEmitter.Emit(product,
+                    new ProductPictureUploadedDomainEvent(product.ProductId, product.ProductPicture));
                 _productRepository.Update(product);
             }
 
@@ -122,13 +129,24 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task<bool> ChangeProductNameAsync(ProductId productId, string productName)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
+
             if (_productBusinessRulesChecker.ProductNameCanNotBeNullOrEmptyRuleIsBroken(productName))
+            {
                 throw new ProductNameCanNotBeEmptyException();
+            }
+
             if (_productBusinessRulesChecker.ProductNameCanNotBeShorterThanRuleIsBroken(productName))
+            {
                 throw new ProductNameIsTooShortException(GlobalValidationVariables.ProductNameMinLength);
+            }
+
             if (_productBusinessRulesChecker.ProductNameCanNotBeLongerThanRuleIsBroken(productName))
+            {
                 throw new ProductNameIsTooLongException(GlobalValidationVariables.ProductNameMaxLength);
+            }
 
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
@@ -138,19 +156,25 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
             if (isNameChanged)
             {
-                _domainEventEmitter.Emit(product, new ProductNameChangedDomainEvent(product.ProductId, product.ProductName));
+                _domainEventEmitter.Emit(product,
+                    new ProductNameChangedDomainEvent(product.ProductId, product.ProductName));
                 _productRepository.Update(product);
             }
-            
+
             return isNameChanged;
         }
 
-        public async Task<bool> ChangeProductProducerAsync(ProductId productId, ProductProducer productProducer)
+        public async Task<bool> ChangeProductProducerAsync(ProductId productId, Producer productProducer)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
+
             if (_productBusinessRulesChecker.ProductProducerCanNotBeNullRuleIsBroken(productProducer))
+            {
                 throw new ProductProducerCanNotBeNullException();
+            }
 
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
@@ -160,19 +184,25 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 
             if (isProducerChanged)
             {
-                _domainEventEmitter.Emit(product, new ProductProducerChangedDomainEvent(product.ProductId, product.ProductProducer));
+                _domainEventEmitter.Emit(product,
+                    new ProductProducerChangedDomainEvent(product.ProductId, product.ProductProducer));
                 _productRepository.Update(product);
             }
-            
+
             return isProducerChanged;
         }
 
         public async Task AssignProductToCategoryAsync(ProductId productId, CategoryId categoryId)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
+
             if (_categoryBusinessRulesChecker.CategoryIdCanNotBeEmptyRuleIsBroken(categoryId))
+            {
                 throw new InvalidCategoryIdException(categoryId);
+            }
 
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
@@ -186,9 +216,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task DeallocateProductFromCategoryAsync(ProductId productId, CategoryId categoryId)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
+
             if (_categoryBusinessRulesChecker.CategoryIdCanNotBeEmptyRuleIsBroken(categoryId))
+            {
                 throw new InvalidCategoryIdException(categoryId);
+            }
 
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
@@ -203,7 +238,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task DeallocateProductFromAllCategoriesAsync(ProductId productId)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
 
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
@@ -217,18 +254,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task RemoveProductAsync(ProductId productId)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
-            
+            }
+
             var product =
                 await _productRepository.GetByIdAndThrowIfEntityNotFound(productId,
                     new ProductNotFoundException(productId));
-            
+
             _domainEventEmitter.Emit(product, new ProductRemovedDomainEvent(product.ProductId));
             _productRepository.Delete(product);
         }
 
         private async Task<Product> CreateProductAsync(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer producer, Picture productPicture = null, IEnumerable<CategoryId> categoryIds = null)
+            Producer producer, Picture productPicture = null, IEnumerable<CategoryId> categoryIds = null)
         {
             await _productRepository.GetByIdAndThrowIfEntityAlreadyExists(productId,
                 new ProductAlreadyExistsException(productId));

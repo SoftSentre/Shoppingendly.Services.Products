@@ -22,6 +22,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
@@ -30,8 +31,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
     public class CreatorDomainController : ICreatorDomainController
     {
         private readonly ICreatorBusinessRulesChecker _creatorBusinessRulesChecker;
-        private readonly ICreatorRepository _creatorRepository;
         private readonly CreatorFactory _creatorFactory;
+        private readonly ICreatorRepository _creatorRepository;
 
         public CreatorDomainController(ICreatorBusinessRulesChecker creatorBusinessRulesChecker,
             ICreatorRepository creatorRepository, CreatorFactory creatorFactory)
@@ -56,7 +57,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task<Maybe<Creator>> AddNewCreatorAsync(CreatorId creatorId, string creatorName,
             CreatorRole creatorRole)
         {
-            await _creatorRepository.GetByIdAndThrowIfEntityAlreadyExists(creatorId, new CreatorAlreadyExistsException(creatorId));
+            await _creatorRepository.GetByIdAndThrowIfEntityAlreadyExists(creatorId,
+                new CreatorAlreadyExistsException(creatorId));
 
             var newCreator = _creatorFactory.Create(creatorId, creatorName, creatorRole);
             await _creatorRepository.AddAsync(newCreator);
@@ -67,12 +69,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task ChangeCreatorNameAsync(CreatorId creatorId, string creatorName)
         {
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeEmptyRuleIsBroken(creatorName))
+            {
                 throw new CreatorNameCanNotBeEmptyException();
+            }
+
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeShorterThanRuleIsBroken(creatorName))
+            {
                 throw new CreatorNameIsTooShortException(GlobalValidationVariables.CreatorNameMinLength);
+            }
+
             if (_creatorBusinessRulesChecker.CreatorNameCanNotBeLongerThanRuleIsBroken(creatorName))
+            {
                 throw new CreatorNameIsTooLongException(GlobalValidationVariables.CreatorNameMaxLength);
-            
+            }
+
             var creator =
                 await _creatorRepository.GetByIdAndThrowIfEntityNotFound(creatorId,
                     new CreatorNotFoundException(creatorId));

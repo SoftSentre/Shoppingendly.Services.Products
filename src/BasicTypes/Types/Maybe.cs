@@ -16,7 +16,7 @@ using System;
 
 namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types
 {
-    public struct Maybe<T> : IEquatable<Maybe<T>> where T : class
+    public readonly struct Maybe<T> : IEquatable<Maybe<T>> where T : class
     {
         private readonly T _value;
 
@@ -70,9 +70,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types
 
         public override bool Equals(object obj)
         {
-            if (obj is T)
+            if (obj is T o)
             {
-                obj = new Maybe<T>((T) obj);
+                obj = new Maybe<T>(o);
             }
 
             if (!(obj is Maybe<T>))

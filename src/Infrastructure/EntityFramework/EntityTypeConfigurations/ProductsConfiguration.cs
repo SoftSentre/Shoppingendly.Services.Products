@@ -69,11 +69,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                         .IsRequired();
                 });
 
-            productsConfiguration.HasMany(p => p.ProductCategories)
+            productsConfiguration.HasMany(p => p.AssignedCategories)
                 .WithOne(pc => pc.Product)
                 .HasForeignKey(pc => pc.ProductId);
 
-            productsConfiguration.Metadata.FindNavigation(nameof(Product.ProductCategories))
+            productsConfiguration.Metadata.FindNavigation(nameof(Product.AssignedCategories))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             productsConfiguration.Ignore(c => c.DomainEvents);

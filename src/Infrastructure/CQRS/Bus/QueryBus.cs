@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.CQRS.Bus
                 .MakeGenericType(query.GetType(), typeof(TResult));
 
             dynamic queryHandler = scope.Resolve(handlerType);
-            
+
             if (queryHandler == null)
             {
                 throw new SendingQueryFailedException(query);

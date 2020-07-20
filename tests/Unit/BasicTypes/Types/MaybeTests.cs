@@ -37,45 +37,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.BasicTypes.Types
         }
 
         [Fact]
-        public void InvalidOperationExceptionShouldBeThrownWhenTryingToGetValueFromNullObject()
-        {
-            // Arrange
-            var maybe = Maybe<object>.Empty;
-            Maybe<object> secondMaybe = null;
-
-            // Act
-            Action action = () => maybe = secondMaybe.Value;
-
-            // Assert
-            maybe.HasNoValue.Should().BeTrue();
-            action.Should().Throw<InvalidOperationException>();
-        }
-
-        [Fact]
-        public void ComparingObjectsByHashCodesReturnExpectedResult()
-        {
-            // Arrange
-            var firstObject = new Maybe<string>("Value");
-            var secondObject = new Maybe<string>("Value");
-            const string secondObjectNotWrapped = "Value";
-            var secondOtherObject = new Maybe<string>("Value1");
-            const string secondOtherObjectNotWrapped = "Value1";
-
-            // Act & Assert
-            var equals = firstObject.GetHashCode() == secondObject.GetHashCode();
-            equals.Should().BeTrue();
-
-            equals = firstObject.GetHashCode() == secondObjectNotWrapped.GetHashCode();
-            equals.Should().BeTrue();
-
-            equals = firstObject.GetHashCode() == secondOtherObject.GetHashCode();
-            equals.Should().BeFalse();
-
-            equals = firstObject.GetHashCode() == secondOtherObjectNotWrapped.GetHashCode();
-            equals.Should().BeFalse();
-        }
-
-        [Fact]
         public void ComparingObjectsByEqualsReturnExpectedResult()
         {
             // Arrange
@@ -99,6 +60,30 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.BasicTypes.Types
             equals.Should().BeFalse();
 
             equals = firstObject.Equals(new object());
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ComparingObjectsByHashCodesReturnExpectedResult()
+        {
+            // Arrange
+            var firstObject = new Maybe<string>("Value");
+            var secondObject = new Maybe<string>("Value");
+            const string secondObjectNotWrapped = "Value";
+            var secondOtherObject = new Maybe<string>("Value1");
+            const string secondOtherObjectNotWrapped = "Value1";
+
+            // Act & Assert
+            var equals = firstObject.GetHashCode() == secondObject.GetHashCode();
+            equals.Should().BeTrue();
+
+            equals = firstObject.GetHashCode() == secondObjectNotWrapped.GetHashCode();
+            equals.Should().BeTrue();
+
+            equals = firstObject.GetHashCode() == secondOtherObject.GetHashCode();
+            equals.Should().BeFalse();
+
+            equals = firstObject.GetHashCode() == secondOtherObjectNotWrapped.GetHashCode();
             equals.Should().BeFalse();
         }
 
@@ -148,6 +133,21 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.BasicTypes.Types
 
             equals = firstObject != secondOtherObjectNotWrapped;
             equals.Should().BeTrue();
+        }
+
+        [Fact]
+        public void InvalidOperationExceptionShouldBeThrownWhenTryingToGetValueFromNullObject()
+        {
+            // Arrange
+            var maybe = Maybe<object>.Empty;
+            Maybe<object> secondMaybe = null;
+
+            // Act
+            Action action = () => maybe = secondMaybe.Value;
+
+            // Assert
+            maybe.HasNoValue.Should().BeTrue();
+            action.Should().Throw<InvalidOperationException>();
         }
 
         [Fact]

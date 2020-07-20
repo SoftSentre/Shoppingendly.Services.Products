@@ -14,13 +14,14 @@
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
 {
     public class NewProductCreatedDomainEvent : DomainEventBase
     {
         internal NewProductCreatedDomainEvent(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, Picture productPicture)
+            Producer productProducer, Picture productPicture)
         {
             ProductId = productId;
             CreatorId = creatorId;
@@ -32,7 +33,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Products
         public ProductId ProductId { get; }
         public CreatorId CreatorId { get; }
         public string ProductName { get; }
-        public ProductProducer ProductProducer { get; }
+        public Producer ProductProducer { get; }
         public Picture ProductPicture { get; }
     }
 }

@@ -24,6 +24,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
 
@@ -48,79 +49,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             _creatorRole = CreatorRole.User;
 
             await Task.CompletedTask;
-        }
-
-        [Fact]
-        public void SuccessToCreateCreatorWhenParametersAreCorrect()
-        {
-            // Act
-            _creatorFactory =
-                new CreatorFactory(_creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Arrange
-            var creator = _creatorFactory.Create(_creatorId, _creatorName, _creatorRole);
-
-            // Assert
-            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId),
-                Times.Once);
-            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorNameCanNotBeEmptyRuleIsBroken(_creatorName),
-                Times.Once);
-            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorNameCanNotBeShorterThanRuleIsBroken(_creatorName),
-                Times.Once);
-            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorNameCanNotBeLongerThanRuleIsBroken(_creatorName),
-                Times.Once);
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Creator>(),
-                    It.Is<NewCreatorCreatedDomainEvent>(de =>
-                        de.CreatorId.Equals(creator.CreatorId) && de.CreatorName == creator.CreatorName &&
-                        Equals(de.CreatorRole, creator.CreatorRole))), Times.Once);
-        }
-
-        [Fact]
-        public void CreateCreatorShouldNotRiseAnyExceptionWhenParametersAreCorrect()
-        {
-            // Act
-            _creatorFactory =
-                new CreatorFactory(_creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Arrange
-            Func<Creator> createCreator = () => _creatorFactory.Create(_creatorId, _creatorName, _creatorRole);
-
-            // Assert
-            createCreator.Should().NotThrow<DomainException>();
-        }
-
-        [Fact]
-        public void FailToCreateCreatorWhenCreatorIdIsEmpty()
-        {
-            FailToCreateCreatorWhenRuleIsBroken(checker =>
-                    checker.CreatorIdCanNotBeEmptyRuleIsBroken(It.IsAny<CreatorId>()),
-                new InvalidCreatorIdException(_creatorId));
-        }
-
-        [Fact]
-        public void FailToCreateCreatorWhenCreatorNameIsEmpty()
-        {
-            FailToCreateCreatorWhenRuleIsBroken(checker =>
-                    checker.CreatorNameCanNotBeEmptyRuleIsBroken(It.IsAny<string>()),
-                new CreatorNameCanNotBeEmptyException());
-        }
-
-        [Fact]
-        public void FailToCreateCreatorWhenCreatorNameIsTooShort()
-        {
-            FailToCreateCreatorWhenRuleIsBroken(checker =>
-                    checker.CreatorNameCanNotBeShorterThanRuleIsBroken(It.IsAny<string>()),
-                new CreatorNameIsTooShortException(GlobalValidationVariables.CreatorNameMinLength));
-        }
-
-        [Fact]
-        public void FailToCreateCreatorWhenCreatorNameIsTooLong()
-        {
-            FailToCreateCreatorWhenRuleIsBroken(checker =>
-                    checker.CreatorNameCanNotBeLongerThanRuleIsBroken(It.IsAny<string>()),
-                new CreatorNameIsTooLongException(GlobalValidationVariables.CreatorNameMaxLength));
         }
 
         private void FailToCreateCreatorWhenRuleIsBroken<T>(
@@ -156,6 +84,79 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             _creatorRole = null;
 
             await Task.CompletedTask;
+        }
+
+        [Fact]
+        public void CreateCreatorShouldNotRiseAnyExceptionWhenParametersAreCorrect()
+        {
+            // Act
+            _creatorFactory =
+                new CreatorFactory(_creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Arrange
+            Func<Creator> createCreator = () => _creatorFactory.Create(_creatorId, _creatorName, _creatorRole);
+
+            // Assert
+            createCreator.Should().NotThrow<DomainException>();
+        }
+
+        [Fact]
+        public void FailToCreateCreatorWhenCreatorIdIsEmpty()
+        {
+            FailToCreateCreatorWhenRuleIsBroken(checker =>
+                    checker.CreatorIdCanNotBeEmptyRuleIsBroken(It.IsAny<CreatorId>()),
+                new InvalidCreatorIdException(_creatorId));
+        }
+
+        [Fact]
+        public void FailToCreateCreatorWhenCreatorNameIsEmpty()
+        {
+            FailToCreateCreatorWhenRuleIsBroken(checker =>
+                    checker.CreatorNameCanNotBeEmptyRuleIsBroken(It.IsAny<string>()),
+                new CreatorNameCanNotBeEmptyException());
+        }
+
+        [Fact]
+        public void FailToCreateCreatorWhenCreatorNameIsTooLong()
+        {
+            FailToCreateCreatorWhenRuleIsBroken(checker =>
+                    checker.CreatorNameCanNotBeLongerThanRuleIsBroken(It.IsAny<string>()),
+                new CreatorNameIsTooLongException(GlobalValidationVariables.CreatorNameMaxLength));
+        }
+
+        [Fact]
+        public void FailToCreateCreatorWhenCreatorNameIsTooShort()
+        {
+            FailToCreateCreatorWhenRuleIsBroken(checker =>
+                    checker.CreatorNameCanNotBeShorterThanRuleIsBroken(It.IsAny<string>()),
+                new CreatorNameIsTooShortException(GlobalValidationVariables.CreatorNameMinLength));
+        }
+
+        [Fact]
+        public void SuccessToCreateCreatorWhenParametersAreCorrect()
+        {
+            // Act
+            _creatorFactory =
+                new CreatorFactory(_creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Arrange
+            var creator = _creatorFactory.Create(_creatorId, _creatorName, _creatorRole);
+
+            // Assert
+            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId),
+                Times.Once);
+            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorNameCanNotBeEmptyRuleIsBroken(_creatorName),
+                Times.Once);
+            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorNameCanNotBeShorterThanRuleIsBroken(_creatorName),
+                Times.Once);
+            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorNameCanNotBeLongerThanRuleIsBroken(_creatorName),
+                Times.Once);
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Creator>(),
+                    It.Is<NewCreatorCreatedDomainEvent>(de =>
+                        de.CreatorId.Equals(creator.CreatorId) && de.CreatorName == creator.CreatorName &&
+                        Equals(de.CreatorRole, creator.CreatorRole))), Times.Once);
         }
     }
 }

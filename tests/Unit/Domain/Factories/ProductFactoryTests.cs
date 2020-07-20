@@ -26,6 +26,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
 
@@ -41,7 +42,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
         private ProductId _productId;
         private CreatorId _creatorId;
         private string _productName;
-        private ProductProducer _productProducer;
+        private Producer _productProducer;
         private Picture _productPicture;
 
         public async Task InitializeAsync()
@@ -52,78 +53,129 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             _productId = new ProductId(new Guid("E806DD5E-2BF3-44A0-8BDB-62D43200F3A8"));
             _creatorId = new CreatorId(new Guid("1A8EA4A3-B7E7-4FDF-B2AA-378D5EB245BC"));
             _productName = "exampleProductName";
-            _productProducer = ProductProducer.Create("exampleProducerName");
+            _productProducer = Producer.Create("exampleProducerName");
             _productPicture = Picture.Create("examplePictureName", "examplePictureUrl");
 
             await Task.CompletedTask;
         }
 
-        [Fact]
-        public void SuccessToCreateProductWhenParametersAreCorrect()
+        private void FailWhenProductIdIsEmpty(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
         {
-            // Act
-            _productFactory = new ProductFactory(_productBusinessRulesCheckerMock.Object,
-                _creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Arrange
-            var product = _productFactory.Create(_productId, _creatorId, _productName, _productProducer);
-
-            // Assert
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
-                Times.Once);
-            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeNullOrEmptyRuleIsBroken(_productName),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(
-                pbr => pbr.ProductProducerCanNotBeNullRuleIsBroken(_productProducer), Times.Once);
-            _productBusinessRulesCheckerMock.Verify(
-                pbr => pbr.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture), Times.Never);
-            
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Product>(),
-                    It.Is<NewProductCreatedDomainEvent>(de =>
-                        de.ProductId.Equals(product.ProductId) && de.CreatorId.Equals(product.CreatorId) &&
-                        de.ProductName == product.ProductName && de.ProductProducer.Equals(product.ProductProducer) &&
-                        de.ProductPicture.Equals(product.ProductPicture))), Times.Once);
+            FailToCreateProductWhenBusinessRuleHasBeenBroken(
+                checker => checker.ProductIdCanNotBeEmptyRuleIsBroken(productId),
+                new InvalidProductIdException(productId), productId, creatorId,
+                productName, productProducer, productPicture);
         }
 
-        [Fact]
-        public void SuccessToCreateProductWithPictureWhenParametersAreCorrect()
+        private void FailWhenCreatorIdIsEmpty(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
         {
             // Act
+            _creatorBusinessRulesCheckerMock.Setup(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(It.IsAny<CreatorId>()))
+                .Returns(true);
             _productFactory = new ProductFactory(_productBusinessRulesCheckerMock.Object,
                 _creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
 
             // Arrange
-            var product = _productFactory.Create(_productId, _creatorId, _productPicture, _productName, _productProducer);
+            Func<Product> createProduct = () =>
+                ChooseMethodToCreateProduct(productId, creatorId, productName, productProducer, productPicture);
 
             // Assert
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
-                Times.Once);
+            createProduct.Should().Throw<InvalidCreatorIdException>()
+                .Where(e => e.Code == ErrorCodes.InvalidCreatorId)
+                .WithMessage($"Invalid creator id. {_creatorId}");
+
             _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId),
                 Times.Once);
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeNullOrEmptyRuleIsBroken(_productName),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
-                Times.Once);
-            _productBusinessRulesCheckerMock.Verify(
-                pbr => pbr.ProductProducerCanNotBeNullRuleIsBroken(_productProducer), Times.Once);
-            _productBusinessRulesCheckerMock.Verify(
-                pbr => pbr.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture), Times.Once);
-            
             _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Product>(),
-                    It.Is<NewProductCreatedDomainEvent>(de =>
-                        de.ProductId.Equals(product.ProductId) && de.CreatorId.Equals(product.CreatorId) &&
-                        de.ProductName == product.ProductName && de.ProductProducer.Equals(product.ProductProducer) &&
-                        de.ProductPicture.Equals(product.ProductPicture))), Times.Once);
+                dve => dve.Emit(It.IsAny<Product>(), It.IsAny<NewProductCreatedDomainEvent>()),
+                Times.Never);
+        }
+
+        private void FailWhenProductNameIsEmpty(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
+        {
+            FailToCreateProductWhenBusinessRuleHasBeenBroken(
+                checker => checker.ProductNameCanNotBeNullOrEmptyRuleIsBroken(productName),
+                new ProductNameCanNotBeEmptyException(), productId, creatorId,
+                productName, productProducer, productPicture);
+        }
+
+        private void FailWhenProductNameIsTooShort(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
+        {
+            FailToCreateProductWhenBusinessRuleHasBeenBroken(
+                checker => checker.ProductNameCanNotBeShorterThanRuleIsBroken(productName),
+                new ProductNameIsTooShortException(GlobalValidationVariables.ProductNameMinLength), productId,
+                creatorId, productName, productProducer, productPicture);
+        }
+
+        private void FailWhenProductNameIsTooLong(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
+        {
+            FailToCreateProductWhenBusinessRuleHasBeenBroken(
+                checker => checker.ProductNameCanNotBeLongerThanRuleIsBroken(productName),
+                new ProductNameIsTooLongException(GlobalValidationVariables.ProductNameMaxLength), productId, creatorId,
+                productName, productProducer, productPicture);
+        }
+
+        private void FailWhenProductProducerIsNull(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
+        {
+            FailToCreateProductWhenBusinessRuleHasBeenBroken(
+                checker => checker.ProductProducerCanNotBeNullRuleIsBroken(productProducer),
+                new ProductProducerCanNotBeNullException(), productId, creatorId,
+                productName, productProducer, productPicture);
+        }
+
+        private void FailToCreateProductWhenBusinessRuleHasBeenBroken<T>(
+            Expression<Func<IProductBusinessRulesChecker, bool>> brokenRule, T exception, ProductId productId,
+            CreatorId creatorId, string productName, Producer productProducer, ValueObject productPicture = null)
+            where T : DomainException
+        {
+            // Act
+            _productBusinessRulesCheckerMock.Setup(brokenRule).Returns(true);
+            _productFactory = new ProductFactory(_productBusinessRulesCheckerMock.Object,
+                _creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Arrange
+            Func<Product> createProduct = () =>
+                ChooseMethodToCreateProduct(productId, creatorId, productName, productProducer, productPicture);
+
+            // Assert
+            createProduct.Should().Throw<T>()
+                .Where(e => e.Code == exception.Code)
+                .WithMessage(exception.Message);
+
+            _productBusinessRulesCheckerMock.Verify(brokenRule, Times.Once);
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Product>(), It.IsAny<NewProductCreatedDomainEvent>()),
+                Times.Never);
+        }
+
+        private Product ChooseMethodToCreateProduct(ProductId productId, CreatorId creatorId, string productName,
+            Producer productProducer, ValueObject productPicture = null)
+        {
+            var product = productPicture == null
+                ? _productFactory.Create(productId, creatorId, productName, productProducer)
+                : _productFactory.Create(productId, creatorId, _productPicture, productName, productProducer);
+
+            return product;
+        }
+
+        public async Task DisposeAsync()
+        {
+            _productBusinessRulesCheckerMock = null;
+            _creatorBusinessRulesCheckerMock = null;
+            _domainEventEmitterMock = null;
+            _productId = null;
+            _creatorId = null;
+            _productName = null;
+            _productProducer = null;
+            _productPicture = null;
+
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -157,27 +209,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
         }
 
         [Fact]
-        public void FailToCreateProductWhenProductIdIsEmpty()
-        {
-            FailWhenProductIdIsEmpty(_productId, _creatorId, _productName, _productProducer);
-        }
-
-        [Fact]
-        public void FailToCreateProductWithPictureWhenProductIdIsEmpty()
-        {
-            FailWhenProductIdIsEmpty(_productId, _creatorId, _productName, _productProducer, _productPicture);
-        }
-
-        [Fact]
         public void FailToCreateProductWhenCreatorIdIsEmpty()
         {
             FailWhenCreatorIdIsEmpty(_productId, _creatorId, _productName, _productProducer);
         }
 
         [Fact]
-        public void FailToCreateProductWithPictureWhenCreatorIdIsEmpty()
+        public void FailToCreateProductWhenProductIdIsEmpty()
         {
-            FailWhenCreatorIdIsEmpty(_productId, _creatorId, _productName, _productProducer, _productPicture);
+            FailWhenProductIdIsEmpty(_productId, _creatorId, _productName, _productProducer);
         }
 
         [Fact]
@@ -187,9 +227,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
         }
 
         [Fact]
-        public void FailToCreateProductWithPictureWhenProductNameIsEmpty()
+        public void FailToCreateProductWhenProductNameIsTooLong()
         {
-            FailWhenProductNameIsEmpty(_productId, _creatorId, _productName, _productProducer, _productPicture);
+            FailWhenProductNameIsTooLong(_productId, _creatorId, _productName, _productProducer);
         }
 
         [Fact]
@@ -199,15 +239,27 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
         }
 
         [Fact]
-        public void FailToCreateProductWithPictureWhenProductNameIsTooShort()
+        public void FailToCreateProductWhenProductProducerIsNull()
         {
-            FailWhenProductNameIsTooShort(_productId, _creatorId, _productName, _productProducer, _productPicture);
+            FailWhenProductProducerIsNull(_productId, _creatorId, _productName, _productProducer);
         }
 
         [Fact]
-        public void FailToCreateProductWhenProductNameIsTooLong()
+        public void FailToCreateProductWithPictureWhenCreatorIdIsEmpty()
         {
-            FailWhenProductNameIsTooLong(_productId, _creatorId, _productName, _productProducer);
+            FailWhenCreatorIdIsEmpty(_productId, _creatorId, _productName, _productProducer, _productPicture);
+        }
+
+        [Fact]
+        public void FailToCreateProductWithPictureWhenProductIdIsEmpty()
+        {
+            FailWhenProductIdIsEmpty(_productId, _creatorId, _productName, _productProducer, _productPicture);
+        }
+
+        [Fact]
+        public void FailToCreateProductWithPictureWhenProductNameIsEmpty()
+        {
+            FailWhenProductNameIsEmpty(_productId, _creatorId, _productName, _productProducer, _productPicture);
         }
 
         [Fact]
@@ -217,15 +269,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
         }
 
         [Fact]
-        public void FailToCreateProductWhenProductProducerIsNull()
+        public void FailToCreateProductWithPictureWhenProductNameIsTooShort()
         {
-            FailWhenProductProducerIsNull(_productId, _creatorId, _productName, _productProducer);
-        }
-
-        [Fact]
-        public void FailToCreateProductWithPictureWhenProductProducerIsNull()
-        {
-            FailWhenProductProducerIsNull(_productId, _creatorId, _productName, _productProducer, _productPicture);
+            FailWhenProductNameIsTooShort(_productId, _creatorId, _productName, _productProducer, _productPicture);
         }
 
         [Fact]
@@ -235,7 +281,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             _productBusinessRulesCheckerMock
                 .Setup(pbr => pbr.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture))
                 .Returns(true);
-            
+
             _productFactory = new ProductFactory(_productBusinessRulesCheckerMock.Object,
                 _creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
 
@@ -256,123 +302,79 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
                 Times.Never);
         }
 
-        private void FailWhenProductIdIsEmpty(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
+        [Fact]
+        public void FailToCreateProductWithPictureWhenProductProducerIsNull()
         {
-            FailToCreateProductWhenBusinessRuleHasBeenBroken(
-                checker => checker.ProductIdCanNotBeEmptyRuleIsBroken(productId),
-                new InvalidProductIdException(productId), productId, creatorId,
-                productName, productProducer, productPicture);
+            FailWhenProductProducerIsNull(_productId, _creatorId, _productName, _productProducer, _productPicture);
         }
 
-        private void FailWhenCreatorIdIsEmpty(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
+        [Fact]
+        public void SuccessToCreateProductWhenParametersAreCorrect()
         {
             // Act
-            _creatorBusinessRulesCheckerMock.Setup(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(It.IsAny<CreatorId>()))
-                .Returns(true);
             _productFactory = new ProductFactory(_productBusinessRulesCheckerMock.Object,
                 _creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
 
             // Arrange
-            Func<Product> createProduct = () =>
-                ChooseMethodToCreateProduct(productId, creatorId, productName, productProducer, productPicture);
+            var product = _productFactory.Create(_productId, _creatorId, _productName, _productProducer);
 
             // Assert
-            createProduct.Should().Throw<InvalidCreatorIdException>()
-                .Where(e => e.Code == ErrorCodes.InvalidCreatorId)
-                .WithMessage($"Invalid creator id. {_creatorId}");
-
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
+                Times.Once);
             _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId),
                 Times.Once);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeNullOrEmptyRuleIsBroken(_productName),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(
+                pbr => pbr.ProductProducerCanNotBeNullRuleIsBroken(_productProducer), Times.Once);
+            _productBusinessRulesCheckerMock.Verify(
+                pbr => pbr.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture), Times.Never);
+
             _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Product>(), It.IsAny<NewProductCreatedDomainEvent>()),
-                Times.Never);
+                dve => dve.Emit(It.IsAny<Product>(),
+                    It.Is<NewProductCreatedDomainEvent>(de =>
+                        de.ProductId.Equals(product.ProductId) && de.CreatorId.Equals(product.CreatorId) &&
+                        de.ProductName == product.ProductName && de.ProductProducer.Equals(product.ProductProducer) &&
+                        de.ProductPicture.Equals(product.ProductPicture))), Times.Once);
         }
 
-        private void FailWhenProductNameIsEmpty(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
-        {
-            FailToCreateProductWhenBusinessRuleHasBeenBroken(
-                checker => checker.ProductNameCanNotBeNullOrEmptyRuleIsBroken(productName),
-                new ProductNameCanNotBeEmptyException(), productId, creatorId,
-                productName, productProducer, productPicture);
-        }
-
-        private void FailWhenProductNameIsTooShort(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
-        {
-            FailToCreateProductWhenBusinessRuleHasBeenBroken(
-                checker => checker.ProductNameCanNotBeShorterThanRuleIsBroken(productName),
-                new ProductNameIsTooShortException(GlobalValidationVariables.ProductNameMinLength), productId,
-                creatorId, productName, productProducer, productPicture);
-        }
-
-        private void FailWhenProductNameIsTooLong(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
-        {
-            FailToCreateProductWhenBusinessRuleHasBeenBroken(
-                checker => checker.ProductNameCanNotBeLongerThanRuleIsBroken(productName),
-                new ProductNameIsTooLongException(GlobalValidationVariables.ProductNameMaxLength), productId, creatorId,
-                productName, productProducer, productPicture);
-        }
-
-        private void FailWhenProductProducerIsNull(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
-        {
-            FailToCreateProductWhenBusinessRuleHasBeenBroken(
-                checker => checker.ProductProducerCanNotBeNullRuleIsBroken(productProducer),
-                new ProductProducerCanNotBeNullException(), productId, creatorId,
-                productName, productProducer, productPicture);
-        }
-
-        private void FailToCreateProductWhenBusinessRuleHasBeenBroken<T>(
-            Expression<Func<IProductBusinessRulesChecker, bool>> brokenRule, T exception, ProductId productId,
-            CreatorId creatorId, string productName, ProductProducer productProducer, ValueObject productPicture = null)
-            where T : DomainException
+        [Fact]
+        public void SuccessToCreateProductWithPictureWhenParametersAreCorrect()
         {
             // Act
-            _productBusinessRulesCheckerMock.Setup(brokenRule).Returns(true);
             _productFactory = new ProductFactory(_productBusinessRulesCheckerMock.Object,
                 _creatorBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
 
             // Arrange
-            Func<Product> createProduct = () =>
-                ChooseMethodToCreateProduct(productId, creatorId, productName, productProducer, productPicture);
+            var product =
+                _productFactory.Create(_productId, _creatorId, _productPicture, _productName, _productProducer);
 
             // Assert
-            createProduct.Should().Throw<T>()
-                .Where(e => e.Code == exception.Code)
-                .WithMessage(exception.Message);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductIdCanNotBeEmptyRuleIsBroken(_productId),
+                Times.Once);
+            _creatorBusinessRulesCheckerMock.Verify(cbr => cbr.CreatorIdCanNotBeEmptyRuleIsBroken(_creatorId),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeNullOrEmptyRuleIsBroken(_productName),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(pbr => pbr.ProductNameCanNotBeShorterThanRuleIsBroken(_productName),
+                Times.Once);
+            _productBusinessRulesCheckerMock.Verify(
+                pbr => pbr.ProductProducerCanNotBeNullRuleIsBroken(_productProducer), Times.Once);
+            _productBusinessRulesCheckerMock.Verify(
+                pbr => pbr.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture), Times.Once);
 
-            _productBusinessRulesCheckerMock.Verify(brokenRule, Times.Once);
             _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Product>(), It.IsAny<NewProductCreatedDomainEvent>()),
-                Times.Never);
-        }
-
-        private Product ChooseMethodToCreateProduct(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer, ValueObject productPicture = null)
-        {
-            var product = productPicture == null
-                ? _productFactory.Create(productId, creatorId, productName, productProducer)
-                : _productFactory.Create(productId, creatorId, _productPicture, productName, productProducer);
-
-            return product;
-        }
-
-        public async Task DisposeAsync()
-        {
-            _productBusinessRulesCheckerMock = null;
-            _creatorBusinessRulesCheckerMock = null;
-            _domainEventEmitterMock = null;
-            _productId = null;
-            _creatorId = null;
-            _productName = null;
-            _productProducer = null;
-            _productPicture = null;
-
-            await Task.CompletedTask;
+                dve => dve.Emit(It.IsAny<Product>(),
+                    It.Is<NewProductCreatedDomainEvent>(de =>
+                        de.ProductId.Equals(product.ProductId) && de.CreatorId.Equals(product.CreatorId) &&
+                        de.ProductName == product.ProductName && de.ProductProducer.Equals(product.ProductProducer) &&
+                        de.ProductPicture.Equals(product.ProductPicture))), Times.Once);
         }
     }
 }
