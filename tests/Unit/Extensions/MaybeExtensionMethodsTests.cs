@@ -16,6 +16,5 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Extensions
 {
     public class MaybeExtensionMethodsTests
     {
-        
     }
 }

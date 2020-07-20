@@ -39,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         private readonly SqlSettings _sqlSettings;
 
         private Maybe<IDbContextTransaction> _currentTransaction;
-        
+
         public ProductServiceDbContext(ILoggerFactory loggerFactory, SqlSettings sqlSettings,
             DbContextOptions options) : base(options)
         {
@@ -55,7 +55,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Creator> Creators { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Categorization> Categorizations { get; set; }
         public DbSet<CreatorRole> CreatorRoles { get; set; }
 
         public IDbContextTransaction GetCurrentTransaction()
@@ -92,7 +92,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             {
                 await domainEventsDispatcher.DispatchAsync();
                 await SaveChangesAsync();
-                
+
                 transaction.Commit();
             }
             catch
@@ -159,7 +159,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
             modelBuilder.ApplyConfiguration(new CategoriesConfiguration());
             modelBuilder.ApplyConfiguration(new CreatorRolesConfiguration());
             modelBuilder.ApplyConfiguration(new CreatorsConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductCategoriesConfiguration());
+            modelBuilder.ApplyConfiguration(new CategorizationConfiguration());
             modelBuilder.ApplyConfiguration(new ProductsConfiguration());
         }
 

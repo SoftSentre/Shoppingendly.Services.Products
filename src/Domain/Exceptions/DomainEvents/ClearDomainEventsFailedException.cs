@@ -19,10 +19,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.DomainEve
 {
     public class ClearDomainEventsFailedException : DomainException
     {
-        public override string Code { get; } = ErrorCodes.ClearDomainEventsFailed;
-
         public ClearDomainEventsFailedException() : base("Unable to clear domain events, because entity is null.")
         {
         }
+
+        public override string Code { get; } = ErrorCodes.ClearDomainEventsFailed;
     }
 }

@@ -19,7 +19,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Logger.Confi
     public interface ISerilogConfigurator
     {
         ILogger CreateSerilogLogger(string environment);
-        
+
         LoggerConfiguration ConfigureLogger(LoggerConfiguration loggerConfiguration, LoggerSettings loggerSettings,
             AppOptions appOptions, string environmentName);
     }

@@ -24,11 +24,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
     public class DomainModule : Module
     {
         private AllConstructorFinder _allConstructorFinder;
-        
+
         protected override void Load(ContainerBuilder builder)
         {
             _allConstructorFinder = new AllConstructorFinder();
-            
+
             builder.RegisterType<ProductDomainController>()
                 .As<IProductDomainController>()
                 .InstancePerLifetimeScope();
@@ -44,19 +44,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
             builder.RegisterType<CategoryBusinessRulesChecker>()
                 .As<ICategoryBusinessRulesChecker>()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<CreatorBusinessRulesChecker>()
                 .As<ICreatorBusinessRulesChecker>()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<ProductBusinessRulesChecker>()
                 .As<IProductBusinessRulesChecker>()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<DomainEventsEmitter>()
                 .As<IDomainEventEmitter>()
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<DomainEventsManager>()
                 .As<IDomainEventsManager>()
                 .InstancePerLifetimeScope();
@@ -65,12 +65,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.Configuratio
                 .AsSelf()
                 .InstancePerLifetimeScope()
                 .FindConstructorsWith(_allConstructorFinder);
-            
+
             builder.RegisterType<CategoryFactory>()
                 .AsSelf()
                 .InstancePerLifetimeScope()
                 .FindConstructorsWith(_allConstructorFinder);
-            
+
             builder.RegisterType<ProductFactory>()
                 .AsSelf()
                 .InstancePerLifetimeScope()

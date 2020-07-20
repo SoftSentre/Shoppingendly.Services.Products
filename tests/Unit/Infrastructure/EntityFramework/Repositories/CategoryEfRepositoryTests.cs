@@ -24,6 +24,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories;
@@ -48,7 +49,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                 .Options;
 
             var loggerFactory = new Mock<ILoggerFactory>();
-            var productServiceDbContext = new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), dbContextOptions);
+            var productServiceDbContext =
+                new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), dbContextOptions);
 
             await productServiceDbContext.Database.EnsureDeletedAsync();
             await productServiceDbContext.Database.EnsureCreatedAsync();
@@ -56,13 +58,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             await productServiceDbContext.Products.AddRangeAsync(new Product(
                     new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")),
                     new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-                    "ExampleProductName", ProductProducer.Create("ExampleProducer")),
+                    "ExampleProductName", Producer.Create("ExampleProducer")),
                 new Product(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")),
                     new CreatorId(new Guid("12301ABE-24FE-41E5-A5F5-B6255C049CA1")),
-                    "ExampleSomeProductName", ProductProducer.Create("ExampleSomeProducer")));
-            await productServiceDbContext.ProductCategories.AddRangeAsync(
-                new ProductCategory(new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")), _category.CategoryId),
-                new ProductCategory(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")), _category.CategoryId));
+                    "ExampleSomeProductName", Producer.Create("ExampleSomeProducer")));
+            await productServiceDbContext.Categorizations.AddRangeAsync(
+                new Categorization(new ProductId(new Guid("BD31DDB6-CEA1-493C-B49E-BFC902EF1F14")),
+                    _category.CategoryId),
+                new Categorization(new ProductId(new Guid("C3241FC4-AD0F-40AE-A8B2-D8F848DD1D17")),
+                    _category.CategoryId));
             await productServiceDbContext.SaveChangesAsync();
 
             return productServiceDbContext;
@@ -82,7 +86,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.CategoryName.Should().Be(_category.CategoryName);
             testResult.Value.CategoryDescription.Should().Be(_category.CategoryDescription);
             testResult.Value.CreatedAt.Should().Be(_category.CreatedAt);
-            testResult.Value.ProductCategories.Should().HaveCount(2);
+            testResult.Value.AssignedProducts.Should().HaveCount(2);
 
             await dbContext.DisposeAsync();
         }
@@ -98,7 +102,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             // Act
             await categoryRepository.AddAsync(category);
             await dbContext.SaveChangesAsync();
-            var testResult = dbContext.Categories.FirstOrDefault(p => p.CategoryId.Equals(category.CategoryId)) ?? It.IsAny<Category>();
+            var testResult = dbContext.Categories.FirstOrDefault(p => p.CategoryId.Equals(category.CategoryId)) ??
+                             It.IsAny<Category>();
 
             // Assert
             testResult.CategoryName.Should().Be(category.CategoryName);
@@ -163,7 +168,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             testResult.Value.Should().HaveCount(3);
             var testResultItem = testResult.Value.FirstOrDefault(c => c.CategoryName == _category.CategoryName) ??
                                  It.IsAny<Category>();
-            testResultItem.ProductCategories.Should().HaveCount(2);
+            testResultItem.AssignedProducts.Should().HaveCount(2);
 
             await dbContext.DisposeAsync();
         }
@@ -213,7 +218,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             const string newCategoryName = "otherCategoryName";
 
             // Act
-            var categoryFromDatabase = await dbContext.Categories.FirstOrDefaultAsync(p => p.CategoryId.Equals(_category.CategoryId));
+            var categoryFromDatabase =
+                await dbContext.Categories.FirstOrDefaultAsync(p => p.CategoryId.Equals(_category.CategoryId));
             categoryFromDatabase.ChangeCategoryName(newCategoryName);
             categoryRepository.Update(categoryFromDatabase);
             await dbContext.SaveChangesAsync();

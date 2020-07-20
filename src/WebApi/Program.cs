@@ -40,7 +40,7 @@ using ILogger = Serilog.ILogger;
 
 namespace SoftSentre.Shoppingendly.Services.Products.WebApi
 {
-    public class Program
+    public static class Program
     {
         private static ILogger _logger;
         private static IApplicationService _applicationService;
@@ -51,27 +51,27 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
 
             var environment = _applicationService.GetEnvironmentName();
             var appName = _applicationService.GetAppName();
-            
+
             try
             {
                 CreateSerilogLogger(environment);
-                
+
                 _logger.Information("Configuring web host ({Application})...", appName);
-                
+
                 var host = CreateHostBuilder(args).Build();
                 host.MigrateDatabase<ProductServiceDbContext>((context, provider) =>
                 {
                     var logger = provider.GetService<ILogger<ProductServiceDbContextSeed>>();
-                
+
                     new ProductServiceDbContextSeed()
                         .SeedAsync(context, logger)
                         .Wait();
                 });
-                
+
                 _logger.Information("Applying migrations ({Application})...", appName);
 
                 await host.RunAsync();
-                
+
                 return 0;
             }
             catch (Exception ex)
@@ -118,9 +118,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
                         app.UseHttpsRedirection();
                         app.UseRouting();
                         app.UseAuthorization();
-                        
+
                         var endpointInvoker = app.ApplicationServices.GetService<CreatorEndpointsInvoker>();
-                        
+
                         app.UseEndpoints(endpoints =>
                         {
                             endpoints.MapControllers();
@@ -128,10 +128,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi
                             endpoints.MapGet("/",
                                 async context =>
                                     await context.Response.WriteAsync("Hello it's Shoppingendly Product Service."));
-                            
+
                             endpoints.MapGet("api/products/creators/{creatorId}", async context =>
                                 await endpointInvoker.GetCreatorProducts(context));
-
                         });
                     });
                 });

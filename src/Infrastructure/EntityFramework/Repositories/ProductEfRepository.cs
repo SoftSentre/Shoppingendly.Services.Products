@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Repositories
@@ -41,7 +41,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         public async Task<Maybe<Product>> GetByIdWithIncludesAsync(ProductId productId)
         {
-            return await _productServiceDbContext.Products.Include(p => p.ProductCategories)
+            return await _productServiceDbContext.Products.Include(p => p.AssignedCategories)
                 .FirstOrDefaultAsync(p => p.ProductId.Equals(productId));
         }
 
@@ -53,7 +53,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         public async Task<Maybe<IEnumerable<Product>>> GetManyByNameWithIncludesAsync(string name)
         {
-            return await _productServiceDbContext.Products.Include(p => p.ProductCategories)
+            return await _productServiceDbContext.Products.Include(p => p.AssignedCategories)
                 .Where(p => p.ProductName == name).ToListAsync();
         }
 

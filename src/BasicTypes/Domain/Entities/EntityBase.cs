@@ -18,14 +18,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
 {
     public abstract class EntityBase : IEntity, IAuditAbleEntity
     {
-        public DateTime? UpdatedDate { get; private set; }
-        public DateTime CreatedAt { get; }
-
         protected EntityBase()
         {
             CreatedAt = DateTime.UtcNow;
         }
-        
+
+        public DateTime? UpdatedDate { get; private set; }
+        public DateTime CreatedAt { get; }
+
         protected void SetUpdatedDate()
         {
             UpdatedDate = DateTime.UtcNow;

@@ -29,8 +29,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             where TEventSourcingEntity : class, IEventSourcingEntity
         {
             if (eventSourcingEntity == null || eventSourcingEntity.DomainEvents.IsEmpty())
+            {
                 throw new GetUncommittedDomainEventsFailedException();
-            
+            }
+
             return eventSourcingEntity.DomainEvents.ToList();
         }
 
@@ -38,8 +40,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             where TEventSourcingEntity : class, IEventSourcingEntity
         {
             if (eventSourcingEntity == null)
+            {
                 throw new ClearDomainEventsFailedException();
-            
+            }
+
             eventSourcingEntity.DomainEvents?.Clear();
         }
     }

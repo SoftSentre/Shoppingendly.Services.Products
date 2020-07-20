@@ -13,19 +13,19 @@
 // limitations under the License.
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
 {
     public class CategoryDeletedDomainEvent : DomainEventBase
     {
-        public CategoryId CategoryId { get; }
-        public CategoryId ParentCategoryId { get; set; }
-
         internal CategoryDeletedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId)
         {
             CategoryId = categoryId;
             ParentCategoryId = parentCategoryId;
         }
+
+        public CategoryId CategoryId { get; }
+        public CategoryId ParentCategoryId { get; set; }
     }
 }

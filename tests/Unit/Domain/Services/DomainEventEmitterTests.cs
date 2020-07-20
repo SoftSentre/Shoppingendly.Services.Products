@@ -22,6 +22,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
 
@@ -48,33 +49,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             await Task.CompletedTask;
         }
 
-        [Fact]
-        public void EmitShouldSuccessfullyAddedEvent()
+        public async Task DisposeAsync()
         {
-            // Arrange 
-
-
-            // Act
-            _domainEventEmitter.Emit(_creator, _newCreatorCreatedDomainEvent);
-
-            // Assert
-            _creator.DomainEvents.Should().NotBeEmpty();
-            _creator.DomainEvents.FirstOrDefault().Should().Be(_newCreatorCreatedDomainEvent);
-        }
-
-        [Fact]
-        public void EmitShouldBeFailedWhenEntityIsNull()
-        {
-            // Arrange 
+            _domainEventEmitter = null;
+            _creatorId = null;
+            _creatorName = null;
+            _creatorRole = null;
             _creator = null;
+            _newCreatorCreatedDomainEvent = null;
 
-            // Act
-            Action emit = () => _domainEventEmitter.Emit(_creator, _newCreatorCreatedDomainEvent);
-
-            // Assert
-            emit.Should().Throw<EmitDomainEventFailedException>()
-                .Where(e => e.Code == ErrorCodes.EmitDomainEventFailed)
-                .WithMessage($"Parameters can not be a nulls.");
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -89,19 +73,36 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             // Assert
             emit.Should().Throw<EmitDomainEventFailedException>()
                 .Where(e => e.Code == ErrorCodes.EmitDomainEventFailed)
-                .WithMessage($"Parameters can not be a nulls.");
+                .WithMessage("Parameters can not be a nulls.");
         }
 
-        public async Task DisposeAsync()
+        [Fact]
+        public void EmitShouldBeFailedWhenEntityIsNull()
         {
-            _domainEventEmitter = null;
-            _creatorId = null;
-            _creatorName = null;
-            _creatorRole = null;
+            // Arrange 
             _creator = null;
-            _newCreatorCreatedDomainEvent = null;
 
-            await Task.CompletedTask;
+            // Act
+            Action emit = () => _domainEventEmitter.Emit(_creator, _newCreatorCreatedDomainEvent);
+
+            // Assert
+            emit.Should().Throw<EmitDomainEventFailedException>()
+                .Where(e => e.Code == ErrorCodes.EmitDomainEventFailed)
+                .WithMessage("Parameters can not be a nulls.");
+        }
+
+        [Fact]
+        public void EmitShouldSuccessfullyAddedEvent()
+        {
+            // Arrange 
+
+
+            // Act
+            _domainEventEmitter.Emit(_creator, _newCreatorCreatedDomainEvent);
+
+            // Assert
+            _creator.DomainEvents.Should().NotBeEmpty();
+            _creator.DomainEvents.FirstOrDefault().Should().Be(_newCreatorCreatedDomainEvent);
         }
     }
 }

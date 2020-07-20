@@ -25,7 +25,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
 
         Task CommitTransactionAsync(IDbContextTransaction transaction,
             IDomainEventsDispatcher domainEventsDispatcher);
-        
+
         void RollbackTransaction();
         Task<bool> SaveAsync();
     }

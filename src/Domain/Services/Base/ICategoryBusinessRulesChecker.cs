@@ -14,6 +14,7 @@
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
 {

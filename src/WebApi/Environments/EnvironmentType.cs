@@ -23,7 +23,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi.Environments
         public static EnvironmentType Test = new EnvironmentType(3, "Test");
         public static EnvironmentType Development = new EnvironmentType(4, "Development");
         public static EnvironmentType Docker = new EnvironmentType(5, "Docker");
-        
+
         public EnvironmentType(int id, string name) : base(id, name)
         {
         }

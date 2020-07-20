@@ -18,18 +18,18 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.EntityTypeConfigurations
 {
-    public class ProductCategoriesConfiguration : IEntityTypeConfiguration<ProductCategory>
+    public class CategorizationConfiguration : IEntityTypeConfiguration<Categorization>
     {
-        public void Configure(EntityTypeBuilder<ProductCategory> productCategoriesConfiguration)
+        public void Configure(EntityTypeBuilder<Categorization> categorizationConfiguration)
         {
-            productCategoriesConfiguration.ToTable("ProductCategories", ProductServiceDbContext.DefaultSchema);
+            categorizationConfiguration.ToTable("Categorization", ProductServiceDbContext.DefaultSchema);
 
-            productCategoriesConfiguration.HasKey(pc => new {pc.ProductId, pc.CategoryId});
+            categorizationConfiguration.HasKey(pc => new {pc.ProductId, pc.CategoryId});
 
-            productCategoriesConfiguration.Property(pc => pc.UpdatedDate)
+            categorizationConfiguration.Property(pc => pc.UpdatedDate)
                 .HasColumnName("UpdatedDate");
 
-            productCategoriesConfiguration.Property(pc => pc.CreatedAt)
+            categorizationConfiguration.Property(pc => pc.CreatedAt)
                 .HasColumnName("CreatedDate")
                 .IsRequired();
         }

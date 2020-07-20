@@ -19,6 +19,7 @@ using FluentAssertions;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
 
@@ -30,7 +31,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
 
         private ProductId _productId;
         private Picture _productPicture;
-        private ProductProducer _productProducer;
+        private Producer _productProducer;
         private string _productName;
 
         public static IEnumerable<object[]> InvalidPictures =>
@@ -45,50 +46,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             _productBusinessRulesChecker = new ProductBusinessRulesChecker();
             _productId = new ProductId(new Guid("9AC9CAA7-1629-4BA6-9BB2-797A073ACD3B"));
             _productPicture = Picture.Create("examplePictureName", "examplePictureUrl");
-            _productProducer = ProductProducer.Create("exampleProductProducer");
+            _productProducer = Producer.Create("exampleProductProducer");
             _productName = "exampleProductName";
 
             await Task.CompletedTask;
-        }
-
-        [Fact]
-        public void FalseWhenProductIdCanNotBeEmptyRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var productIdCanNotBeEmptyRuleIsBroken =
-                _productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(_productId);
-
-            // Assert
-            productIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TrueWhenProductIdCanNotBeEmptyRuleIsBroken()
-        {
-            // Arrange
-            _productId = new ProductId(Guid.Empty);
-
-            // Act
-            var productIdCanNotBeEmptyRuleIsBroken =
-                _productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(_productId);
-
-            // Assert
-            productIdCanNotBeEmptyRuleIsBroken.Should().BeTrue();
-        }
-
-        [Fact]
-        public void FalseWhenProductNameCanBeNotNullOrEmptyRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var productNameCanNotBeNullOrEmptyRuleIsBroken =
-                _productBusinessRulesChecker.ProductNameCanNotBeNullOrEmptyRuleIsBroken(_productName);
-
-            // Assert
-            productNameCanNotBeNullOrEmptyRuleIsBroken.Should().BeFalse();
         }
 
         [Theory]
@@ -107,101 +68,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             productNameCanNotBeNullOrEmptyRuleIsBroken.Should().BeTrue();
         }
 
-        [Fact]
-        public void FalseWhenProductNameCanNotBeShorterThanRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var productNameCanNotBeShorterThanRuleIsBroken =
-                _productBusinessRulesChecker.ProductNameCanNotBeShorterThanRuleIsBroken(_productName);
-
-            // Assert
-            productNameCanNotBeShorterThanRuleIsBroken.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TrueWhenProductNameCanNotBeShorterThanRuleIsBroken()
-        {
-            // Arrange
-            _productName = new string('a', GlobalValidationVariables.ProductNameMinLength - 1);
-
-            // Act
-            var productNameCanNotBeShorterThanRuleIsBroken =
-                _productBusinessRulesChecker.ProductNameCanNotBeShorterThanRuleIsBroken(_productName);
-
-            // Assert
-            productNameCanNotBeShorterThanRuleIsBroken.Should().BeTrue();
-        }
-
-        [Fact]
-        public void FalseWhenProductNameCanNotBeLongerThanRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var productNameCanNotBeLongerThanRuleIsBroken =
-                _productBusinessRulesChecker.ProductNameCanNotBeLongerThanRuleIsBroken(_productName);
-
-            // Assert
-            productNameCanNotBeLongerThanRuleIsBroken.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TrueWhenProductNameCanNotBeLongerThanRuleIsBroken()
-        {
-            // Arrange
-            _productName = new string('a', GlobalValidationVariables.ProductNameMaxLength + 1);
-
-            // Act
-            var productNameCanNotBeLongerThanRuleIsBroken =
-                _productBusinessRulesChecker.ProductNameCanNotBeLongerThanRuleIsBroken(_productName);
-
-            // Assert
-            productNameCanNotBeLongerThanRuleIsBroken.Should().BeTrue();
-        }
-
-        [Fact]
-        public void FalseWhenProductProducerCanBeNullRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var productProducerCanNotBeNullRuleIsBroken =
-                _productBusinessRulesChecker.ProductProducerCanNotBeNullRuleIsBroken(_productProducer);
-
-            // Assert
-            productProducerCanNotBeNullRuleIsBroken.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TrueWhenProductProducerCanBeNullRuleIsBroken()
-        {
-            // Arrange
-            _productProducer = null;
-
-            // Act
-            var productProducerCanNotBeNullRuleIsBroken =
-                _productBusinessRulesChecker.ProductProducerCanNotBeNullRuleIsBroken(_productProducer);
-
-            // Assert
-            productProducerCanNotBeNullRuleIsBroken.Should().BeTrue();
-        }
-
-        [Fact]
-        public void FalseWhenProductPictureCanNotBeNullOrEmptyRuleIsNotBroken()
-        {
-            // Arrange
-
-            // Act
-            var productPictureCanNotBeNullOrEmptyRuleIsBroken =
-                _productBusinessRulesChecker.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture);
-
-            // Assert
-            productPictureCanNotBeNullOrEmptyRuleIsBroken.Should().BeFalse();
-        }
-
-        [Theory, MemberData(nameof(InvalidPictures))]
+        [Theory]
+        [MemberData(nameof(InvalidPictures))]
         public void TrueWhenProductPictureCanNotBeNullOrEmptyRuleIsBroken(Picture productPicture)
         {
             // Arrange
@@ -224,6 +92,140 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             _productId = null;
 
             await Task.CompletedTask;
+        }
+
+        [Fact]
+        public void FalseWhenProductIdCanNotBeEmptyRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var productIdCanNotBeEmptyRuleIsBroken =
+                _productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(_productId);
+
+            // Assert
+            productIdCanNotBeEmptyRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void FalseWhenProductNameCanBeNotNullOrEmptyRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var productNameCanNotBeNullOrEmptyRuleIsBroken =
+                _productBusinessRulesChecker.ProductNameCanNotBeNullOrEmptyRuleIsBroken(_productName);
+
+            // Assert
+            productNameCanNotBeNullOrEmptyRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void FalseWhenProductNameCanNotBeLongerThanRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var productNameCanNotBeLongerThanRuleIsBroken =
+                _productBusinessRulesChecker.ProductNameCanNotBeLongerThanRuleIsBroken(_productName);
+
+            // Assert
+            productNameCanNotBeLongerThanRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void FalseWhenProductNameCanNotBeShorterThanRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var productNameCanNotBeShorterThanRuleIsBroken =
+                _productBusinessRulesChecker.ProductNameCanNotBeShorterThanRuleIsBroken(_productName);
+
+            // Assert
+            productNameCanNotBeShorterThanRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void FalseWhenProductPictureCanNotBeNullOrEmptyRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var productPictureCanNotBeNullOrEmptyRuleIsBroken =
+                _productBusinessRulesChecker.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(_productPicture);
+
+            // Assert
+            productPictureCanNotBeNullOrEmptyRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void FalseWhenProductProducerCanBeNullRuleIsNotBroken()
+        {
+            // Arrange
+
+            // Act
+            var productProducerCanNotBeNullRuleIsBroken =
+                _productBusinessRulesChecker.ProductProducerCanNotBeNullRuleIsBroken(_productProducer);
+
+            // Assert
+            productProducerCanNotBeNullRuleIsBroken.Should().BeFalse();
+        }
+
+        [Fact]
+        public void TrueWhenProductIdCanNotBeEmptyRuleIsBroken()
+        {
+            // Arrange
+            _productId = new ProductId(Guid.Empty);
+
+            // Act
+            var productIdCanNotBeEmptyRuleIsBroken =
+                _productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(_productId);
+
+            // Assert
+            productIdCanNotBeEmptyRuleIsBroken.Should().BeTrue();
+        }
+
+        [Fact]
+        public void TrueWhenProductNameCanNotBeLongerThanRuleIsBroken()
+        {
+            // Arrange
+            _productName = new string('a', GlobalValidationVariables.ProductNameMaxLength + 1);
+
+            // Act
+            var productNameCanNotBeLongerThanRuleIsBroken =
+                _productBusinessRulesChecker.ProductNameCanNotBeLongerThanRuleIsBroken(_productName);
+
+            // Assert
+            productNameCanNotBeLongerThanRuleIsBroken.Should().BeTrue();
+        }
+
+        [Fact]
+        public void TrueWhenProductNameCanNotBeShorterThanRuleIsBroken()
+        {
+            // Arrange
+            _productName = new string('a', GlobalValidationVariables.ProductNameMinLength - 1);
+
+            // Act
+            var productNameCanNotBeShorterThanRuleIsBroken =
+                _productBusinessRulesChecker.ProductNameCanNotBeShorterThanRuleIsBroken(_productName);
+
+            // Assert
+            productNameCanNotBeShorterThanRuleIsBroken.Should().BeTrue();
+        }
+
+        [Fact]
+        public void TrueWhenProductProducerCanBeNullRuleIsBroken()
+        {
+            // Arrange
+            _productProducer = null;
+
+            // Act
+            var productProducerCanNotBeNullRuleIsBroken =
+                _productBusinessRulesChecker.ProductProducerCanNotBeNullRuleIsBroken(_productProducer);
+
+            // Assert
+            productProducerCanNotBeNullRuleIsBroken.Should().BeTrue();
         }
     }
 }

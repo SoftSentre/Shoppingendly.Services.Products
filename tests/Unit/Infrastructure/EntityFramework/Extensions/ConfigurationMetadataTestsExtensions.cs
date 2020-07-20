@@ -36,7 +36,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>()
                 .Options;
-            
+
             var loggerFactory = new Mock<ILoggerFactory>();
             var dbContext = new ProductServiceDbContext(loggerFactory.Object, new SqlSettings(), options);
             var conventionSet = ConventionSet.CreateConventionSet(dbContext);

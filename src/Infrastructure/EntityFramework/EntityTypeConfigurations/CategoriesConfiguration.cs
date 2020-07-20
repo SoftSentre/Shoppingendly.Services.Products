@@ -56,7 +56,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                     pi.Property(pp => pp.IsEmpty)
                         .HasColumnName("IsCategoryIconEmpty");
                 });
-            
+
             categoriesConfiguration.Property(c => c.UpdatedDate)
                 .HasColumnName("UpdatedDate");
 
@@ -64,11 +64,11 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
                 .HasColumnName("CreatedDate")
                 .IsRequired();
 
-            categoriesConfiguration.HasMany(c => c.ProductCategories)
+            categoriesConfiguration.HasMany(c => c.AssignedProducts)
                 .WithOne(pc => pc.Category)
                 .HasForeignKey(pc => pc.CategoryId);
 
-            categoriesConfiguration.Metadata.FindNavigation(nameof(Category.ProductCategories))
+            categoriesConfiguration.Metadata.FindNavigation(nameof(Category.AssignedProducts))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             categoriesConfiguration.Ignore(c => c.DomainEvents);

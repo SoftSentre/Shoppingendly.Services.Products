@@ -20,7 +20,7 @@ using Newtonsoft.Json.Serialization;
 using SoftSentre.Shoppingendly.Services.Products.Application.CQRS.Queries;
 using SoftSentre.Shoppingendly.Services.Products.Application.DTO;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.CQRS.Bus;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.WebApi.Endpoints
@@ -37,15 +37,17 @@ namespace SoftSentre.Shoppingendly.Services.Products.WebApi.Endpoints
         public async Task GetCreatorProducts(HttpContext context)
         {
             var param = context.Request.RouteValues["creatorId"].ToString();
-                                
+
             if (param.IsEmpty())
+            {
                 return;
-                                
+            }
+
             var creatorGuid = Guid.Parse(param);
             var creatorId = new CreatorId(creatorGuid);
             var query = new GetCreatorsProductsQuery(creatorId);
             var result = await _queryBus.QueryAsync<GetCreatorsProductsQuery, CreatorWithProductsDto>(query);
-            
+
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonConvert.SerializeObject(result.Data,
                 new JsonSerializerSettings

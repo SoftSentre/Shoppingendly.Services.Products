@@ -40,7 +40,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Application.CQRS.QueryHandl
             var creatorWithProducts = await _creatorDomainController.GetCreatorWithProductsByIdAsync(query.CreatorId);
 
             if (creatorWithProducts.HasNoValue)
+            {
                 return QueryResult<CreatorWithProductsDto>.Failed("Creator doesn't exists.");
+            }
 
             var creatorWithProductsDto = _mapperWrapper.MapCreatorToCreatorWithProductsDto(creatorWithProducts.Value);
 

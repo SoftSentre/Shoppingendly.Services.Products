@@ -22,10 +22,11 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
 
-namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services 
+namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
 {
     public class DomainEventsManagerTests : IAsyncLifetime
     {
@@ -48,47 +49,16 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
             await Task.CompletedTask;
         }
 
-        [Fact]
-        public void GetUncommittedShouldSuccessfullyReturnDomainEvents()
+        public async Task DisposeAsync()
         {
-            // Arrange 
-            _creator.DomainEvents.Add(_newCreatorCreatedDomainEvent);
-
-            // Act
-            var domainEvents = _domainEventsManager.GetUncommittedDomainEvents(_creator);
-
-            // Assert
-            domainEvents.Should().NotBeEmpty();
-            _creator.DomainEvents.FirstOrDefault().Should().Be(_newCreatorCreatedDomainEvent);
-        }
-
-        [Fact]
-        public void GetUncommitedShouldBeFailedWhenCreatorIsNull()
-        {
-            // Arrange 
+            _domainEventsManager = null;
+            _creatorId = null;
+            _creatorName = null;
+            _creatorRole = null;
             _creator = null;
+            _newCreatorCreatedDomainEvent = null;
 
-            // Act
-            Action getUncommitted = () => _domainEventsManager.GetUncommittedDomainEvents(_creator);
-
-            // Assert
-            getUncommitted.Should().Throw<GetUncommittedDomainEventsFailedException>()
-                .Where(e => e.Code == ErrorCodes.GetUncommittedDomainEventsFailed)
-                .WithMessage(
-                    "Unable to get uncommitted domain events, because entity is null or domain events list are not initialized.");
-        }
-
-        [Fact]
-        public void ClearDomainEventsShouldSuccessfullyRemovedAllDomainEvents()
-        {
-            // Arrange 
-            _creator.DomainEvents.Add(_newCreatorCreatedDomainEvent);
-
-            // Act
-            _domainEventsManager.ClearAllDomainEvents(_creator);
-
-            // Assert
-            _creator.DomainEvents.Should().BeEmpty();
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -106,16 +76,47 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Services
                 .WithMessage("Unable to clear domain events, because entity is null.");
         }
 
-        public async Task DisposeAsync()
+        [Fact]
+        public void ClearDomainEventsShouldSuccessfullyRemovedAllDomainEvents()
         {
-            _domainEventsManager = null;
-            _creatorId = null;
-            _creatorName = null;
-            _creatorRole = null;
-            _creator = null;
-            _newCreatorCreatedDomainEvent = null;
+            // Arrange 
+            _creator.DomainEvents.Add(_newCreatorCreatedDomainEvent);
 
-            await Task.CompletedTask;
+            // Act
+            _domainEventsManager.ClearAllDomainEvents(_creator);
+
+            // Assert
+            _creator.DomainEvents.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void GetUncommittedShouldBeFailedWhenCreatorIsNull()
+        {
+            // Arrange 
+            _creator = null;
+
+            // Act
+            Action getUncommitted = () => _domainEventsManager.GetUncommittedDomainEvents(_creator);
+
+            // Assert
+            getUncommitted.Should().Throw<GetUncommittedDomainEventsFailedException>()
+                .Where(e => e.Code == ErrorCodes.GetUncommittedDomainEventsFailed)
+                .WithMessage(
+                    "Unable to get uncommitted domain events, because entity is null or domain events list are not initialized.");
+        }
+
+        [Fact]
+        public void GetUncommittedShouldSuccessfullyReturnDomainEvents()
+        {
+            // Arrange 
+            _creator.DomainEvents.Add(_newCreatorCreatedDomainEvent);
+
+            // Act
+            var domainEvents = _domainEventsManager.GetUncommittedDomainEvents(_creator);
+
+            // Assert
+            domainEvents.Should().NotBeEmpty();
+            _creator.DomainEvents.FirstOrDefault().Should().Be(_newCreatorCreatedDomainEvent);
         }
     }
 }

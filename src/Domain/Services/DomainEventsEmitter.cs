@@ -27,10 +27,15 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services
             where TEvent : class, IDomainEvent
         {
             if (eventSourcingEntity == null || domainEvent == null)
-                throw new EmitDomainEventFailedException($"Parameters can not be a nulls.");
+            {
+                throw new EmitDomainEventFailedException("Parameters can not be a nulls.");
+            }
+
             if (eventSourcingEntity.DomainEvents == null)
+            {
                 throw new EmitDomainEventFailedException(
                     $"Domain events list in entity: {eventSourcingEntity.GetGenericTypeName()} is not initialized.");
+            }
 
             eventSourcingEntity.DomainEvents.Add(domainEvent);
         }

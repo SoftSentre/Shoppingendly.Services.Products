@@ -46,7 +46,8 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
                 new object[] {new string('*', 201), new string('*', 501)}
             };
 
-        [Theory, MemberData(nameof(IncorrectPictureFields))]
+        [Theory]
+        [MemberData(nameof(IncorrectPictureFields))]
         public void FailToCreateAPictureWhenNameOrUrlAreInvalid(string name, string url)
         {
             // Act
@@ -56,30 +57,12 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
             action.Should().Throw<InternalException>();
         }
 
-        [Fact]
-        public void SuccessToCreateAPictureWhenNameAndUrlAreCorrect()
+        public async Task DisposeAsync()
         {
-            // Arrange
+            _pictureName = null;
+            _pictureUrl = null;
 
-            // Act
-            var picture = Picture.Create(_pictureName, _pictureUrl);
-
-            //Assert
-            picture.Name.Should().Be(_pictureName);
-            picture.Url.Should().Be(_pictureUrl);
-            picture.IsEmpty.Should().BeFalse();
-        }
-
-        [Fact]
-        public void IsPossibleToCreateEmptyPicture()
-        {
-            // Act
-            var picture = Picture.Empty;
-
-            //Assert
-            picture.Name.Should().Be(null);
-            picture.Url.Should().Be(null);
-            picture.IsEmpty.Should().BeTrue();
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -96,34 +79,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
                 .WithMessage("Picture name can not be empty.");
         }
 
-        [Fact]
-        public void AppropriateExceptionHasBeenThrownWhenPictureUrlIsEmpty()
-        {
-            // Arrange
-
-            // Act
-            Action action = () => Picture.Create(_pictureName, string.Empty);
-
-            //Assert
-            action.Should().Throw<PictureUrlCanNotBeEmptyException>()
-                .Where(e => e.Code == ErrorCodes.PictureUrlCanNotBeEmpty)
-                .WithMessage("Picture url can not be empty.");
-        }
-
-        [Fact]
-        public void AppropriateExceptionHasBeenThrownWhenPictureUrlIsTooLong()
-        {
-            // Arrange
-
-            // Act
-            Action action = () => Picture.Create(_pictureName, new string('*', 501));
-
-            //Assert
-            action.Should().Throw<PictureUrlIsTooLongException>()
-                .Where(e => e.Code == ErrorCodes.PictureUrlIsTooLong)
-                .WithMessage("Picture url can not be longer than 500 characters.");
-        }
-        
         [Fact]
         public void AppropriateExceptionHasBeenThrownWhenPictureNameIsTooLong()
         {
@@ -153,6 +108,34 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
         }
 
         [Fact]
+        public void AppropriateExceptionHasBeenThrownWhenPictureUrlIsEmpty()
+        {
+            // Arrange
+
+            // Act
+            Action action = () => Picture.Create(_pictureName, string.Empty);
+
+            //Assert
+            action.Should().Throw<PictureUrlCanNotBeEmptyException>()
+                .Where(e => e.Code == ErrorCodes.PictureUrlCanNotBeEmpty)
+                .WithMessage("Picture url can not be empty.");
+        }
+
+        [Fact]
+        public void AppropriateExceptionHasBeenThrownWhenPictureUrlIsTooLong()
+        {
+            // Arrange
+
+            // Act
+            Action action = () => Picture.Create(_pictureName, new string('*', 501));
+
+            //Assert
+            action.Should().Throw<PictureUrlIsTooLongException>()
+                .Where(e => e.Code == ErrorCodes.PictureUrlIsTooLong)
+                .WithMessage("Picture url can not be longer than 500 characters.");
+        }
+
+        [Fact]
         public void GetHashCodeShouldMakeCorrectComparison()
         {
             // Arrange
@@ -169,12 +152,30 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.ValueObje
             notTheSame.Should().BeFalse();
         }
 
-        public async Task DisposeAsync()
+        [Fact]
+        public void IsPossibleToCreateEmptyPicture()
         {
-            _pictureName = null;
-            _pictureUrl = null;
+            // Act
+            var picture = Picture.Empty;
 
-            await Task.CompletedTask;
+            //Assert
+            picture.Name.Should().Be(null);
+            picture.Url.Should().Be(null);
+            picture.IsEmpty.Should().BeTrue();
+        }
+
+        [Fact]
+        public void SuccessToCreateAPictureWhenNameAndUrlAreCorrect()
+        {
+            // Arrange
+
+            // Act
+            var picture = Picture.Create(_pictureName, _pictureUrl);
+
+            //Assert
+            picture.Name.Should().Be(_pictureName);
+            picture.Url.Should().Be(_pictureUrl);
+            picture.IsEmpty.Should().BeFalse();
         }
     }
 }

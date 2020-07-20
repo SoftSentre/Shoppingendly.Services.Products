@@ -25,6 +25,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
@@ -32,10 +33,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
 {
     public class CategoryDomainController : ICategoryDomainController
     {
-        private readonly ICategoryRepository _categoryRepository;
         private readonly ICategoryBusinessRulesChecker _categoryBusinessRulesChecker;
-        private readonly IDomainEventEmitter _domainEventEmitter;
         private readonly CategoryFactory _categoryFactory;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IDomainEventEmitter _domainEventEmitter;
 
         public CategoryDomainController(ICategoryRepository categoryRepository,
             ICategoryBusinessRulesChecker categoryBusinessRulesChecker, CategoryFactory categoryFactory,
@@ -87,14 +88,14 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
             Picture categoryIcon)
         {
             return await CreateCategoryAsync(categoryId,
-                () => _categoryFactory.Create(categoryId, categoryName, categoryIcon: categoryIcon));
+                () => _categoryFactory.Create(categoryId, categoryName, categoryIcon));
         }
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, CategoryId parentCategoryId,
             string categoryName, Picture categoryIcon)
         {
             return await CreateCategoryAsync(categoryId,
-                () => _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryIcon: categoryIcon));
+                () => _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryIcon));
         }
 
         public async Task<Maybe<Category>> CreateNewCategoryAsync(CategoryId categoryId, string categoryName,
@@ -129,11 +130,19 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task<bool> ChangeCategoryNameAsync(CategoryId categoryId, string categoryName)
         {
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeEmptyRuleIsBroken(categoryName))
+            {
                 throw new CategoryNameCanNotBeEmptyException();
+            }
+
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeShorterThanRuleIsBroken(categoryName))
+            {
                 throw new CategoryNameIsTooShortException(GlobalValidationVariables.CategoryNameMinLength);
+            }
+
             if (_categoryBusinessRulesChecker.CategoryNameCanNotBeLongerThanRuleIsBroken(categoryName))
+            {
                 throw new CategoryNameIsTooLongException(GlobalValidationVariables.CategoryNameMaxLength);
+            }
 
             var category =
                 await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,
@@ -153,12 +162,20 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task<bool> ChangeCategoryDescriptionAsync(CategoryId categoryId, string categoryDescription)
         {
             if (_categoryBusinessRulesChecker.CategoryDescriptionCanNotBeEmptyRuleIsBroken(categoryDescription))
+            {
                 throw new CategoryDescriptionCanNotBeEmptyException();
+            }
+
             if (_categoryBusinessRulesChecker.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(categoryDescription))
+            {
                 throw new CategoryDescriptionIsTooShortException(GlobalValidationVariables
                     .CategoryDescriptionMinLength);
+            }
+
             if (_categoryBusinessRulesChecker.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(categoryDescription))
+            {
                 throw new CategoryDescriptionIsTooLongException(GlobalValidationVariables.CategoryDescriptionMaxLength);
+            }
 
             var category =
                 await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,
@@ -184,7 +201,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
                     new CategoryNotFoundException(categoryId));
 
             if (_categoryBusinessRulesChecker.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(categoryIcon))
+            {
                 throw new CategoryIconCanNotBeNullOrEmptyException();
+            }
 
             var isCategoryIconChanged = category.UploadCategoryIcon(categoryIcon);
 
@@ -200,7 +219,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Controllers
         public async Task RemoveCategoryAsync(CategoryId categoryId)
         {
             if (_categoryBusinessRulesChecker.CategoryIdCanNotBeEmptyRuleIsBroken(categoryId))
+            {
                 throw new InvalidCategoryIdException(categoryId);
+            }
 
             var category =
                 await _categoryRepository.GetByIdAndThrowIfEntityNotFound(categoryId,

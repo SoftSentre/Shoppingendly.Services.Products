@@ -26,6 +26,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Events.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.Converters;
 using SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramework.DomainEvents;
@@ -55,7 +56,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
 
             var creator = new Creator(new CreatorId(new Guid("FE2472FE-81C7-4C10-9D65-195CB820A33A")), "Creator",
                 CreatorRole.Admin);
-            
+
             await productServiceDbContext.Creators.AddAsync(creator);
             await productServiceDbContext.SaveChangesAsync();
 

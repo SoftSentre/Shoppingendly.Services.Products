@@ -19,9 +19,9 @@ using static SoftSentre.Shoppingendly.Services.Products.Globals.GlobalValidation
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
 {
-    public class ProductProducer : ValueObject
+    public class Producer : ValueObject
     {
-        private ProductProducer(string name)
+        private Producer(string name)
         {
             Name = ValidateProducer(name);
         }
@@ -48,9 +48,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects
             return name;
         }
 
-        public static ProductProducer Create(string name)
+        public static Producer Create(string name)
         {
-            return new ProductProducer(name);
+            return new Producer(name);
         }
     }
 }

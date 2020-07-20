@@ -22,24 +22,25 @@ namespace SoftSentre.Shoppingendly.Services.Products.Extensions
 {
     public static class RepositoryExtensionMethods
     {
-        public static async Task<TEntity> GetByIdAndThrowIfEntityNotFound<TEntity, TId>(this IRepository<TEntity, TId> repository,
+        public static async Task<TEntity> GetByIdAndThrowIfEntityNotFound<TEntity, TId>(
+            this IRepository<TEntity, TId> repository,
             TId entityId, Exception noValueException) where TEntity : class, IEntity
         {
             return await repository
                 .GetByIdAsync(entityId)
                 .UnwrapAsync(noValueException);
         }
-        
-        public static async Task<Maybe<TEntity>> GetByIdAndThrowIfEntityAlreadyExists<TEntity, TId>(this IRepository<TEntity, TId> repository,
+
+        public static async Task GetByIdAndThrowIfEntityAlreadyExists<TEntity, TId>(
+            this IRepository<TEntity, TId> repository,
             TId entityId, Exception noValueException) where TEntity : class, IEntity
         {
-             var entity = await repository.GetByIdAsync(entityId);
-             if (entity.HasValue)
-             {
-                 throw noValueException;
-             }
-
-             return entity;
+            var entity = await repository.GetByIdAsync(entityId);
+            
+            if (entity.HasValue)
+            {
+                throw noValueException;
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 {

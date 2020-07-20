@@ -17,13 +17,14 @@ using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Aggregates;
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
 {
     public class Category : EventSourcingEntity, IAggregateRoot
     {
-        private HashSet<ProductCategory> _productCategories = new HashSet<ProductCategory>();
+        private HashSet<Categorization> _assignedProducts = new HashSet<Categorization>();
 
         // Required for EF
         private Category()
@@ -36,7 +37,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryName = categoryName;
             CategoryIcon = Picture.Empty;
         }
-        
+
         internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName)
         {
             CategoryId = categoryId;
@@ -51,7 +52,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryName = categoryName;
             CategoryIcon = categoryIcon;
         }
-        
+
         internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, Picture categoryIcon)
         {
             CategoryId = categoryId;
@@ -67,8 +68,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryDescription = categoryDescription;
             CategoryIcon = Picture.Empty;
         }
-        
-        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, string categoryDescription)
+
+        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            string categoryDescription)
         {
             CategoryId = categoryId;
             ParentCategoryId = parentCategoryId;
@@ -85,8 +87,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             CategoryDescription = categoryDescription;
             CategoryIcon = categoryIcon;
         }
-        
-        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, string categoryDescription,
+
+        internal Category(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            string categoryDescription,
             Picture categoryIcon)
         {
             CategoryId = categoryId;
@@ -102,10 +105,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
         public string CategoryDescription { get; private set; }
         public Picture CategoryIcon { get; private set; }
 
-        public HashSet<ProductCategory> ProductCategories
+        public HashSet<Categorization> AssignedProducts
         {
-            get => _productCategories;
-            set => _productCategories = new HashSet<ProductCategory>(value);
+            get => _assignedProducts;
+            set => _assignedProducts = new HashSet<Categorization>(value);
         }
 
         internal bool ChangeCategoryName(string categoryName)
@@ -114,7 +117,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates
             {
                 return false;
             }
-            
+
             CategoryName = categoryName;
             SetUpdatedDate();
             return true;

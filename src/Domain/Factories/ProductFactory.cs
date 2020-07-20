@@ -18,6 +18,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Creators;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Products;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 
@@ -25,9 +26,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
 {
     public class ProductFactory
     {
-        private readonly IProductBusinessRulesChecker _productBusinessRulesChecker;
         private readonly ICreatorBusinessRulesChecker _creatorBusinessRulesChecker;
         private readonly IDomainEventEmitter _domainEventEmitter;
+        private readonly IProductBusinessRulesChecker _productBusinessRulesChecker;
 
         internal ProductFactory(IProductBusinessRulesChecker productBusinessRulesChecker,
             ICreatorBusinessRulesChecker creatorBusinessRulesChecker, IDomainEventEmitter domainEventEmitter)
@@ -38,7 +39,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         }
 
         internal Product Create(ProductId productId, CreatorId creatorId, string productName,
-            ProductProducer productProducer)
+            Producer productProducer)
         {
             CheckBusinessRules(productId, creatorId, productName, productProducer);
 
@@ -50,7 +51,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         }
 
         internal Product Create(ProductId productId, CreatorId creatorId, Picture productPicture,
-            string productName, ProductProducer productProducer)
+            string productName, Producer productProducer)
         {
             CheckBusinessRules(productId, creatorId, productName, productProducer, productPicture);
 
@@ -62,23 +63,43 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Factories
         }
 
         private void CheckBusinessRules(ProductId productId, CreatorId creatorId,
-            string productName, ProductProducer productProducer, Picture productPicture = null)
+            string productName, Producer productProducer, Picture productPicture = null)
         {
             if (_productBusinessRulesChecker.ProductIdCanNotBeEmptyRuleIsBroken(productId))
+            {
                 throw new InvalidProductIdException(productId);
+            }
+
             if (_creatorBusinessRulesChecker.CreatorIdCanNotBeEmptyRuleIsBroken(creatorId))
+            {
                 throw new InvalidCreatorIdException(creatorId);
+            }
+
             if (_productBusinessRulesChecker.ProductNameCanNotBeNullOrEmptyRuleIsBroken(productName))
+            {
                 throw new ProductNameCanNotBeEmptyException();
+            }
+
             if (_productBusinessRulesChecker.ProductNameCanNotBeShorterThanRuleIsBroken(productName))
+            {
                 throw new ProductNameIsTooShortException(GlobalValidationVariables.ProductNameMinLength);
+            }
+
             if (_productBusinessRulesChecker.ProductNameCanNotBeLongerThanRuleIsBroken(productName))
+            {
                 throw new ProductNameIsTooLongException(GlobalValidationVariables.ProductNameMaxLength);
+            }
+
             if (_productBusinessRulesChecker.ProductProducerCanNotBeNullRuleIsBroken(productProducer))
+            {
                 throw new ProductProducerCanNotBeNullException();
+            }
+
             if (productPicture != null &&
                 _productBusinessRulesChecker.ProductPictureCanNotBeNullOrEmptyRuleIsBroken(productPicture))
+            {
                 throw new ProductPictureCanNotBeNullOrEmptyException();
+            }
         }
     }
 }

@@ -23,6 +23,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Repositories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using Xunit;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controllers
@@ -34,14 +35,18 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
         private Mock<IDomainEventEmitter> _domainEventEmitterMock;
         private CategoryFactory _categoryFactory;
         private Category _category;
+
         private CategoryId _categoryId;
+
         //private CategoryId _parentCategoryId;
         private string _categoryName;
+
         //private string _newCategoryName;
         private string _categoryDescription;
+
         //private string _newCategoryDescription;
         private Picture _categoryIcon;
-        
+
         public async Task InitializeAsync()
         {
             _categoryRepositoryMock = new Mock<ICategoryRepository>();
@@ -56,7 +61,24 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
             //_newCategoryDescription = "newExampleCategoryDescription";
             _categoryIcon = Picture.Create("exampleCategoryIconName", "exampleCategoryIconUrl");
             _category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-        
+
+            await Task.CompletedTask;
+        }
+
+        public async Task DisposeAsync()
+        {
+            _categoryRepositoryMock = null;
+            _categoryBusinessRulesCheckerMock = null;
+            _domainEventEmitterMock = null;
+            _categoryFactory = null;
+            _categoryId = null;
+            _categoryName = null;
+            //_newCategoryName = null;
+            _categoryDescription = null;
+            //_newCategoryDescription = null;
+            _categoryIcon = null;
+            _category = null;
+
             await Task.CompletedTask;
         }
 
@@ -77,23 +99,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Controlle
             // Assert
             category.Should().Be(_category);
             _categoryRepositoryMock.Verify(cr => cr.GetByIdAsync(_categoryId), Times.Once);
-        }
-        
-        public async Task DisposeAsync()
-        {
-            _categoryRepositoryMock = null;
-            _categoryBusinessRulesCheckerMock = null;
-            _domainEventEmitterMock = null;
-            _categoryFactory = null;
-            _categoryId = null;
-            _categoryName = null;
-            //_newCategoryName = null;
-            _categoryDescription = null;
-            //_newCategoryDescription = null;
-            _categoryIcon = null;
-            _category = null;
-        
-            await Task.CompletedTask;
         }
     }
 }

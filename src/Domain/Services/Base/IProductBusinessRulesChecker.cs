@@ -14,6 +14,7 @@
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Types;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
 {
@@ -23,7 +24,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base
         bool ProductNameCanNotBeNullOrEmptyRuleIsBroken(string productName);
         bool ProductNameCanNotBeShorterThanRuleIsBroken(string productName);
         bool ProductNameCanNotBeLongerThanRuleIsBroken(string productName);
-        bool ProductProducerCanNotBeNullRuleIsBroken(Maybe<ProductProducer> productProducer);
+        bool ProductProducerCanNotBeNullRuleIsBroken(Maybe<Producer> productProducer);
         bool ProductPictureCanNotBeNullOrEmptyRuleIsBroken(Maybe<Picture> productPicture);
     }
 }

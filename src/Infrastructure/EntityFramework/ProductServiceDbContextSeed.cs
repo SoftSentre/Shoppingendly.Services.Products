@@ -40,9 +40,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Infrastructure.EntityFramew
         private static AsyncRetryPolicy CreatePolicy(ILogger logger, string prefix, int retries = 3)
         {
             return Policy.Handle<SqlException>().WaitAndRetryAsync(
-                retryCount: retries,
-                sleepDurationProvider: retry => TimeSpan.FromSeconds(5),
-                onRetry: (exception, timeSpan, retry, ctx) =>
+                retries,
+                retry => TimeSpan.FromSeconds(5),
+                (exception, timeSpan, retry, ctx) =>
                 {
                     logger.LogWarning(exception,
                         "[{prefix}] Exception {ExceptionType} with message {Message} detected on attempt {retry} of {retries}",

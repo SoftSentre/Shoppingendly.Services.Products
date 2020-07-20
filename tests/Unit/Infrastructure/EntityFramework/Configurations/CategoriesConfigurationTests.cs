@@ -84,7 +84,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Infrastructure.E
             maxLength.Should().Be(CategoryNameMaxLength);
             isRequired.Should().Be(IsCategoryNameRequired);
         }
-        
+
         [Fact]
         public void CheckIfProductPictureNameHasConfiguredValidValues()
         {

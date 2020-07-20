@@ -14,6 +14,7 @@
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.DomainEvents;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
 {
@@ -25,8 +26,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
             CategoryName = categoryName;
             CategoryIcon = categoryIcon;
         }
-        
-        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, Picture categoryIcon)
+
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            Picture categoryIcon)
         {
             CategoryId = categoryId;
             ParentCategoryId = parentCategoryId;
@@ -42,8 +44,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Domain.Events.Categories
             CategoryDescription = categoryDescription;
             CategoryIcon = categoryIcon;
         }
-        
-        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId, string categoryName, string categoryDescription,
+
+        internal NewCategoryCreatedDomainEvent(CategoryId categoryId, CategoryId parentCategoryId, string categoryName,
+            string categoryDescription,
             Picture categoryIcon)
         {
             CategoryId = categoryId;

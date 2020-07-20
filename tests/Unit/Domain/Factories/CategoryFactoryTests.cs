@@ -24,6 +24,7 @@ using SoftSentre.Shoppingendly.Services.Products.Domain.Exceptions.Categories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Factories;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Services.Base;
 using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 using SoftSentre.Shoppingendly.Services.Products.Extensions;
 using SoftSentre.Shoppingendly.Services.Products.Globals;
 using Xunit;
@@ -53,702 +54,6 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             _categoryIcon = Picture.Create("exampleCategoryIconName", "exampleCategoryUrl");
 
             await Task.CompletedTask;
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _categoryName);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithParentWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithDescriptionWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithDescriptionAndParentWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName, _categoryDescription);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithIconWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _categoryName, _categoryIcon);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithIconAndParentWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName, _categoryIcon);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithDescriptionAndIconWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        public void SuccessToCreateCategoryWithDescriptionAndIconAndParentWhenParametersAreCorrect()
-        {
-            // Arrange
-            _categoryFactory =
-                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
-
-            // Act
-            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName, _categoryDescription,
-                _categoryIcon);
-
-            // Assert
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
-                Times.Once());
-            _categoryBusinessRulesCheckerMock.Verify(
-                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
-                Times.Once());
-
-            _domainEventEmitterMock.Verify(
-                dve => dve.Emit(It.IsAny<Category>(),
-                    It.Is<NewCategoryCreatedDomainEvent>(de =>
-                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
-                        de.CategoryIcon == category.CategoryIcon &&
-                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryIdIsEmpty()
-        {
-            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
-                _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryNameIsEmpty()
-        {
-            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
-                _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryNameIsTooShort()
-        {
-            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
-                _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryNameIsTooLong()
-        {
-            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
-                _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryDescriptionIsEmpty()
-        {
-            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
-                _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription,
-                _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryDescriptionIsTooShort()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription,
-                _categoryIcon, _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription,
-                _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryDescriptionIsTooLong()
-        {
-            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription,
-                _categoryIcon, _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithParentWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithIconAndParentWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
-                parentCategoryId: _parentCategoryId);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription,
-                _categoryIcon);
-        }
-
-        [Fact]
-        private void FailToCreateCategoryWithDescriptionAndIconAndParentCategoryIconIsNullOrEmpty()
-        {
-            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription,
-                _categoryIcon, _parentCategoryId);
         }
 
         private void FailToCreateWhenCategoryIdIsEmpty(CategoryId categoryId, string categoryName,
@@ -839,8 +144,10 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
                     cbr => cbr.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(categoryIcon), Times.Once);
             }
             else
+            {
                 _categoryBusinessRulesCheckerMock.Verify(
                     cbr => cbr.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(categoryIcon), Times.Never);
+            }
 
             VerifyIfDomainEventHasBeenEmitted();
         }
@@ -871,7 +178,9 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
                 _categoryBusinessRulesCheckerMock.Verify(brokenRule, Times.Once);
             }
             else
+            {
                 _categoryBusinessRulesCheckerMock.Verify(brokenRule, Times.Never);
+            }
 
             VerifyIfDomainEventHasBeenEmitted();
         }
@@ -906,21 +215,37 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             string categoryDescription, Picture categoryIcon)
         {
             if (categoryDescription.IsEmpty() && categoryIcon == null)
+            {
                 _categoryFactory.Create(categoryId, categoryName);
+            }
             else if (categoryDescription.IsEmpty() && categoryIcon == null && parentCategoryId != null)
+            {
                 _categoryFactory.Create(categoryId, parentCategoryId, categoryName);
+            }
             else if (categoryDescription.IsEmpty() && categoryIcon != null)
+            {
                 _categoryFactory.Create(categoryId, categoryName, categoryIcon);
+            }
             else if (categoryDescription.IsEmpty() && categoryIcon != null && parentCategoryId != null)
+            {
                 _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryIcon);
+            }
             else if (categoryIcon == null && categoryDescription.IsNotEmpty())
+            {
                 _categoryFactory.Create(categoryId, categoryName, categoryDescription);
+            }
             else if (categoryIcon == null && categoryDescription.IsNotEmpty() && parentCategoryId != null)
+            {
                 _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryDescription);
+            }
             else if (categoryIcon != null && categoryDescription.IsNotEmpty())
+            {
                 _categoryFactory.Create(categoryId, categoryName, categoryDescription, categoryIcon);
+            }
             else
+            {
                 _categoryFactory.Create(categoryId, parentCategoryId, categoryName, categoryDescription, categoryIcon);
+            }
         }
 
         private void VerifyIfDomainEventHasBeenEmitted()
@@ -939,6 +264,702 @@ namespace SoftSentre.Shoppingendly.Services.Products.Tests.Unit.Domain.Factories
             _categoryIcon = null;
 
             await Task.CompletedTask;
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription,
+                _categoryIcon, _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
+                _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription,
+                _categoryIcon, _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription,
+                _categoryIcon, _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
+                _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
+                _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
+                _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconAndParentWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription, _categoryIcon,
+                _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription,
+                _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription,
+                _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription,
+                _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndIconWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionAndParentWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithDescriptionWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, _categoryDescription);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconAndParentWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithIconWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, categoryIcon: _categoryIcon);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryDescriptionIsEmpty()
+        {
+            FailToCreateWhenCategoryDescriptionIsEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryDescriptionIsTooLong()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooLong(_categoryId, _categoryName,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryDescriptionIsTooShort()
+        {
+            FailToCreateWhenCategoryDescriptionIsTooShort(_categoryId, _categoryName,
+                parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryIconIsNullOrEmpty()
+        {
+            FailToCreateWhenCategoryIconIsNullOrEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryIdIsEmpty()
+        {
+            FailToCreateWhenCategoryIdIsEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryNameIsEmpty()
+        {
+            FailToCreateWhenCategoryNameIsEmpty(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryNameIsTooLong()
+        {
+            FailToCreateWhenCategoryNameIsTooLong(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        private void FailToCreateCategoryWithParentWhenCategoryNameIsTooShort()
+        {
+            FailToCreateWhenCategoryNameIsTooShort(_categoryId, _categoryName, parentCategoryId: _parentCategoryId);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _categoryName);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithDescriptionAndIconAndParentWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName, _categoryDescription,
+                _categoryIcon);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithDescriptionAndIconWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription, _categoryIcon);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithDescriptionAndParentWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName, _categoryDescription);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithDescriptionWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _categoryName, _categoryDescription);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeEmptyRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeShorterThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryDescriptionCanNotBeLongerThanRuleIsBroken(_categoryDescription),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithIconAndParentWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName, _categoryIcon);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithIconWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _categoryName, _categoryIcon);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryIconCanNotBeNullOrEmptyRuleIsBroken(_categoryIcon),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
+        }
+
+        [Fact]
+        public void SuccessToCreateCategoryWithParentWhenParametersAreCorrect()
+        {
+            // Arrange
+            _categoryFactory =
+                new CategoryFactory(_categoryBusinessRulesCheckerMock.Object, _domainEventEmitterMock.Object);
+
+            // Act
+            var category = _categoryFactory.Create(_categoryId, _parentCategoryId, _categoryName);
+
+            // Assert
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryIdCanNotBeEmptyRuleIsBroken(_categoryId),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(cbc => cbc.CategoryNameCanNotBeEmptyRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeShorterThanRuleIsBroken(_categoryName),
+                Times.Once());
+            _categoryBusinessRulesCheckerMock.Verify(
+                cbc => cbc.CategoryNameCanNotBeLongerThanRuleIsBroken(_categoryName),
+                Times.Once());
+
+            _domainEventEmitterMock.Verify(
+                dve => dve.Emit(It.IsAny<Category>(),
+                    It.Is<NewCategoryCreatedDomainEvent>(de =>
+                        de.CategoryId.Equals(category.CategoryId) && de.CategoryName == category.CategoryName &&
+                        de.CategoryIcon == category.CategoryIcon &&
+                        de.CategoryDescription == category.CategoryDescription)), Times.Once);
         }
     }
 }

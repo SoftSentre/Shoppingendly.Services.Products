@@ -23,7 +23,7 @@ namespace SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities
         {
             DomainEvents = new List<IDomainEvent>();
         }
-        
+
         public List<IDomainEvent> DomainEvents { get; }
     }
 }

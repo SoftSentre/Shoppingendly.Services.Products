@@ -14,35 +14,35 @@
 
 using SoftSentre.Shoppingendly.Services.Products.BasicTypes.Domain.Entities;
 using SoftSentre.Shoppingendly.Services.Products.Domain.Aggregates;
-using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects;
+using SoftSentre.Shoppingendly.Services.Products.Domain.ValueObjects.StronglyTypedIds;
 
 namespace SoftSentre.Shoppingendly.Services.Products.Domain.Entities
 {
-    public class ProductCategory : EntityBase
+    public class Categorization : EntityBase
     {
         // Required for EF
-        private ProductCategory()
+        private Categorization()
         {
         }
 
-        internal ProductCategory(ProductId productId, CategoryId categoryId)
+        internal Categorization(ProductId productId, CategoryId categoryId)
         {
             ProductId = productId;
             CategoryId = categoryId;
         }
 
-        public ProductId ProductId { get; private set; }
-        public CategoryId CategoryId { get; private set; }
-        
+        public ProductId ProductId { get; }
+        public CategoryId CategoryId { get; }
+
         // Navigation property--
         public Product Product { get; set; }
 
         // Navigation property
         public Category Category { get; set; }
 
-        internal static ProductCategory Create(ProductId productId, CategoryId categoryId)
+        internal static Categorization Create(ProductId productId, CategoryId categoryId)
         {
-            return new ProductCategory(productId, categoryId);
+            return new Categorization(productId, categoryId);
         }
     }
 }
